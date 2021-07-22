@@ -1,3 +1,8 @@
+// TODO: Make platform class with non-buggy collision system.
+// TODO: Make a level with a bunch of platforms.
+// TODO: Make a background image.
+// TODO: Figure out how to add smooth zoom effects
+
 /** @type HTMLCanvasElement */
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
@@ -139,7 +144,7 @@ class Button {
         var rect = canvas.getBoundingClientRect();
         let mouseX = event.clientX - rect.left;
         let mouseY = event.clientY - rect.top;
-        
+
         this.color = this.colors.inactive;
 
         if (
@@ -159,7 +164,7 @@ class Button {
 
         this.color = this.colors.inactive;
         this.isPressed = false;
-        
+
         if (mouseX >= this.x && mouseX <= this.x + this.w) {
             if (mouseY >= this.y && mouseY <= this.y + this.h) {
                 this.color = this.colors.pressed;
@@ -184,41 +189,106 @@ class Button {
     }
 }
 
-let myObject = new ScreenObject(100, 100, 100, 100, "#f00");
-let button = new Button(
-    300,
-    300,
+class Player {
+    // This is the player.
+    // It will have 2 screen objects.
+    // One for the health bar, and one for the player itself.
+
+    constructor(x, y, w, h, color, controls) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.color = color;
+        this.controls = controls;
+
+        this.screenObject = new ScreenObject(
+            this.x,
+            this.y,
+            this.w,
+            this.h,
+            this.color
+        );
+    }
+
+    draw() {
+        this.screenObject.x = this.x;
+        this.screenObject.y = this.y;
+        this.screenObject.w = this.w;
+        this.screenObject.h = this.h;
+
+        this.screenObject.draw();
+    }
+
+    listenKeyDown(event) {
+        switch (event.key) {
+            case this.controls.left:
+                break;
+            case this.controls.right:
+                break;
+            case this.controls.up:
+                break;
+            case this.controls.down:
+                break;
+            case this.controls.attack:
+                break;
+        }
+    }
+
+    listenKeyUp(event) {
+        switch (event.key) {
+            case this.controls.left:
+                break;
+            case this.controls.right:
+                break;
+            case this.controls.up:
+                break;
+            case this.controls.down:
+                break;
+            case this.controls.attack:
+                break;
+        }
+    }
+}
+
+let player = new Player(
     100,
-    75,
-    { inactive: "#0ad", active: "#0ef", pressed: "#aff" },
-    5,
-    "#333",
-    "Test",
-    -20,
-    "#000",
-    () => { console.log("test"); },
-    "20px 'Comic Sans MS'"
-);
+    100,
+    100,
+    100,
+    "#f00",
+    {
+        left: "ArrowLeft",
+        right: "ArrowRight",
+        up: "ArrowUp",
+        down: "ArrowDown",
+        attack: "m"
+    }
+)
+
+canvas.addEventListener("mousemove", (event) => {
+});
+
+canvas.addEventListener("mousedown", (event) => {
+});
+
+canvas.addEventListener("mouseup", (event) => {
+});
+
+document.addEventListener("keydown", (event) => {
+    player.listenKeyDown(event);
+});
+
+document.addEventListener("keyup", (event) => {
+    player.listenKeyUp(event);
+});
 
 function update() {
     // This function runs every frame
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-    myObject.draw();
-    button.draw();
+    player.draw();
 }
-
-canvas.addEventListener("mousemove", (event) => {
-    button.listenMouseMove(event);
-});
-
-canvas.addEventListener("mousedown", (event) => {
-    button.listenMouseDown(event);
-});
-
-canvas.addEventListener("mouseup", (event) => {
-    button.listenMouseUp(event);
-});
 
 setInterval(update, 20);
 
