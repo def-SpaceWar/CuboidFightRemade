@@ -15,6 +15,7 @@ class ScreenObject {
     // This object/class is just something that is drawn on the screen.
     // So we don't have to keep copying and pasting the same function to draw
     // a freaking square.
+    // And this could help with soon adding camera affects with zooming.
 
     constructor(x, y, w, h, color) {
         this.x = x;
@@ -202,6 +203,22 @@ class Player {
         this.color = color;
         this.controls = controls;
 
+        this.xSpeed = 0;
+        this.ySpeed = 0;
+
+        this.forces = [
+            { x: 0, y: 0 },   // Movement
+            { x: 0, y: 0 },   // Attacking
+            { x: 0, y: 0 },   // Jumping
+            { x: 0, y: 0 },   // Ground Pound
+            { x: 0, y: 0 },   // Gravity
+        ];
+
+        this.jumping = false;
+        this.groundPounding = false;
+        this.gravity = 0.1;
+        this.grounded = false;
+
         this.screenObject = new ScreenObject(
             this.x,
             this.y,
@@ -209,6 +226,62 @@ class Player {
             this.h,
             this.color
         );
+    }
+
+    jump() {
+        if (this.jumping) return;
+
+        this.forces[2].y = 50;
+        this.jumping = true;
+    }
+
+    groundPound() {
+        if (this.grounded) return;
+
+        this.groundPounding = true;
+    }
+
+    updatePhysics() {
+        this.xSpeed = 0;
+        this.ySpeed = 0;
+
+        if (this.forces[2].y > 0) {
+            this.jumping = true;
+        } else {
+            this.jumping = false;
+        }
+
+        if (this.forces[2].y < 0.001) {
+            this.forces[2].y = 0;
+        } else {
+            this.forces[2].y = this.forces[2].y / 1.2;
+        }
+
+        if (this.groundPounding) {
+            this.forces[3].y = -20;
+        } else {
+            this.forces[3].y = 0;
+        }
+
+        this.forces[4].y -= this.gravity;
+
+        if (this.y + this.h >= HEIGHT) {
+            this.y = HEIGHT - this.h;
+            this.forces[4].y = 0;
+            this.jumping = false;
+            this.groundPounding = false;
+            this.grounded = true;
+        } else {
+            this.grounded = false;
+        }
+
+        for (let i = 0; i < this.forces.length; i++) {
+            this.xSpeed += this.forces[i].x;
+            this.ySpeed -= this.forces[i].y;
+        }
+
+        this.x += this.xSpeed;
+        this.y += this.ySpeed;
     }
 
     draw() {
@@ -223,12 +296,16 @@ class Player {
     listenKeyDown(event) {
         switch (event.key) {
             case this.controls.left:
+                this.forces[0].x = -5;
                 break;
             case this.controls.right:
+                this.forces[0].x = 5;
                 break;
             case this.controls.up:
+                this.jump();
                 break;
             case this.controls.down:
+                this.groundPound();
                 break;
             case this.controls.attack:
                 break;
@@ -238,8 +315,10 @@ class Player {
     listenKeyUp(event) {
         switch (event.key) {
             case this.controls.left:
+                this.forces[0].x = 0;
                 break;
             case this.controls.right:
+                this.forces[0].x = 0;
                 break;
             case this.controls.up:
                 break;
@@ -287,6 +366,7 @@ function update() {
     // This function runs every frame
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
+    player.updatePhysics();
     player.draw();
 }
 
