@@ -216,7 +216,7 @@ class Player {
 
         this.jumping = false;
         this.groundPounding = false;
-        this.gravity = 0.1;
+        this.gravity = 0.2;
         this.grounded = false;
 
         this.screenObject = new ScreenObject(
@@ -254,7 +254,7 @@ class Player {
         if (this.forces[2].y < 0.001) {
             this.forces[2].y = 0;
         } else {
-            this.forces[2].y = this.forces[2].y / 1.2;
+            this.forces[2].y = this.forces[2].y / 1.1;
         }
 
         if (this.groundPounding) {
@@ -337,10 +337,25 @@ class Platform {
     // The Array will be passed in the player update physics function like
     // this:
     // `player.updatePhysics(platforms);`
-    
-    // colors: { top: "#9f1", bottom: "#312" }
+
+    // colors: { top: "#9f1", bottom: "#320" }
     constructor(x, y, w, h, colors) {
-        //
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.colors = colors;
+
+        this.screenObjects = [
+            new ScreenObject(x, y, w, h / 2, colors.top),
+            new ScreenObject(x, y + h / 2, w, h / 2, colors.bottom),
+        ];
+    }
+
+    draw() {
+        for (let i = 0; i < this.screenObjects.length; i++) {
+            this.screenObjects[i].draw();
+        }
     }
 }
 
@@ -357,7 +372,17 @@ let player = new Player(
         down: "ArrowDown",
         attack: "m"
     }
-)
+);
+
+let platforms = [
+    new Platform(
+        400,
+        400,
+        100,
+        20,
+        { top: "#9f1", bottom: "#320" }
+    ),
+]
 
 canvas.addEventListener("mousemove", (event) => {
 });
@@ -382,6 +407,10 @@ function update() {
 
     player.updatePhysics();
     player.draw();
+
+    for (let i = 0; i < platforms.length; i++) {
+        platforms[i].draw();
+    }
 }
 
 setInterval(update, 20);
