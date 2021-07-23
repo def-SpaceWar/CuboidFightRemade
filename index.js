@@ -330,6 +330,20 @@ class Player {
     }
 }
 
+class Platform {
+    // This is the platform class.
+    // We'll have an Array with every single platform so that players
+    // Don't go straight through them.
+    // The Array will be passed in the player update physics function like
+    // this:
+    // `player.updatePhysics(platforms);`
+    
+    // colors: { top: "#9f1", bottom: "#312" }
+    constructor(x, y, w, h, colors) {
+        //
+    }
+}
+
 let player = new Player(
     100,
     100,
@@ -371,4 +385,3 @@ function update() {
 }
 
 setInterval(update, 20);
-
