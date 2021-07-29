@@ -1,7 +1,7 @@
-// TODO: Make platform class with non-buggy collision system.
+// TODO: Make a non-buggy collision system.
 // TODO: Make a level with a bunch of platforms.
 // TODO: Make a background image.
-// TODO: Figure out how to add smooth zoom effects
+// TODO: Figure out how to add smooth camera-like zoom effects
 
 /** @type HTMLCanvasElement */
 let canvas = document.getElementById("canvas");
@@ -381,7 +381,7 @@ let platforms = [
         100,
         20,
         { top: "#9f1", bottom: "#320" }
-    ),
+    )
 ]
 
 canvas.addEventListener("mousemove", (event) => {
