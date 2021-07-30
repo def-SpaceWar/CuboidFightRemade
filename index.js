@@ -207,11 +207,11 @@ class Player {
         this.ySpeed = 0;
 
         this.forces = [
-            { x: 0, y: 0 },   // Movement
-            { x: 0, y: 0 },   // Attacking
-            { x: 0, y: 0 },   // Jumping
-            { x: 0, y: 0 },   // Ground Pound
-            { x: 0, y: 0 },   // Gravity
+            {x: 0, y: 0},   // Movement
+            {x: 0, y: 0},   // Attacking
+            {x: 0, y: 0},   // Jumping
+            {x: 0, y: 0},   // Ground Pound
+            {x: 0, y: 0},   // Gravity
         ];
 
         this.jumping = false;
@@ -345,6 +345,7 @@ class Platform {
         this.w = w;
         this.h = h;
         this.colors = colors;
+        this.id = Math.random();
 
         this.screenObjects = [
             new ScreenObject(x, y, w, h / 2, colors.top),
@@ -356,6 +357,24 @@ class Platform {
         for (let i = 0; i < this.screenObjects.length; i++) {
             this.screenObjects[i].draw();
         }
+    }
+
+    isCollided(player) {
+        if (player.x > this.x && player.x < this.x + this.w) {
+            if (player.y > this.y && player.y < this.y + this.h) {
+                return true;
+            } else if (player.y + player.h > this.y && player.y + player.h < this.y + this.h) {
+                return true;
+            }
+        } else if (player.x + player.w > this.x && player.x + player.w < this.x + this.w) {
+            if (player.y > this.y && player.y < this.y + this.h) {
+                return true;
+            } else if (player.y + player.h > this.y && player.y + player.h < this.y + this.h) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
@@ -380,7 +399,7 @@ let platforms = [
         400,
         100,
         20,
-        { top: "#9f1", bottom: "#320" }
+        {top: "#9f1", bottom: "#320"}
     )
 ]
 
@@ -410,6 +429,7 @@ function update() {
 
     for (let i = 0; i < platforms.length; i++) {
         platforms[i].draw();
+        console.log(platforms[i].isCollided(player));
     }
 }
 
