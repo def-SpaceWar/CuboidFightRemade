@@ -16,6 +16,7 @@ class ScreenObject {
     // So we don't have to keep copying and pasting the same function to draw
     // a freaking square.
     // And this could help with soon adding camera affects with zooming.
+    // And detaching the actual object from the graphics.
 
     constructor(x, y, w, h, color) {
         this.x = x;
