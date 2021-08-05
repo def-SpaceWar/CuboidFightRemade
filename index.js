@@ -4,12 +4,12 @@
 // TODO: Figure out how to add smooth camera-like zoom effects
 
 /** @type HTMLCanvasElement */
-let canvas = document.getElementById("canvas");
-let ctx = canvas.getContext("2d");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
 // I'm too used to my variables being named like this.
-let WIDTH = canvas.width;
-let HEIGHT = canvas.height;
+const WIDTH = canvas.width;
+const HEIGHT = canvas.height;
 
 class ScreenObject {
     // This object/class is just something that is drawn on the screen.
