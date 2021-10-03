@@ -1,12 +1,6 @@
-// TODO: Make a non-buggy collision system.
-//     - Holding down makes you not collide
-//     - When moving up you not collide
-//     - When not jumping u collide
-
-// TODO: Make a level with a bunch of platforms.
 // TODO: Add a second player and implement attacking.
+// TODO: Make a level with a bunch of platforms.
 // TODO: Make a background image.
-// TODO: Figure out how to add smooth camera-like zoom effects
 
 /** @type HTMLCanvasElement */
 const canvas = document.getElementById("canvas");
@@ -16,6 +10,13 @@ const ctx = canvas.getContext("2d");
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
+const camera = {
+    x: 0,
+    y: 0,
+    w_scale: 1,
+    h_scale: 1
+}
+
 class ScreenObject {
     // This object/class is just something that is drawn on the screen.
     // So we don't have to keep copying and pasting the same function to draw
@@ -23,17 +24,32 @@ class ScreenObject {
     // And this could help with soon adding camera affects with zooming.
     // And detaching the actual object from the graphics.
 
-    constructor(x, y, w, h, color) {
+    constructor(x, y, w, h, color, scale = true) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.color = color;
+        this.scale = scale;
     }
 
     draw() {
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.w, this.h)
+        if (this.scale) {
+            ctx.fillRect(
+                ((this.x + camera.x) * camera.w_scale) - WIDTH * (camera.w_scale - 1) / 2,
+                ((this.y + camera.y) * camera.h_scale) - HEIGHT * (camera.h_scale - 1) / 2,
+                this.w * camera.w_scale,
+                this.h * camera.h_scale
+            );
+        } else {
+            ctx.fillRect(
+                this.x,
+                this.y,
+                this.w,
+                this.h
+            );
+        }
     }
 }
 
@@ -117,7 +133,8 @@ class Button {
             this.y,
             this.w,
             this.h,
-            this.color
+            this.color,
+            false
         );
 
         this.borderObject = new ScreenObject(
@@ -125,7 +142,8 @@ class Button {
             this.y - this.borderMargin,
             this.w + this.borderMargin * 2,
             this.h + this.borderMargin * 2,
-            borderColor
+            borderColor,
+            false
         );
 
         this.textObject = new TextObject(
@@ -290,8 +308,7 @@ class Player {
         this.y += this.ySpeed;
 
         for (let i = 0; i < platforms.length; i++) {
-            console.log(platforms[i].isCollided(this), this.ySpeed, this.grounded);
-            if (platforms[i].isCollided(this) && this.ySpeed >= 0 && (this.y <= platforms[i].y - this.h + 1 || this.groundPounding)) {
+            if (platforms[i].isCollided(this) && this.ySpeed >= 0 && (this.y <= platforms[i].y - (this.h / 2) || this.groundPounding)) {
                 this.y = platforms[i].y - this.h;
                 this.forces[4].y = 0;
                 this.jumping = false;
@@ -396,7 +413,7 @@ class Platform {
     }
 }
 
-let player = new Player(
+const player = new Player(
     100,
     100,
     100,
@@ -411,7 +428,7 @@ let player = new Player(
     }
 );
 
-let platforms = [
+const platforms = [
     new Platform(
         400,
         400,
@@ -421,7 +438,7 @@ let platforms = [
     )
 ]
 
-let button = new Button(100, 100, 300, 80, {inactive: "#0ad", active: "#0ef", pressed: "#aff"}, 10, "#555", "Hi", [-25, 10], "#000", () => console.log("Hi"), "40px 'Comic Sans MS'");
+const button = new Button(100, 100, 300, 80, {inactive: "#0ad", active: "#0ef", pressed: "#aff"}, 10, "#555", "Hi", [-25, 10], "#000", () => setTimeout(() => console.log("Hi"), 5000), "40px 'Comic Sans MS'");
 
 canvas.addEventListener("mousemove", (event) => {
     button.listenMouseMove(event);
@@ -443,6 +460,37 @@ document.addEventListener("keyup", (event) => {
     player.listenKeyUp(event);
 });
 
+function lerpCamera(obj1, obj2) {
+    // obj1 and obj2 are of type ScreenObject
+
+    // get midpounts
+    let midpoint = {
+        x: ((obj1.x + obj2.x + obj1.w / 2 + obj2.w / 2) / 2),
+        y: ((obj1.y + obj2.y + obj1.h / 2 + obj2.h / 2) / 2)
+    };
+
+    // move camera
+    camera.x = -midpoint.x + WIDTH / 2;
+    camera.y = -midpoint.y + HEIGHT / 2;
+
+    // resize camera
+    let scale = 1;
+    //distance = Math.sqrt(((obj1.x - obj2.x) ^ 2) + ((obj1.y - obj2.y) ^ 2));
+
+    scale = Math.min(((HEIGHT * 0.75) / Math.abs(obj1.y - obj2.y)), ((WIDTH * 0.75) / Math.abs(obj1.x - obj2.x)));
+
+    if (scale > 3) {
+        scale = 3;
+    } else if (scale < 0.5) {
+        scale = 0.5;
+    }
+
+    console.log(scale);
+
+    camera.w_scale = scale;
+    camera.h_scale = scale;
+}
+
 function update() {
     // This function runs every frame
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
@@ -454,6 +502,8 @@ function update() {
     for (let i = 0; i < platforms.length; i++) {
         platforms[i].draw();
     }
+
+    lerpCamera(player.screenObject, platforms[0].screenObjects[1]);
 }
 
 setInterval(update, 20);
