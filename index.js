@@ -1,5 +1,10 @@
 // TODO: Make a non-buggy collision system.
+//     - Holding down makes you not collide
+//     - When moving up you not collide
+//     - When not jumping u collide
+
 // TODO: Make a level with a bunch of platforms.
+// TODO: Add a second player and implement attacking.
 // TODO: Make a background image.
 // TODO: Figure out how to add smooth camera-like zoom effects
 
@@ -77,7 +82,7 @@ class Button {
     //     5,                                                      // borderMargin
     //     "#333",                                                 // borderColor
     //     "Test",                                                 // text
-    //     -20,                                                    // textOffset
+    //     [-20, 0],                                               // textOffset
     //     "#000",                                                 // textColor
     //     () => { console.log("test"); },                         // onClick
     //     "20px 'Comic Sans MS'"                                  // font
@@ -124,8 +129,8 @@ class Button {
         );
 
         this.textObject = new TextObject(
-            this.x + this.w / 2 + textOffset,
-            this.y + this.h / 2 + borderMargin / 2,
+            this.x + this.w / 2 + textOffset[0],
+            this.y + this.h / 2 + borderMargin / 2 + textOffset[1],
             this.w,
             this.h,
             text,
@@ -242,7 +247,7 @@ class Player {
         this.groundPounding = true;
     }
 
-    updatePhysics() {
+    updatePhysics(platforms) {
         this.xSpeed = 0;
         this.ySpeed = 0;
 
@@ -252,10 +257,10 @@ class Player {
             this.jumping = false;
         }
 
-        if (this.forces[2].y < 0.001) {
+        if (this.forces[2].y < 0.01) {
             this.forces[2].y = 0;
         } else {
-            this.forces[2].y = this.forces[2].y / 1.1;
+            this.forces[2].y = this.forces[2].y / 1.2;
         }
 
         if (this.groundPounding) {
@@ -283,6 +288,18 @@ class Player {
 
         this.x += this.xSpeed;
         this.y += this.ySpeed;
+
+        for (let i = 0; i < platforms.length; i++) {
+            console.log(platforms[i].isCollided(this), this.ySpeed, this.grounded);
+            if (platforms[i].isCollided(this) && this.ySpeed >= 0 && (this.y <= platforms[i].y - this.h + 1 || this.groundPounding)) {
+                this.y = platforms[i].y - this.h;
+                this.forces[4].y = 0;
+                this.jumping = false;
+                this.groundPounding = false;
+                this.grounded = true;
+            }
+        }
+
     }
 
     draw() {
@@ -361,16 +378,16 @@ class Platform {
     }
 
     isCollided(player) {
-        if (player.x > this.x && player.x < this.x + this.w) {
-            if (player.y > this.y && player.y < this.y + this.h) {
+        if (player.x >= this.x && player.x <= this.x + this.w) {
+            if (player.y >= this.y && player.y <= this.y + this.h) {
                 return true;
-            } else if (player.y + player.h > this.y && player.y + player.h < this.y + this.h) {
+            } else if (player.y + player.h >= this.y && player.y + player.h <= this.y + this.h) {
                 return true;
             }
-        } else if (player.x + player.w > this.x && player.x + player.w < this.x + this.w) {
-            if (player.y > this.y && player.y < this.y + this.h) {
+        } else if (player.x + player.w >= this.x && player.x + player.w <= this.x + this.w) {
+            if (player.y >= this.y && player.y <= this.y + this.h) {
                 return true;
-            } else if (player.y + player.h > this.y && player.y + player.h < this.y + this.h) {
+            } else if (player.y + player.h >= this.y && player.y + player.h <= this.y + this.h) {
                 return true;
             }
         }
@@ -404,13 +421,18 @@ let platforms = [
     )
 ]
 
+let button = new Button(100, 100, 300, 80, {inactive: "#0ad", active: "#0ef", pressed: "#aff"}, 10, "#555", "Hi", [-25, 10], "#000", () => console.log("Hi"), "40px 'Comic Sans MS'");
+
 canvas.addEventListener("mousemove", (event) => {
+    button.listenMouseMove(event);
 });
 
 canvas.addEventListener("mousedown", (event) => {
+    button.listenMouseDown(event);
 });
 
 canvas.addEventListener("mouseup", (event) => {
+    button.listenMouseUp(event);
 });
 
 document.addEventListener("keydown", (event) => {
@@ -425,12 +447,12 @@ function update() {
     // This function runs every frame
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-    player.updatePhysics();
+    player.updatePhysics(platforms);
     player.draw();
+    button.draw();
 
     for (let i = 0; i < platforms.length; i++) {
         platforms[i].draw();
-        console.log(platforms[i].isCollided(player));
     }
 }
 
