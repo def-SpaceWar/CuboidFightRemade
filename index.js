@@ -479,10 +479,10 @@ function lerpCamera(obj1, obj2) {
 
     scale = Math.min(((HEIGHT * 0.75) / Math.abs(obj1.y - obj2.y)), ((WIDTH * 0.75) / Math.abs(obj1.x - obj2.x)));
 
-    if (scale > 3) {
-        scale = 3;
-    } else if (scale < 0.5) {
-        scale = 0.5;
+    if (scale > 2.5) {
+        scale = 2.5;
+    } else if (scale < 0.25) {
+        scale = 0.25;
     }
 
     console.log(scale);
