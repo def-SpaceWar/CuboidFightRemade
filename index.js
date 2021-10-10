@@ -229,6 +229,9 @@ class Player {
 
         this.xSpeed = 0;
         this.ySpeed = 0;
+        this.otherPlayers = [];
+        this.attackRange = 100;
+        this.attackForce = 50;
 
         this.forces = [
             {x: 0, y: 0},   // Movement
@@ -238,9 +241,11 @@ class Player {
             {x: 0, y: 0},   // Gravity
         ];
 
+        this.moving = false;
         this.jumping = false;
         this.groundPounding = false;
         this.gravity = 0.2;
+        this.drag = 0.8;
         this.grounded = false;
 
         this.screenObject = new ScreenObject(
@@ -259,6 +264,33 @@ class Player {
         this.jumping = true;
     }
 
+    attack() {
+        for (let i = 0; i < this.otherPlayers.length; i++) {
+            let otherplayer = this.otherPlayers[i];
+
+            var distance =
+                Math.abs(otherplayer.x - this.x) *
+                Math.abs(otherplayer.x - this.x) +
+                (Math.abs(otherplayer.y - this.y) / 2) *
+                (Math.abs(otherplayer.y - this.y) / 2);
+            if (distance <= this.attackRange * this.attackRange) {
+                console.log("Attacked!");
+                //otherplayer.health.health -= this.attack_damage / round_number;
+                //otherplayer.moving = false;
+                //otherplayer.x_speed =
+                //    (otherplayer.x - this.x) /
+                //    ((10 * otherplayer.health.health) /
+                //        otherplayer.health.max_health);
+                //otherplayer.y_speed =
+                //    (otherplayer.y - this.y) /
+                //    ((10 * otherplayer.health.health) /
+                //        otherplayer.health.max_health);
+                otherplayer.forces[1].x = ((otherplayer.x + otherplayer.w / 2 - (this.x + this.w / 2)) > 0) ? this.attackForce : -this.attackForce;
+                otherplayer.forces[1].y = ((otherplayer.y + otherplayer.h / 2 - (this.y + this.h / 2)) > 0) ? -this.attackForce : this.attackForce;
+            }
+        }
+    }
+
     groundPound() {
         if (this.grounded) return;
 
@@ -268,6 +300,22 @@ class Player {
     updatePhysics(platforms) {
         this.xSpeed = 0;
         this.ySpeed = 0;
+
+        if (!this.moving && this.forces[0].x != 0) {
+            this.forces[0].x *= this.drag;
+
+            if (Math.abs(this.forces[0].x) < 0.01) {
+                this.forces[0].x = 0;
+            }
+        }
+
+        if (Math.abs(this.forces[1].x) > 0) {
+            this.forces[1].x *= this.drag;
+        }
+
+        if (Math.abs(this.forces[1].y) > 0) {
+            this.forces[1].y *= this.drag;
+        }
 
         if (this.forces[2].y > 0) {
             this.jumping = true;
@@ -332,9 +380,11 @@ class Player {
         switch (event.key) {
             case this.controls.left:
                 this.forces[0].x = -5;
+                this.moving = true;
                 break;
             case this.controls.right:
                 this.forces[0].x = 5;
+                this.moving = true;
                 break;
             case this.controls.up:
                 this.jump();
@@ -343,6 +393,7 @@ class Player {
                 this.groundPound();
                 break;
             case this.controls.attack:
+                this.attack();
                 break;
         }
     }
@@ -350,10 +401,10 @@ class Player {
     listenKeyUp(event) {
         switch (event.key) {
             case this.controls.left:
-                this.forces[0].x = 0;
+                this.moving = false;
                 break;
             case this.controls.right:
-                this.forces[0].x = 0;
+                this.moving = false;
                 break;
             case this.controls.up:
                 break;
@@ -416,8 +467,8 @@ class Platform {
 const player = new Player(
     100,
     100,
-    100,
-    100,
+    75,
+    75,
     "#f00",
     {
         left: "ArrowLeft",
@@ -427,6 +478,24 @@ const player = new Player(
         attack: "m"
     }
 );
+
+const player2 = new Player(
+    1000,
+    100,
+    75,
+    75,
+    "#00f",
+    {
+        left: "s",
+        right: "f",
+        up: "e",
+        down: "d",
+        attack: "q"
+    }
+);
+
+player.otherPlayers.push(player2);
+player2.otherPlayers.push(player);
 
 const platforms = [
     new Platform(
@@ -454,10 +523,12 @@ canvas.addEventListener("mouseup", (event) => {
 
 document.addEventListener("keydown", (event) => {
     player.listenKeyDown(event);
+    player2.listenKeyDown(event);
 });
 
 document.addEventListener("keyup", (event) => {
     player.listenKeyUp(event);
+    player2.listenKeyUp(event);
 });
 
 function lerpCamera(obj1, obj2) {
@@ -479,16 +550,14 @@ function lerpCamera(obj1, obj2) {
 
     scale = Math.min(((HEIGHT * 0.75) / Math.abs(obj1.y - obj2.y)), ((WIDTH * 0.75) / Math.abs(obj1.x - obj2.x)));
 
-    if (scale > 2.5) {
-        scale = 2.5;
+    if (scale > 2) {
+        scale = 2;
     } else if (scale < 0.25) {
         scale = 0.25;
     }
 
-    console.log(scale);
-
-    camera.w_scale = scale;
-    camera.h_scale = scale;
+    camera.w_scale = camera.w_scale - (camera.w_scale - scale) / 25;
+    camera.h_scale = camera.h_scale - (camera.h_scale - scale) / 25;
 }
 
 function update() {
@@ -496,14 +565,17 @@ function update() {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
     player.updatePhysics(platforms);
+    player2.updatePhysics(platforms);
+
     player.draw();
-    button.draw();
+    player2.draw();
+    //button.draw();
 
     for (let i = 0; i < platforms.length; i++) {
         platforms[i].draw();
     }
 
-    lerpCamera(player.screenObject, platforms[0].screenObjects[1]);
+    lerpCamera(player.screenObject, player2.screenObject);
 }
 
 setInterval(update, 20);
