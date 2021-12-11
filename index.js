@@ -24,17 +24,31 @@ class ScreenObject {
     // And this could help with soon adding camera affects with zooming.
     // And detaching the actual object from the graphics.
 
-    constructor(x, y, w, h, color, scale = true) {
+    constructor(x, y, w, h, color, scale = true, glow = false, glowOffset = [0, 0], glowBlur = 20, glowColor = undefined) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.color = color;
         this.scale = scale;
+        this.glow = glow;
+        this.glowColor = glowColor || this.color;
+        this.glowOffset = glowOffset;
+        this.glowBlur = glowBlur;
     }
 
     draw() {
         ctx.fillStyle = this.color;
+
+        if (this.glow) {
+            ctx.shadowColor = this.glowColor;
+            ctx.shadowOffsetX = this.glowOffset[0];
+            ctx.shadowOffsetY = this.glowOffset[1];
+            ctx.shadowBlur = this.glowBlur * camera.w_scale;
+        } else {
+            ctx.shadowColor = "#00000000";
+        }
+
         if (this.scale) {
             ctx.fillRect(
                 ((this.x + camera.x) * camera.w_scale) - WIDTH * (camera.w_scale - 1) / 2,
@@ -253,7 +267,9 @@ class Player {
             this.y,
             this.w,
             this.h,
-            this.color
+            this.color,
+            true,
+            true,
         );
     }
 
@@ -564,16 +580,16 @@ function update() {
     // This function runs every frame
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-    player.updatePhysics(platforms);
     player2.updatePhysics(platforms);
-
-    player.draw();
-    player2.draw();
-    //button.draw();
+    player.updatePhysics(platforms);
 
     for (let i = 0; i < platforms.length; i++) {
         platforms[i].draw();
     }
+
+    player2.draw();
+    player.draw();
+    //button.draw();
 
     lerpCamera(player.screenObject, player2.screenObject);
 }
