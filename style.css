@@ -4,5 +4,6 @@
 
 canvas {
     background-color: #000;
+    image-rendering: -moz-crisp-edges;
 }
 

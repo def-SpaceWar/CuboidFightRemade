@@ -10,6 +10,9 @@ const ctx = canvas.getContext("2d");
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
+const bgImage = new Image(WIDTH * 2, HEIGHT * 2);
+bgImage.src = "./amazing_background.png";
+
 const camera = {
     x: 0,
     y: 0,
@@ -353,8 +356,8 @@ class Player {
 
         this.forces[4].y -= this.gravity;
 
-        if (this.y + this.h >= HEIGHT) {
-            this.y = HEIGHT - this.h;
+        if (this.y + this.h >= 2 * HEIGHT) {
+            this.y = 2 * HEIGHT - this.h;
             this.forces[4].y = 0;
             this.jumping = false;
             this.groundPounding = false;
@@ -582,6 +585,14 @@ function update() {
 
     player2.updatePhysics(platforms);
     player.updatePhysics(platforms);
+
+    ctx.drawImage(
+        bgImage,
+        (-WIDTH / 2 + camera.x) * camera.w_scale - WIDTH * (camera.w_scale - 1) / 2,
+        (-HEIGHT / 2 + camera.y) * camera.h_scale - HEIGHT * (camera.h_scale - 1) / 2,
+        WIDTH * 3 * camera.w_scale,
+        HEIGHT * 3 * camera.h_scale
+    );
 
     for (let i = 0; i < platforms.length; i++) {
         platforms[i].draw();
