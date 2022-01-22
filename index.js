@@ -1,4 +1,7 @@
-// TODO: Add a second player and implement attacking.
+// TODO: Make a health system
+// Closer attacks deal more damage.
+// Farther attacks deal more knockback (already implemented).
+// Ground pounds deal no damage but extra knockback.
 // TODO: Make a level with a bunch of platforms.
 // TODO: Make a background image.
 
@@ -11,6 +14,7 @@ const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
 const bgImage = new Image(WIDTH * 2, HEIGHT * 2);
+// TODO make this background more amazing lol.
 bgImage.src = "./amazing_background.png";
 
 const camera = {
@@ -18,7 +22,7 @@ const camera = {
     y: 0,
     w_scale: 1,
     h_scale: 1
-}
+};
 
 class ScreenObject {
     // This object/class is just something that is drawn on the screen.
@@ -171,7 +175,7 @@ class Button {
             text,
             textColor,
             font
-        )
+        );
     }
 
     draw() {
@@ -285,6 +289,7 @@ class Player {
 
     attack() {
         for (let i = 0; i < this.otherPlayers.length; i++) {
+            /** @type Player */
             let otherplayer = this.otherPlayers[i];
 
             var distance =
@@ -293,7 +298,6 @@ class Player {
                 (Math.abs(otherplayer.y - this.y) / 2) *
                 (Math.abs(otherplayer.y - this.y) / 2);
             if (distance <= this.attackRange * this.attackRange) {
-                console.log("Attacked!");
                 //otherplayer.health.health -= this.attack_damage / round_number;
                 //otherplayer.moving = false;
                 //otherplayer.x_speed =
@@ -304,8 +308,12 @@ class Player {
                 //    (otherplayer.y - this.y) /
                 //    ((10 * otherplayer.health.health) /
                 //        otherplayer.health.max_health);
-                otherplayer.forces[1].x = ((otherplayer.x + otherplayer.w / 2 - (this.x + this.w / 2)) > 0) ? this.attackForce : -this.attackForce;
-                otherplayer.forces[1].y = ((otherplayer.y + otherplayer.h / 2 - (this.y + this.h / 2)) > 0) ? -this.attackForce : this.attackForce;
+                // force increases exponentially based on health but for now we put 100% health.
+                let attackForce = 1.0;
+                if (this.groundPounding) attackForce /= 1.15;
+
+                otherplayer.forces[1].x = ((otherplayer.x + (otherplayer.w / 2)) - (this.x + this.w / 2)) / Math.pow(attackForce, 2);
+                otherplayer.forces[1].y = -((otherplayer.y + (otherplayer.h / 2)) - (this.y + this.h / 2)) / Math.pow(attackForce, 2);
             }
         }
     }
@@ -360,7 +368,10 @@ class Player {
             this.y = 2 * HEIGHT - this.h;
             this.forces[4].y = 0;
             this.jumping = false;
-            this.groundPounding = false;
+            if (this.groundPounding) {
+                this.attack();
+                this.groundPounding = false;
+            }
             this.grounded = true;
         } else {
             this.grounded = false;
@@ -519,11 +530,33 @@ player2.otherPlayers.push(player);
 const platforms = [
     new Platform(
         400,
+        600,
+        100,
+        20,
+        {top: "#9f1", bottom: "#320"}
+    ),
+    new Platform(
+        400,
+        800,
+        100,
+        20,
+        {top: "#9f1", bottom: "#320"}
+    ),
+    new Platform(
+        400,
+        1000,
+        100,
+        20,
+        {top: "#9f1", bottom: "#320"}
+    ),
+
+    new Platform(
+        400,
         400,
         100,
         20,
         {top: "#9f1", bottom: "#320"}
-    )
+    ),
 ]
 
 const button = new Button(100, 100, 300, 80, {inactive: "#0ad", active: "#0ef", pressed: "#aff"}, 10, "#555", "Hi", [-25, 10], "#000", () => setTimeout(() => console.log("Hi"), 5000), "40px 'Comic Sans MS'");
@@ -575,8 +608,8 @@ function lerpCamera(obj1, obj2) {
         scale = 0.25;
     }
 
-    camera.w_scale = camera.w_scale - (camera.w_scale - scale) / 25;
-    camera.h_scale = camera.h_scale - (camera.h_scale - scale) / 25;
+    camera.w_scale = camera.w_scale - (camera.w_scale - scale) / 10;
+    camera.h_scale = camera.h_scale - (camera.h_scale - scale) / 10;
 }
 
 function update() {
