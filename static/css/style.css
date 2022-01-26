@@ -2,8 +2,12 @@
     background-color: #282828;
 }
 
+body {
+    margin: 10px;
+    align-items: center;
+}
+
 canvas {
     background-color: #000;
     image-rendering: -moz-crisp-edges;
 }
-
