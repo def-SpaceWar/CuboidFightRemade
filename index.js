@@ -1,10 +1,5 @@
-// TODO: Make a health system
-// Closer attacks deal more damage.
-// Farther attacks deal more knockback (already implemented).
-// Ground pounds deal no damage but extra knockback.
-// TODO: When down key is pressed player should phase through **1** platform: no more, no less.
 // TODO: Make a level with a bunch of platforms.
-// TODO: Make a background image.
+// TODO: Make a background image. (kinda done just need to fix the blur)
 
 const player = new Player(
     100,
