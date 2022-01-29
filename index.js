@@ -11,8 +11,7 @@ const player = new Player(
     100,
     75,
     75,
-    "#f00",
-    {
+    "#f00", {
         left: "ArrowLeft",
         right: "ArrowRight",
         up: "ArrowUp",
@@ -26,8 +25,7 @@ const player2 = new Player(
     100,
     75,
     75,
-    "#00f",
-    {
+    "#00f", {
         left: "s",
         right: "f",
         up: "e",
@@ -36,6 +34,7 @@ const player2 = new Player(
     }
 );
 
+// We can use these "otherPlayer"s to MAKE TEAMS WHICH I JUST REALIZED!
 player.otherPlayers.push(player2);
 player2.otherPlayers.push(player);
 
@@ -44,34 +43,46 @@ const platforms = [
         400,
         600,
         100,
-        20,
-        {top: "#9f1", bottom: "#320"}
+        20, {
+            top: "#9f1",
+            bottom: "#320"
+        }
     ),
     new Platform(
         400,
         800,
         100,
-        20,
-        {top: "#9f1", bottom: "#320"}
+        20, {
+            top: "#9f1",
+            bottom: "#320"
+        }
     ),
     new Platform(
         400,
         1000,
         100,
-        20,
-        {top: "#9f1", bottom: "#320"}
+        20, {
+            top: "#9f1",
+            bottom: "#320"
+        }
     ),
 
     new Platform(
         400,
         400,
         100,
-        20,
-        {top: "#9f1", bottom: "#320"}
+        20, {
+            top: "#9f1",
+            bottom: "#320"
+        }
     ),
 ]
 
-const button = new Button(100, 100, 300, 80, {inactive: "#0ad", active: "#0ef", pressed: "#aff"}, 10, "#555", "Hi", [-25, 10], "#000", () => setTimeout(() => console.log("Hi"), 5000), "40px 'Comic Sans MS'");
+const button = new Button(100, 100, 300, 80, {
+    inactive: "#0ad",
+    active: "#0ef",
+    pressed: "#aff"
+}, 10, "#555", "Hi", [-25, 10], "#000", () => setTimeout(() => console.log("Hi"), 5000), "40px 'Comic Sans MS'");
 
 canvas.addEventListener("mousemove", (event) => {
     button.listenMouseMove(event);
@@ -94,35 +105,6 @@ document.addEventListener("keyup", (event) => {
     player.listenKeyUp(event);
     player2.listenKeyUp(event);
 });
-
-function lerpCamera(obj1, obj2) {
-    // obj1 and obj2 are of type ScreenObject
-
-    // get midpounts
-    let midpoint = {
-        x: ((obj1.x + obj2.x + obj1.w / 2 + obj2.w / 2) / 2),
-        y: ((obj1.y + obj2.y + obj1.h / 2 + obj2.h / 2) / 2)
-    };
-
-    // move camera
-    camera.x = -midpoint.x + WIDTH / 2;
-    camera.y = -midpoint.y + HEIGHT / 2;
-
-    // resize camera
-    let scale = 1;
-    //distance = Math.sqrt(((obj1.x - obj2.x) ^ 2) + ((obj1.y - obj2.y) ^ 2));
-
-    scale = Math.min(((HEIGHT * 0.75) / Math.abs(obj1.y - obj2.y)), ((WIDTH * 0.75) / Math.abs(obj1.x - obj2.x)));
-
-    if (scale > 2) {
-        scale = 2;
-    } else if (scale < 0.25) {
-        scale = 0.25;
-    }
-
-    camera.w_scale = camera.w_scale - (camera.w_scale - scale) / 10;
-    camera.h_scale = camera.h_scale - (camera.h_scale - scale) / 10;
-}
 
 function update() {
     // This function runs every frame
@@ -148,6 +130,9 @@ function update() {
     //button.draw();
 
     lerpCamera(player.screenObject, player2.screenObject);
+
+    player2.health.draw();
+    player.health.draw();
 }
 
 setInterval(update, 20);
