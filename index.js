@@ -1,3 +1,4 @@
+// TODO: Make double jumping!
 // TODO: Make a level with a bunch of platforms.
 // TODO: Make a background image. (kinda done just need to fix the blur)
 
