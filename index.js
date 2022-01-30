@@ -1,3 +1,4 @@
+// TODO: Make powerup boxes spawn.
 // TODO: Make a level with a bunch of platforms.
 // TODO: Make a background image. (kinda done just need to fix the blur)
 
@@ -35,11 +36,11 @@ const player3 = new Player(
     75,
     75,
     "#0f0", {
-        left: "b",
-        right: "m",
-        up: "h",
-        down: "n",
-        attack: " "
+        left: "4",
+        right: "6",
+        up: "8",
+        down: "2",
+        attack: "5"
     }
 );
 
@@ -47,6 +48,8 @@ const player3 = new Player(
 player.otherPlayers.push(player2, player3);
 player2.otherPlayers.push(player, player3);
 player3.otherPlayers.push(player, player2);
+
+const playersScreenObjs = [player.screenObject, player2.screenObject, player3.screenObject];
 
 const platforms = [
     new Platform(
@@ -100,6 +103,8 @@ const platforms = [
     ),
 ]
 
+const powerUps = [];
+
 const button = new Button(100, 100, 300, 80, {
     inactive: "#0ad",
     active: "#0ef",
@@ -134,9 +139,9 @@ function update() {
     // This function runs every frame
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-    player3.updatePhysics(platforms);
-    player2.updatePhysics(platforms);
-    player.updatePhysics(platforms);
+    player3.updatePhysics(platforms, powerUps);
+    player2.updatePhysics(platforms, powerUps);
+    player.updatePhysics(platforms, powerUps);
 
     //ctx.drawImage(
     //    bgImage,
@@ -146,8 +151,16 @@ function update() {
     //    HEIGHT * 2 * camera.h_scale
     //);
 
+    if (Math.random() * 500 > 499) {
+        powerUps.push(new PowerUpBox(Math.random() * 800 + 200, Math.random() * 600 + 400));
+    }
+
     for (let i = 0; i < platforms.length; i++) {
         platforms[i].draw();
+    }
+
+    for (let i = 0; i < powerUps.length; i++) {
+        powerUps[i].draw();
     }
 
     player3.draw();
@@ -155,7 +168,13 @@ function update() {
     player.draw();
     //button.draw();
 
-    lerpCamera([player.screenObject, player2.screenObject, player3.screenObject]);
+    for (let i = 0; i < playersScreenObjs.length; i++) {
+        if (playersScreenObjs[i].y > HEIGHT * 3) {
+            playersScreenObjs.splice(i, 1);
+        }
+    }
+
+    lerpCamera(playersScreenObjs);
 
     player3.health.draw();
     player2.health.draw();
