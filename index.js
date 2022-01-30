@@ -1,4 +1,3 @@
-// TODO: Make double jumping! (done kinda)
 // TODO: Make a level with a bunch of platforms.
 // TODO: Make a background image. (kinda done just need to fix the blur)
 
@@ -12,7 +11,7 @@ const player = new Player(
         right: "ArrowRight",
         up: "ArrowUp",
         down: "ArrowDown",
-        attack: "m"
+        attack: "/"
     }
 );
 
@@ -22,17 +21,32 @@ const player2 = new Player(
     75,
     75,
     "#00f", {
-        left: "s",
-        right: "f",
-        up: "e",
-        down: "d",
+        left: "a",
+        right: "d",
+        up: "w",
+        down: "s",
         attack: "q"
     }
 );
 
+const player3 = new Player(
+    550,
+    100,
+    75,
+    75,
+    "#0f0", {
+        left: "b",
+        right: "m",
+        up: "h",
+        down: "n",
+        attack: " "
+    }
+);
+
 // We can use these "otherPlayer"s to MAKE TEAMS WHICH I JUST REALIZED!
-player.otherPlayers.push(player2);
-player2.otherPlayers.push(player);
+player.otherPlayers.push(player2, player3);
+player2.otherPlayers.push(player, player3);
+player3.otherPlayers.push(player, player2);
 
 const platforms = [
     new Platform(
@@ -107,17 +121,20 @@ canvas.addEventListener("mouseup", (event) => {
 document.addEventListener("keydown", (event) => {
     player.listenKeyDown(event);
     player2.listenKeyDown(event);
+    player3.listenKeyDown(event);
 });
 
 document.addEventListener("keyup", (event) => {
     player.listenKeyUp(event);
     player2.listenKeyUp(event);
+    player3.listenKeyUp(event);
 });
 
 function update() {
     // This function runs every frame
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
+    player3.updatePhysics(platforms);
     player2.updatePhysics(platforms);
     player.updatePhysics(platforms);
 
@@ -133,12 +150,14 @@ function update() {
         platforms[i].draw();
     }
 
+    player3.draw();
     player2.draw();
     player.draw();
     //button.draw();
 
-    lerpCamera(player.screenObject, player2.screenObject);
+    lerpCamera([player.screenObject, player2.screenObject, player3.screenObject]);
 
+    player3.health.draw();
     player2.health.draw();
     player.health.draw();
 }
