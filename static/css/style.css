@@ -1,5 +1,5 @@
 :root {
-    background-color: #282828;
+    background-color: #212223;
 }
 
 body {
@@ -7,7 +7,10 @@ body {
     align-items: center;
 }
 
-canvas {
-    background-color: #000;
+canvas#canvas {
+    background-color: #34A4B6;
     image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }

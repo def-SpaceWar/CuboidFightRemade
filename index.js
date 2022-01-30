@@ -1,4 +1,4 @@
-// TODO: Make double jumping!
+// TODO: Make double jumping! (done kinda)
 // TODO: Make a level with a bunch of platforms.
 // TODO: Make a background image. (kinda done just need to fix the blur)
 
@@ -37,15 +37,6 @@ player2.otherPlayers.push(player);
 const platforms = [
     new Platform(
         400,
-        600,
-        100,
-        20, {
-            top: "#9f1",
-            bottom: "#320"
-        }
-    ),
-    new Platform(
-        400,
         800,
         100,
         20, {
@@ -53,6 +44,7 @@ const platforms = [
             bottom: "#320"
         }
     ),
+
     new Platform(
         400,
         1000,
@@ -67,6 +59,26 @@ const platforms = [
         400,
         400,
         100,
+        20, {
+            top: "#9f1",
+            bottom: "#320"
+        }
+    ),
+
+    new Platform(
+        100,
+        HEIGHT,
+        WIDTH - 200,
+        20, {
+            top: "#9f1",
+            bottom: "#320"
+        }
+    ),
+
+    new Platform(
+        0,
+        HEIGHT * 2,
+        WIDTH * 2,
         20, {
             top: "#9f1",
             bottom: "#320"
@@ -109,13 +121,13 @@ function update() {
     player2.updatePhysics(platforms);
     player.updatePhysics(platforms);
 
-    ctx.drawImage(
-        bgImage,
-        (-WIDTH / 2 + camera.x) * camera.w_scale - WIDTH * (camera.w_scale - 1) / 2,
-        (-HEIGHT / 2 + camera.y) * camera.h_scale - HEIGHT * (camera.h_scale - 1) / 2,
-        WIDTH * 3 * camera.w_scale,
-        HEIGHT * 3 * camera.h_scale
-    );
+    //ctx.drawImage(
+    //    bgImage,
+    //    (-WIDTH / 2 + camera.x) * camera.w_scale - WIDTH * (camera.w_scale - 1) / 2,
+    //    (-HEIGHT / 2 + camera.y) * camera.h_scale - HEIGHT * (camera.h_scale - 1) / 2,
+    //    WIDTH * 2 * camera.w_scale,
+    //    HEIGHT * 2 * camera.h_scale
+    //);
 
     for (let i = 0; i < platforms.length; i++) {
         platforms[i].draw();
