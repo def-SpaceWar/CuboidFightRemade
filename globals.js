@@ -31,8 +31,8 @@ function lerpCamera(objs) {
     let yAverage = 0;
 
     for (let i = 0; i < objs.length; i++) {
-        xAverage += objs[i].x;
-        yAverage += objs[i].y;
+        xAverage += objs[i].x + objs[i].w / 2;
+        yAverage += objs[i].y + objs[i].h / 2;
     }
 
     midpoint.x = xAverage / objs.length;
