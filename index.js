@@ -1,6 +1,6 @@
-// TODO: Make powerup boxes spawn.
+// TODO: Make more powerups!
+// TODO: Make a console that says what player got what power up and the text should be colored by the color of the player who got it!
 // TODO: Make a level with a bunch of platforms.
-// TODO: Make a background image. (kinda done just need to fix the blur)
 
 const player = new Player(
     100,
