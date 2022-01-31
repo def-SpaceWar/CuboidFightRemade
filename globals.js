@@ -85,3 +85,15 @@ function lerpCamera(objs) {
     camera.w_scale = camera.w_scale - (camera.w_scale - scale) / 10;
     camera.h_scale = camera.h_scale - (camera.h_scale - scale) / 10;
 }
+
+const gameConsole = document.getElementById("console");
+const GameConsole = {
+    log: (msg, color="inherit") => {
+        gameConsole.innerHTML += `<p>> <span style="color: ${color};">${msg}</span></p>`;
+        gameConsole.scrollTop = gameConsole.scrollHeight; // autoscrolling
+    },
+
+    debug: (msg) => {
+        GameConsole.log("[Debug]: " + msg, "#FF9900");
+    }
+}

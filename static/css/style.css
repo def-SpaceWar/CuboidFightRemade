@@ -8,9 +8,19 @@ body {
 }
 
 canvas#canvas {
-    background-color: #34A4B6;
+    background-color: #12CEDE;
     image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-crisp-edges;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+}
+
+#console {
+    background-color: #1C1D21;
+    color: #B0C0D0;
+    font-family: monospace;
+    width: 90%;
+    padding: 20px;
+    height: 200px;
+    overflow-y: hidden;
 }

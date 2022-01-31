@@ -7,7 +7,7 @@ const player = new Player(
     100,
     75,
     75,
-    "#f00", {
+    "#f43", {
         left: "ArrowLeft",
         right: "ArrowRight",
         up: "ArrowUp",
@@ -21,7 +21,7 @@ const player2 = new Player(
     100,
     75,
     75,
-    "#00f", {
+    "#09f", {
         left: "a",
         right: "d",
         up: "w",
@@ -35,7 +35,7 @@ const player3 = new Player(
     100,
     75,
     75,
-    "#0f0", {
+    "#3f4", {
         left: "4",
         right: "6",
         up: "8",
@@ -49,7 +49,7 @@ player.otherPlayers.push(player2, player3);
 player2.otherPlayers.push(player, player3);
 player3.otherPlayers.push(player, player2);
 
-const playersScreenObjs = [player.screenObject, player2.screenObject, player3.screenObject];
+const players = [player, player2, player3];
 
 const platforms = [
     new Platform(
@@ -124,24 +124,24 @@ canvas.addEventListener("mouseup", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-    player.listenKeyDown(event);
-    player2.listenKeyDown(event);
-    player3.listenKeyDown(event);
+    for (let i = 0; i < players.length; i++) {
+        players[i].listenKeyDown(event);
+    }
 });
 
 document.addEventListener("keyup", (event) => {
-    player.listenKeyUp(event);
-    player2.listenKeyUp(event);
-    player3.listenKeyUp(event);
+    for (let i = 0; i < players.length; i++) {
+        players[i].listenKeyUp(event);
+    }
 });
 
 function update() {
     // This function runs every frame
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-    player3.updatePhysics(platforms, powerUps);
-    player2.updatePhysics(platforms, powerUps);
-    player.updatePhysics(platforms, powerUps);
+    for (let i = 0; i < players.length; i++) {
+        players[i].updatePhysics(platforms, powerUps);
+    }
 
     //ctx.drawImage(
     //    bgImage,
@@ -163,22 +163,29 @@ function update() {
         powerUps[i].draw();
     }
 
-    player3.draw();
-    player2.draw();
-    player.draw();
-    //button.draw();
+    for (let i = 0; i < players.length; i++) {
+        players[i].draw();
+    }
 
-    for (let i = 0; i < playersScreenObjs.length; i++) {
-        if (playersScreenObjs[i].y > HEIGHT * 3) {
-            playersScreenObjs.splice(i, 1);
+    // button.draw();
+
+    for (let i = 0; i < players.length; i++) {
+        if (players[i].health.health <= 0) {
+            players.splice(i, 1);
         }
     }
 
-    lerpCamera(playersScreenObjs);
+    const playerScreenObjs = [];
 
-    player3.health.draw();
-    player2.health.draw();
-    player.health.draw();
+    for (let i = 0; i < players.length; i++) {
+        playerScreenObjs.push(players[i].screenObject);
+    }
+
+    lerpCamera(playerScreenObjs);
+
+    for (let i = 0; i < players.length; i++) {
+        players[i].health.draw();
+    }
 }
 
 setInterval(update, 20);
