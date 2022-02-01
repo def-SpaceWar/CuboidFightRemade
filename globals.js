@@ -7,7 +7,6 @@ const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
 const bgImage = new Image(WIDTH * 2, HEIGHT * 2);
-// TODO make this background more amazing lol.
 bgImage.src = "./static/img/amazing_background.png";
 
 const camera = {
