@@ -1,5 +1,9 @@
 #+TITLE: Todo
 
-* TODO Make more powerups!
-* TODO Make a console that says what player got what power up and the text should be colored by the color of the player who got it!
-* TODO Make a level with a bunch of platforms.
+* TODO Make more powerups! [1/4]
++ [ ] knockback resistence
++ [ ] damage resistence
++ [ ] extra speed
++ [X] extra jump
+* DONE Make a console that is colored by player color and says the powerup they got.
+* TODO Make a level with a bunch of platforms. (The one right now is hot garbage.)
