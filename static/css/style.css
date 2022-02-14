@@ -24,3 +24,10 @@ canvas#canvas {
     height: 200px;
     overflow-y: hidden;
 }
+
+input {
+    /*
+     * caret-color: red;
+     * caret-shape: block;
+     */
+}

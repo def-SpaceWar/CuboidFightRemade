@@ -3,7 +3,7 @@ const player = new Player(
     100,
     75,
     75,
-    "#f43", {
+    ["#f43", "#821"], {
         left: "ArrowLeft",
         right: "ArrowRight",
         up: "ArrowUp",
@@ -17,7 +17,7 @@ const player2 = new Player(
     100,
     75,
     75,
-    "#09f", {
+    ["#09f", "#058"], {
         left: "a",
         right: "d",
         up: "w",
@@ -31,7 +31,7 @@ const player3 = new Player(
     100,
     75,
     75,
-    "#3f4", {
+    ["#3f4", "#182"], {
         left: "4",
         right: "6",
         up: "8",
@@ -147,7 +147,7 @@ function update() {
     //    HEIGHT * 2 * camera.h_scale
     //);
 
-    if (Math.random() * 500 > 499) {
+    if (Math.random() * 1500 > 1499) {
         powerUps.push(new PowerUpBox(Math.random() * 800 + 200, Math.random() * 600 + 400));
     }
 

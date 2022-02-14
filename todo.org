@@ -1,9 +1,21 @@
-#+TITLE: Todo
+#+TITLE: TODO
 
-* TODO Make more powerups! [1/4]
-+ [ ] knockback resistence
-+ [ ] damage resistence
-+ [ ] extra speed
+* DONE Make a console that is colored by player color and says the power up they got.
+* DONE Make an Attack Cool Down Bar that spawns above the players.
+* DONE Make player have a minimum damage requirement.
+* TODO Combo Counter under health bar.
+* TODO Settings panel at bottom.
+Change controls and ADD modifiers like changing damage, attack, and jump power for some players.
+This is good for a troll.
+* TODO Make more power ups! [3/5]
 + [X] extra jump
-* DONE Make a console that is colored by player color and says the powerup they got.
++ [X] fix attack speed not working
++ [X] extra speed (movement)
++ [ ] knockback resistance
++ [ ] damage resistance
+* TODO Style the entire website.
+Add a navbar that can send you to the settings page and back to the game. And also add instructions!
 * TODO Make a level with a bunch of platforms. (The one right now is hot garbage.)
+AKA make a good map. This has been on the back-burner for a long time.
+* TODO Make camera better?????
+IDK the answer might come to me randomly.
