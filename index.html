@@ -16,7 +16,7 @@
 
 <body>
 
-    <input />
+    <input id="idk" />
 
     <center>
         <h1>Cuboid Fight!</h1>
@@ -47,6 +47,58 @@
     <script src="lib/PowerUpBox.js"></script>
     <script src="index.js"></script>
 
+    <div id="settings">
+    <h1>Settings</h1>
+    <p>You have accessed the secret settings!</p>
+
+    <div class="classes">
+        <h3>Classes</h3>
+        <p>There are only 4 classes:</p>
+
+        <ul>
+            <li>Default</li>
+            <li>Ninja</li>
+            <li>Beserk</li>
+            <li>Tank</li>
+        </ul>
+
+        <span>Player 1 Class: <input id="player1class" /></span>
+        <br />
+        <br />
+        <span>Player 2 Class: <input id="player2class" /></span>
+        <br />
+        <br />
+        <span>Player 3 Class: <input id="player3class" /></span>
+        <br />
+        <br />
+        <span>Player 4 Class: <input id="player4class" /></span>
+    </div>
+
+    <button onclick="setOptions();">Save</button>
+
+    <script type="text/javascript">
+     // Use localStorage to set all the players'
+     // classes, modifiers, (very far future cosmetics)
+     // and colors.
+
+     const controlInputs = [
+         document.getElementById("player1class"),
+         document.getElementById("player2class"),
+         document.getElementById("player3class"),
+     ]
+
+     controlInputs.map((i) => {
+         i.value = localStorage.getItem(i.id);
+     });
+
+     function setOptions() {
+         controlInputs.map((i) => {
+             localStorage.setItem(i.id, i.value);
+             console.log(i.value);
+         });
+     }
+    </script>
+    </div>
 </body>
 
 </html>

@@ -3,10 +3,19 @@
 * DONE Make a console that is colored by player color and says the power up they got.
 * DONE Make an Attack Cool Down Bar that spawns above the players.
 * DONE Make player have a minimum damage requirement.
-* TODO Combo Counter under health bar.
-* TODO Settings panel at bottom.
-Change controls and ADD modifiers like changing damage, attack, and jump power for some players.
-This is good for a troll.
+* DONE Combo Counter under health bar.
+Kill counter too.
+* DONE Kill buff
+When you get a kill you should get a buff.
+* DONE Fix phase through ground bug.
+* DONE Settings panel page.
+CLASSES FIRsT.
+Change controls and ADD modifiers like changing damage, attack, and jump power for some players. Also add team modifiers so you can add people to teams.
+This is good for a troll. The settings panel can only be accessed if you do /settings in the url bar otherwise you can't access it.
+* TODO Make camera only be able to see everything within the range of the bg image.
+No seeing the blank outside.
+* TODO Fun kill death msgs
+* DONE Power up stacking.
 * TODO Make more power ups! [3/5]
 + [X] extra jump
 + [X] fix attack speed not working
@@ -19,3 +28,5 @@ Add a navbar that can send you to the settings page and back to the game. And al
 AKA make a good map. This has been on the back-burner for a long time.
 * TODO Make camera better?????
 IDK the answer might come to me randomly.
+* TODO Add survival gamemode where everyone is team and a buncha gray squares spawn and try to kill them.
+Basically a survival single/multiplayer mode.

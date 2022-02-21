@@ -7,7 +7,7 @@ const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
 const bgImage = new Image(WIDTH * 2, HEIGHT * 2);
-bgImage.src = "./static/img/amazing_background.png";
+bgImage.src = "./static/img/bg1.png";
 
 const camera = {
     x: 0,
@@ -75,10 +75,10 @@ function lerpCamera(objs) {
     // OBJ 1 and OBJ 2 will be the two farthest objects
     scale = Math.min(((HEIGHT * Math.pow(0.86, objs.length)) / Math.abs(obj1.y - obj2.y)), ((WIDTH * Math.pow(0.86, objs.length)) / Math.abs(obj1.x - obj2.x)));
 
-    if (scale > 1.75) {
-        scale = 1.75;
-    } else if (scale < 0.1) {
-        scale = 0.1;
+    if (scale > 1.5) {
+        scale = 1.5;
+    } else if (scale < 0.05) {
+        scale = 0.05;
     }
 
     camera.w_scale = camera.w_scale - (camera.w_scale - scale) / 10;

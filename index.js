@@ -13,7 +13,7 @@ const player = new Player(
 );
 
 const player2 = new Player(
-    1000,
+    400,
     100,
     75,
     75,
@@ -27,32 +27,47 @@ const player2 = new Player(
 );
 
 const player3 = new Player(
-    550,
+    700,
     100,
     75,
     75,
     ["#3f4", "#182"], {
+        left: "v",
+        right: "n",
+        up: "g",
+        down: "b",
+        attack: " "
+    }
+);
+
+const player4 = new Player(
+    1000,
+    100,
+    75,
+    75,
+    ["#ff4", "#ba2"], {
         left: "4",
         right: "6",
         up: "8",
-        down: "2",
-        attack: "5"
+        down: "5",
+        attack: "7"
     }
 );
 
 // We can use these "otherPlayer"s to MAKE TEAMS WHICH I JUST REALIZED!
-player.otherPlayers.push(player2, player3);
-player2.otherPlayers.push(player, player3);
-player3.otherPlayers.push(player, player2);
+player.otherPlayers.push(player2, player3, player4);
+player2.otherPlayers.push(player, player3, player4);
+player3.otherPlayers.push(player, player2, player4);
+player4.otherPlayers.push(player, player2, player3);
 
-const players = [player, player2, player3];
+const players = [player, player2, player3, player4];
 
 const platforms = [
     new Platform(
         400,
         800,
         100,
-        20, {
+        40, {
             top: "#9f1",
             bottom: "#320"
         }
@@ -62,7 +77,7 @@ const platforms = [
         400,
         1000,
         100,
-        20, {
+        40, {
             top: "#9f1",
             bottom: "#320"
         }
@@ -72,7 +87,7 @@ const platforms = [
         400,
         400,
         100,
-        20, {
+        40, {
             top: "#9f1",
             bottom: "#320"
         }
@@ -82,7 +97,7 @@ const platforms = [
         100,
         HEIGHT,
         WIDTH - 200,
-        20, {
+        40, {
             top: "#9f1",
             bottom: "#320"
         }
@@ -92,10 +107,11 @@ const platforms = [
         0,
         HEIGHT * 2,
         WIDTH * 2,
-        20, {
-            top: "#9f1",
-            bottom: "#320"
-        }
+        40, {
+            top: "#AAA",
+            bottom: "#666"
+        },
+        true
     ),
 ]
 
@@ -139,13 +155,14 @@ function update() {
         players[i].updatePhysics(platforms, powerUps);
     }
 
-    //ctx.drawImage(
-    //    bgImage,
-    //    (-WIDTH / 2 + camera.x) * camera.w_scale - WIDTH * (camera.w_scale - 1) / 2,
-    //    (-HEIGHT / 2 + camera.y) * camera.h_scale - HEIGHT * (camera.h_scale - 1) / 2,
-    //    WIDTH * 2 * camera.w_scale,
-    //    HEIGHT * 2 * camera.h_scale
-    //);
+    // Yea, we need a screenobject
+    ctx.drawImage(
+        bgImage,
+        (-WIDTH / 2 + camera.x) * camera.w_scale - WIDTH * (camera.w_scale - 1) / 2,
+        (-HEIGHT / 2 + camera.y) * camera.h_scale - HEIGHT * (camera.h_scale - 1) / 2,
+        WIDTH * 3 * camera.w_scale,
+        HEIGHT * 3 * camera.h_scale
+    );
 
     if (Math.random() * 1500 > 1499) {
         powerUps.push(new PowerUpBox(Math.random() * 800 + 200, Math.random() * 600 + 400));
@@ -165,16 +182,18 @@ function update() {
 
     // button.draw();
 
-    for (let i = 0; i < players.length; i++) {
-        if (players[i].health.health <= 0) {
-            players.splice(i, 1);
-        }
-    }
+    //for (let i = 0; i < players.length; i++) {
+    //    if (players[i].health.health <= 0) {
+    //        players.splice(i, 1);
+    //    }
+    //}
 
     const playerScreenObjs = [];
 
     for (let i = 0; i < players.length; i++) {
-        playerScreenObjs.push(players[i].screenObject);
+        if (players[i].health.health > 0) {
+            playerScreenObjs.push(players[i].screenObject);
+        }
     }
 
     lerpCamera(playerScreenObjs);
@@ -182,6 +201,14 @@ function update() {
     for (let i = 0; i < players.length; i++) {
         players[i].health.draw();
     }
+
+    if (document.getElementById("idk").value == "idk") {
+        document.getElementById("settings").style.display = "block";
+    }
+
+    if (document.getElementById("idk").value == "no") {
+        document.getElementById("settings").style.display = "none";
+    }
 }
 
-setInterval(update, 20);
+setInterval(update, 15);

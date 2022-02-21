@@ -1,5 +1,7 @@
 :root {
     background-color: #212223;
+    color: #C9DCFF;
+    font-family: sans;
 }
 
 body {
@@ -26,8 +28,43 @@ canvas#canvas {
 }
 
 input {
-    /*
-     * caret-color: red;
-     * caret-shape: block;
-     */
+    background-color: #212223;
+    color: #B0C0D0;
+    caret-color: #B0C0D0;
+    border: solid #B0C0D0 2px;
+
+    padding: 8px;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+button {
+    background-color: #212223;
+    color: #B0C0D0;
+    caret-color: #B0C0D0;
+    border: solid #B0C0D0 2px;
+
+    padding: 8px;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+#settings {
+    display: none;
+}
+
+.classes {
+    background-color: #1C1D21;
+    color: #EFEFEF;
+    padding: 10px;
+    margin: 10px;
+    border: solid #FFFE57 2px;
+    width: 250px;
+}
+
+.classes input {
+    background-color: #1C1D21;
+    color: #FFFE57;
+    caret-color: #FFFE57;
+    border: solid #FFFE57 2px;
 }
