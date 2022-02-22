@@ -9,22 +9,35 @@ body {
     align-items: center;
 }
 
+.invis {
+    opacity: 0%;
+}
+
+#game {
+    column-count: 3;
+    margin: 10px;
+    padding: 10px;
+    background-color: #191A1C;
+    border: solid #C9DCFF 1px;
+}
+
 canvas#canvas {
     background-color: #12CEDE;
     image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-crisp-edges;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+    border: solid #EFEFEF 1px;
 }
 
 #console {
     background-color: #1C1D21;
     color: #B0C0D0;
     font-family: monospace;
-    width: 90%;
     padding: 20px;
-    height: 200px;
+    height: 560px;
     overflow-y: hidden;
+    border: solid #B0C0D0 1px;
 }
 
 input {
@@ -35,7 +48,7 @@ input {
 
     padding: 8px;
     font-weight: bold;
-    font-family: monospace;
+    font-family: sans;
 }
 
 button {
@@ -58,8 +71,10 @@ button {
     color: #EFEFEF;
     padding: 10px;
     margin: 10px;
+    margin-top: 0px;
     border: solid #FFFE57 2px;
     width: 250px;
+    height: 750px;
 }
 
 .classes input {
@@ -67,4 +82,94 @@ button {
     color: #FFFE57;
     caret-color: #FFFE57;
     border: solid #FFFE57 2px;
+}
+
+.enabled {
+    background-color: #1C1D21;
+    color: #EFEFEF;
+    padding: 10px;
+    margin: 10px;
+    margin-top: 0px;
+    border: solid #21D992 2px;
+    width: 250px;
+    height: 750px;
+}
+
+.enabled input {
+    background-color: #1C1D21;
+    color: #21D992;
+    caret-color: #21D992;
+    border: solid #21D992 2px;
+}
+
+.p1controls, .p2controls, .p3controls, .p4controls {
+    height: 355px;
+}
+
+.p1controls {
+    background-color: #1C1D21;
+    color: #EFEFEF;
+    padding: 10px;
+    margin: 10px;
+    margin-top: 0px;
+    border: solid #f43 2px;
+    width: 250px;
+}
+
+.p1controls input {
+    background-color: #1C1D21;
+    color: #f43;
+    caret-color: #f43;
+    border: solid #f43 2px;
+}
+
+.p2controls {
+    background-color: #1C1D21;
+    color: #EFEFEF;
+    padding: 10px;
+    margin: 10px;
+    margin-top: 0px;
+    border: solid #09f 2px;
+    width: 250px;
+}
+
+.p2controls input {
+    background-color: #1C1D21;
+    color: #09f;
+    caret-color: #09f;
+    border: solid #09f 2px;
+}
+
+.p3controls {
+    background-color: #1C1D21;
+    color: #EFEFEF;
+    padding: 10px;
+    margin: 10px;
+    margin-top: 0px;
+    border: solid #3f4 2px;
+    width: 250px;
+}
+
+.p3controls input {
+    background-color: #1C1D21;
+    color: #3f4;
+    caret-color: #3f4;
+    border: solid #3f4 2px;
+}
+
+.p4controls {
+    background-color: #1C1D21;
+    color: #EFEFEF;
+    padding: 10px;
+    margin: 10px;
+    margin-top: 0px;
+    border: solid #ff4 2px;
+    width: 250px;
+}
+
+.p4controls input {
+    background-color: #1C1D21;
+    color: #ff4;
+    caret-color: #ff4;
+    border: solid #ff4 2px;
 }

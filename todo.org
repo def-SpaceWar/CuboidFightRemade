@@ -12,6 +12,8 @@ When you get a kill you should get a buff.
 CLASSES FIRsT.
 Change controls and ADD modifiers like changing damage, attack, and jump power for some players. Also add team modifiers so you can add people to teams.
 This is good for a troll. The settings panel can only be accessed if you do /settings in the url bar otherwise you can't access it.
+* TODO Make the controls options in the settings actually work.
+* TODO The background image needs 3d-like depth.
 * TODO Make camera only be able to see everything within the range of the bg image.
 No seeing the blank outside.
 * TODO Fun kill death msgs

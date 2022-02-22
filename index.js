@@ -62,6 +62,20 @@ player4.otherPlayers.push(player, player2, player3);
 
 const players = [player, player2, player3, player4];
 
+let done = false;
+while (!done) {
+    done = true;
+    for (let i = 0; i < players.length; i++) {
+        if (localStorage.getItem(`player${i + 1}enable`) == "false") {
+            players[i].x = -1000;
+            players[i].y = -1000;
+            players.splice(i, 1);
+            done = false;
+        }
+    }
+}
+
+
 const platforms = [
     new Platform(
         400,
@@ -151,11 +165,21 @@ function update() {
     // This function runs every frame
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
+    const playerScreenObjs = [];
+
+    for (let i = 0; i < players.length; i++) {
+        if (players[i].health.health > 0) {
+            playerScreenObjs.push(players[i].screenObject);
+        }
+    }
+
+    lerpCamera(playerScreenObjs);
+
     for (let i = 0; i < players.length; i++) {
         players[i].updatePhysics(platforms, powerUps);
     }
 
-    // Yea, we need a screenobject
+    // this needs to be rendered with depth at some point
     ctx.drawImage(
         bgImage,
         (-WIDTH / 2 + camera.x) * camera.w_scale - WIDTH * (camera.w_scale - 1) / 2,
@@ -187,16 +211,6 @@ function update() {
     //        players.splice(i, 1);
     //    }
     //}
-
-    const playerScreenObjs = [];
-
-    for (let i = 0; i < players.length; i++) {
-        if (players[i].health.health > 0) {
-            playerScreenObjs.push(players[i].screenObject);
-        }
-    }
-
-    lerpCamera(playerScreenObjs);
 
     for (let i = 0; i < players.length; i++) {
         players[i].health.draw();

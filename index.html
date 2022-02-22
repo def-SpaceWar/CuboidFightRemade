@@ -21,7 +21,9 @@
     <center>
         <h1>Cuboid Fight!</h1>
         <h6>Remade</h6>
+    </center>
 
+    <div id="game">
         <canvas id="canvas" width="1200" height="600">
 
             If you can see this:
@@ -30,12 +32,12 @@
             <!-- You can only see this if your browser no support html canvas -->
 
         </canvas>
-    </center>
 
-    <br />
+        <p class="invis">To access settings you type "idk" in the random input at the top and "no" to make it disappear!</p>
 
-    <div id="console">
-        <h1>Console:</h1>
+        <div id="console">
+            <h1>Console:</h1>
+        </div>
     </div>
 
     <script src="globals.js"></script>
@@ -48,56 +50,151 @@
     <script src="index.js"></script>
 
     <div id="settings">
-    <h1>Settings</h1>
-    <p>You have accessed the secret settings!</p>
+        <h1>Settings</h1>
+        <p>You have accessed the super secret settings!</p>
 
-    <div class="classes">
-        <h3>Classes</h3>
-        <p>There are only 4 classes:</p>
+        <div style="column-count: 4; width: 1120px;">
+            <div class="classes">
+                <h3>Classes</h3>
+                <p>There are only 4 classes:</p>
 
-        <ul>
-            <li>Default</li>
-            <li>Ninja</li>
-            <li>Beserk</li>
-            <li>Tank</li>
-        </ul>
+                <ul>
+                    <li>Default</li>
+                    <li>Ninja</li>
+                    <li>Beserk</li>
+                    <li>Tank</li>
+                </ul>
 
-        <span>Player 1 Class: <input id="player1class" /></span>
+                <span>Player 1 Class: <input id="player1class" /></span>
+                <br />
+                <br />
+                <span>Player 2 Class: <input id="player2class" /></span>
+                <br />
+                <br />
+                <span>Player 3 Class: <input id="player3class" /></span>
+                <br />
+                <br />
+                <span>Player 4 Class: <input id="player4class" /></span>
+            </div>
+
+            <div class="enabled">
+                <h3>Enable/Disable Players</h3>
+
+                <ul>
+                    <li>Player 1: <input id="player1enable" type="checkbox" /></li>
+                    <li>Player 2: <input id="player2enable" type="checkbox" /></li>
+                    <li>Player 3: <input id="player3enable" type="checkbox" /></li>
+                    <li>Player 4: <input id="player4enable" type="checkbox" /></li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="p1controls">
+                    <h3>Player 1 Controls</h3>
+
+                    <span>Left: <input id="player1left" /></span>
+                    <br />
+                    <br />
+                    <span>Up: <input id="player1up" /></span>
+                    <br />
+                    <br />
+                    <span>Down: <input id="player1down" /></span>
+                    <br />
+                    <br />
+                    <span>Right: <input id="player1right" /></span>
+                </div>
+
+                <div class="p2controls">
+                    <h3>Player 2 Controls</h3>
+
+                    <span>Left: <input id="player2left" /></span>
+                    <br />
+                    <br />
+                    <span>Up: <input id="player2up" /></span>
+                    <br />
+                    <br />
+                    <span>Down: <input id="player2down" /></span>
+                    <br />
+                    <br />
+                    <span>Right: <input id="player2right" /></span>
+                </div>
+            </div>
+
+            <div>
+                <div class="p3controls">
+                    <h3>Player 3 Controls</h3>
+
+                    <span>Left: <input id="player3left" /></span>
+                    <br />
+                    <br />
+                    <span>Up: <input id="player3up" /></span>
+                    <br />
+                    <br />
+                    <span>Down: <input id="player3down" /></span>
+                    <br />
+                    <br />
+                    <span>Right: <input id="player3right" /></span>
+                </div>
+
+                <div class="p4controls">
+                    <h3>Player 4 Controls</h3>
+
+                    <span>Left: <input id="player4left" /></span>
+                    <br />
+                    <br />
+                    <span>Up: <input id="player4up" /></span>
+                    <br />
+                    <br />
+                    <span>Down: <input id="player4down" /></span>
+                    <br />
+                    <br />
+                    <span>Right: <input id="player4right" /></span>
+                </div>
+            </div>
+        </div>
+
         <br />
-        <br />
-        <span>Player 2 Class: <input id="player2class" /></span>
-        <br />
-        <br />
-        <span>Player 3 Class: <input id="player3class" /></span>
-        <br />
-        <br />
-        <span>Player 4 Class: <input id="player4class" /></span>
-    </div>
 
-    <button onclick="setOptions();">Save</button>
+        <button onclick="setOptions();">Save</button>
 
-    <script type="text/javascript">
-     // Use localStorage to set all the players'
-     // classes, modifiers, (very far future cosmetics)
-     // and colors.
+        <script type="text/javascript">
+         // Use localStorage to set all the players'
+         // classes, modifiers, (very far future cosmetics)
+         // and colors.
 
-     const controlInputs = [
-         document.getElementById("player1class"),
-         document.getElementById("player2class"),
-         document.getElementById("player3class"),
-     ]
+         const classes = [
+             document.getElementById("player1class"),
+             document.getElementById("player2class"),
+             document.getElementById("player3class"),
+             document.getElementById("player4class"),
+         ];
 
-     controlInputs.map((i) => {
-         i.value = localStorage.getItem(i.id);
-     });
+         const enabled = [
+             document.getElementById("player1enable"),
+             document.getElementById("player2enable"),
+             document.getElementById("player3enable"),
+             document.getElementById("player4enable"),
+         ];
 
-     function setOptions() {
-         controlInputs.map((i) => {
-             localStorage.setItem(i.id, i.value);
-             console.log(i.value);
+         classes.map((i) => {
+             i.value = localStorage.getItem(i.id);
          });
-     }
-    </script>
+
+         enabled.map((i) => {
+             if (localStorage.getItem(i.id) == "false") i.checked = false;
+             else i.checked = true;
+         });
+
+         function setOptions() {
+             classes.map((i) => {
+                 localStorage.setItem(i.id, i.value);
+             });
+
+             enabled.map((i) => {
+                 localStorage.setItem(i.id, i.checked);
+             });
+         }
+        </script>
     </div>
 </body>
 
