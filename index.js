@@ -182,10 +182,10 @@ function update() {
     // this needs to be rendered with depth at some point
     ctx.drawImage(
         bgImage,
-        (-WIDTH / 2 + camera.x) * camera.w_scale - WIDTH * (camera.w_scale - 1) / 2,
-        (-HEIGHT / 2 + camera.y) * camera.h_scale - HEIGHT * (camera.h_scale - 1) / 2,
-        WIDTH * 3 * camera.w_scale,
-        HEIGHT * 3 * camera.h_scale
+        Math.round((-WIDTH / 2 + camera.x) * camera.w_scale - WIDTH * (camera.w_scale - 1) / 2),
+        Math.round((-HEIGHT / 2 + camera.y) * camera.h_scale - HEIGHT * (camera.h_scale - 1) / 2),
+        Math.round(WIDTH * 3 * camera.w_scale),
+        Math.round(HEIGHT * 3 * camera.h_scale)
     );
 
     if (Math.random() * 1500 > 1499) {
