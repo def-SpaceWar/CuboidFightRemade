@@ -6,8 +6,17 @@ const ctx = canvas.getContext("2d");
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
-const bgImage = new Image(WIDTH * 2, HEIGHT * 2);
+const bgImage = new Image();
 bgImage.src = "./static/img/bg1.png";
+
+const ditherTexture = new Image();
+ditherTexture.src = "./static/img/dithertexture.png";
+
+const grassTexture = new Image();
+grassTexture.src = "./static/img/grasstexture.png";
+
+const powerUpBoxTexture1 = new Image();
+powerUpBoxTexture1.src = "./static/img/powerupbox1.png";
 
 const camera = {
     x: 0,
@@ -38,8 +47,8 @@ function lerpCamera(objs) {
     midpoint.y = yAverage / objs.length;
 
     // move camera
-    camera.x = -midpoint.x + WIDTH / 2;
-    camera.y = -midpoint.y + HEIGHT / 2;
+    camera.x = (camera.x + (-midpoint.x + WIDTH / 2)) / 2;
+    camera.y = (camera.y + (-midpoint.y + HEIGHT / 2)) / 2;
 
     // resize camera
     let scale = 1;
@@ -68,31 +77,51 @@ function lerpCamera(objs) {
         }
     }
 
-    // set the two farthest objects
-    let obj1 = objs[farthestObjs[0]];
-    let obj2 = objs[farthestObjs[1]];
-    
-    // OBJ 1 and OBJ 2 will be the two farthest objects
-    scale = Math.min(((HEIGHT * Math.pow(0.86, objs.length)) / Math.abs(obj1.y - obj2.y)), ((WIDTH * Math.pow(0.86, objs.length)) / Math.abs(obj1.x - obj2.x)));
+    try {
+        // set the two farthest objects
+        let obj1 = objs[farthestObjs[0]];
+        let obj2 = objs[farthestObjs[1]];
+        
+        // OBJ 1 and OBJ 2 will be the two farthest objects
+        scale = Math.min(((HEIGHT * Math.pow(0.86, objs.length)) / Math.abs(obj1.y - obj2.y)), ((WIDTH * Math.pow(0.86, objs.length)) / Math.abs(obj1.x - obj2.x)));
 
-    if (scale > 1.5) {
-        scale = 1.5;
-    } else if (scale < 0.05) {
-        scale = 0.05;
+        if (scale > 1.5) {
+            scale = 1.5;
+        } else if (scale < 0.05) {
+            scale = 0.05;
+        }
+
+        if (Math.abs(camera.w_scale - scale) < 0.01) {
+            camera.w_scale = scale;
+            camera.h_scale = scale;
+        } else {
+            camera.w_scale = (camera.w_scale + scale) / 2;
+            camera.h_scale = (camera.h_scale + scale) / 2;
+        }
+    } catch (e) {
+        camera.x = -WIDTH * 1;
+        camera.y = -HEIGHT * 1;
+        camera.w_scale = 0.18;
+        camera.h_scale = 0.18;
     }
-
-    camera.w_scale = camera.w_scale - (camera.w_scale - scale) / 10;
-    camera.h_scale = camera.h_scale - (camera.h_scale - scale) / 10;
 }
 
 const gameConsole = document.getElementById("console");
 const GameConsole = {
-    log: (msg, color="inherit") => {
-        gameConsole.innerHTML += `<p>> <span style="color: ${color};">${msg}</span></p>`;
+    log: (msg, color="inherit", bold=false) => {
+        if (!bold) {
+            gameConsole.innerHTML += `<p>> <span style="color: ${color};">${msg}</span></p>`;
+        } else {
+            gameConsole.innerHTML += `<p>> <span style="color: ${color}; font-weight: bold;">${msg}</span></p>`;
+        }
         gameConsole.scrollTop = gameConsole.scrollHeight; // autoscrolling
     },
 
     debug: (msg) => {
         GameConsole.log("[Debug]: " + msg, "#FF9900");
+    },
+
+    clear: () => {
+        gameConsole.innerHTML = `<h1>Console:</h1>`;
     }
 }

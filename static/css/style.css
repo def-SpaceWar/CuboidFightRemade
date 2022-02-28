@@ -22,7 +22,8 @@ body {
 }
 
 canvas#canvas {
-    background-color: #12CEDE;
+    background: #FF7700;
+    background: linear-gradient(0deg, rgba(255,0,0,1) 0%, rgba(255, 0, 0, 1) 50%, rgba(255, 112, 0, 1) 100%);
     image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-crisp-edges;
     image-rendering: pixelated;

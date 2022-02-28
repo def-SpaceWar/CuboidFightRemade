@@ -12,23 +12,28 @@ When you get a kill you should get a buff.
 CLASSES FIRsT.
 Change controls and ADD modifiers like changing damage, attack, and jump power for some players. Also add team modifiers so you can add people to teams.
 This is good for a troll. The settings panel can only be accessed if you do /settings in the url bar otherwise you can't access it.
-* TODO Make the controls options in the settings actually work.
-* TODO The background image needs 3d-like depth.
+* TODO Teams in the settings page!
+* TODO Each side of the map should have different death messages other than the one from the bottom.
+* TODO Make a communist map. (Rithvik gets the honors of bg image. 256 x 128 px just like last time.)
+* TODO Add gamemodes like ffa most kills or last one standing like TanksRumble with a main menu!
+* DONE Make the controls options in the settings actually work.
+* KILL The background image needs 3d-like depth.
 * TODO Make camera only be able to see everything within the range of the bg image.
 No seeing the blank outside.
-* TODO Fun kill death msgs
+* DONE Fun kill death msgs
 * DONE Power up stacking.
-* TODO Make more power ups! [3/5]
+* TODO Make more power ups! [4/5]
 + [X] extra jump
 + [X] fix attack speed not working
 + [X] extra speed (movement)
-+ [ ] knockback resistance
++ [X] knockback resistance
++ [X] knockback boost
 + [ ] damage resistance
 * TODO Style the entire website.
 Add a navbar that can send you to the settings page and back to the game. And also add instructions!
-* TODO Make a level with a bunch of platforms. (The one right now is hot garbage.)
+* DONE Make a level with a bunch of platforms. (The one right now is hot garbage.)
 AKA make a good map. This has been on the back-burner for a long time.
-* TODO Make camera better?????
+* DONE Make camera better?????
 IDK the answer might come to me randomly.
 * TODO Add survival gamemode where everyone is team and a buncha gray squares spawn and try to kill them.
 Basically a survival single/multiplayer mode.
