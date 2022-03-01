@@ -16,7 +16,7 @@ function main() {
         inactive: "#da0",
         active: "#fe0",
         pressed: "#ffa"
-    }, 10, "#555", "Settings", [-110, 10], "#000", () => {
+    }, 10, "#555", "Settings", [-80, 10], "#000", () => {
         if (document.getElementById("settings").style.display == "block") {
             document.getElementById("settings").style.display = "none";
         } else {
@@ -25,12 +25,12 @@ function main() {
     }, "40px sans");
 
     document.addEventListener("keydown", (e) => {
-        if (e.key == " " && playButton.enabled) {
+        if (e.key == "Enter" && playButton.enabled) {
             playButton.onClick();
         }
     });
 
-    const textObject = new TextObject(WIDTH / 2 - 80, HEIGHT / 2 + 33, 400, 100, "Spacebar also works!", "#222", "16px sans");
+    const textObject = new TextObject(WIDTH / 2 - 70, HEIGHT / 2 + 33, 400, 100, "Enter also works!", "#222", "16px sans");
 
     canvas.addEventListener("mousemove", (event) => {
         playButton.listenMouseMove(event);

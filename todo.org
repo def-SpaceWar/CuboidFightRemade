@@ -12,6 +12,7 @@ When you get a kill you should get a buff.
 CLASSES FIRsT.
 Change controls and ADD modifiers like changing damage, attack, and jump power for some players. Also add team modifiers so you can add people to teams.
 This is good for a troll. The settings panel can only be accessed if you do /settings in the url bar otherwise you can't access it.
+* TODO Red platforms with gray bottom color that does damage every half a second you stand on it and slows you!
 * TODO Teams in the settings page!
 * TODO Each side of the map should have different death messages other than the one from the bottom.
 * TODO Make a communist map. (Rithvik gets the honors of bg image. 256 x 128 px just like last time.)
