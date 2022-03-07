@@ -6,18 +6,6 @@ const ctx = canvas.getContext("2d");
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
-const bgImage = new Image();
-bgImage.src = "./static/img/bg1.png";
-
-const ditherTexture = new Image();
-ditherTexture.src = "./static/img/dithertexture.png";
-
-const grassTexture = new Image();
-grassTexture.src = "./static/img/grasstexture.png";
-
-const powerUpBoxTexture1 = new Image();
-powerUpBoxTexture1.src = "./static/img/powerupbox1.png";
-
 const camera = {
     x: 0,
     y: 0,
@@ -47,8 +35,8 @@ function lerpCamera(objs) {
     midpoint.y = yAverage / objs.length;
 
     // move camera
-    camera.x = (camera.x + (-midpoint.x + WIDTH / 2)) / 2;
-    camera.y = (camera.y + (-midpoint.y + HEIGHT / 2)) / 2;
+    camera.x = (camera.x + midpoint.x) / 2;
+    camera.y = (camera.y + midpoint.y) / 2;
 
     // resize camera
     let scale = 1;
@@ -99,8 +87,8 @@ function lerpCamera(objs) {
             camera.h_scale = (camera.h_scale + scale) / 2;
         }
     } catch (e) {
-        camera.x = -WIDTH * 1;
-        camera.y = -HEIGHT * 1;
+        camera.x = -HEIGHT;
+        camera.y = -WIDTH;
         camera.w_scale = 0.18;
         camera.h_scale = 0.18;
     }
@@ -125,3 +113,23 @@ const GameConsole = {
         gameConsole.innerHTML = `<h1>Console:</h1>`;
     }
 }
+
+let bgImage = new Image();
+
+const bgOrig = new Image();
+bgOrig.src = "./static/img/bg1.png";
+
+const ditherTexture = new Image();
+ditherTexture.src = "./static/img/dithertexture.png";
+
+const grassTexture = new Image();
+grassTexture.src = "./static/img/grasstexture.png";
+
+const powerUpBoxTexture1 = new Image();
+powerUpBoxTexture1.src = "./static/img/powerupbox1.png";
+
+const vampireLeftWingTexture = new Image();
+vampireLeftWingTexture.src = "./static/img/vampireleftwing.png";
+
+const vampireRightWingTexture = new Image();
+vampireRightWingTexture.src = "./static/img/vampirerightwing.png";

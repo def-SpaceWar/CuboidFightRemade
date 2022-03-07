@@ -54,7 +54,7 @@ function main() {
         if (firstTime) {
             ctx.fillStyle = "#0DF";
             ctx.fillRect(0, 0, WIDTH, HEIGHT);
-            ctx.drawImage(bgImage, 0, 0, WIDTH, HEIGHT);
+            ctx.drawImage(bgOrig, 0, 0, WIDTH, HEIGHT);
             firstTime = false;
         }
 
@@ -73,16 +73,6 @@ function main() {
     }
 
     function startGame() {
-        const bg = new ScreenObject(
-            -WIDTH,
-            -HEIGHT,
-            WIDTH * 5,
-            HEIGHT * 5,
-            "#FF0000"
-        );
-
-        bg.image = bgImage;
-
         const player1 = new Player(
             0,
             0,
@@ -93,7 +83,8 @@ function main() {
                 right: "ArrowRight",
                 up: "ArrowUp",
                 down: "ArrowDown",
-                attack: "/"
+                attack: "/",
+                special: "."
             }
         );
 
@@ -103,11 +94,12 @@ function main() {
             75,
             75,
             ["#09f", "#058"], {
-                left: "a",
-                right: "d",
-                up: "w",
-                down: "s",
-                attack: "q"
+                left: "s",
+                right: "f",
+                up: "e",
+                down: "d",
+                attack: "q",
+                special: "w"
             }
         );
 
@@ -121,7 +113,8 @@ function main() {
                 right: "n",
                 up: "g",
                 down: "b",
-                attack: " "
+                attack: " ",
+                special: "c"
             }
         );
 
@@ -135,31 +128,58 @@ function main() {
                 right: "6",
                 up: "8",
                 down: "5",
-                attack: "7"
+                attack: "7",
+                special: "1"
             }
         );
 
-        // We can use these "otherPlayer"s to MAKE TEAMS WHICH I JUST REALIZED!
         player1.otherPlayers.push(player2, player3, player4);
         player2.otherPlayers.push(player1, player3, player4);
         player3.otherPlayers.push(player1, player2, player4);
         player4.otherPlayers.push(player1, player2, player3);
 
         const players = [player1, player2, player3, player4];
+        const teamsEnabled = localStorage.getItem("teamenable");
+        console.log(teamsEnabled);
 
-        document.addEventListener("keydown", (event) => {
-            for (let i = 0; i < players.length; i++) {
-                players[i].listenKeyDown(event);
+        // each team has its own color
+        const teamColors = ["#990000", "#999900", "#009900", "#000099"];
+
+        if (teamsEnabled != "false") {
+            // set player's shadow to white indicating it has no team
+            for (let p = 0; p < players.length; p++) {
+                players[p].screenObject.shadowColor = "#AAAAAA";
             }
-        });
 
-        document.addEventListener("keyup", (event) => {
-            for (let i = 0; i < players.length; i++) {
-                players[i].listenKeyUp(event);
+            // Team Code (set everyone on their teams)
+            for (let i = 1; i < 4; i++) {
+                if (localStorage.getItem(`team${i}`)) {
+                    let playersOnTeam = localStorage.getItem(`team${i}`).split(",");
+
+                    for (let j = 0; j < playersOnTeam.length; j++) {
+                        for (let k = 0; k < players.length; k++) {
+                            if (playersOnTeam[j] == players[k].playerNum) {
+                                players[k].team = i;
+                                players[k].screenObject.shadowColor = teamColors[i - 1];
+                            }
+                        }
+                    }
+                }
             }
-        });
+        }
 
-        const platforms = loadMap(map1, players);
+        const platforms = loadMap(1, players);
+        const powerUps = [];
+
+        const bg = new ScreenObject(
+            -WIDTH,
+            -HEIGHT,
+            WIDTH * 5,
+            HEIGHT * 5,
+            "#FF0000"
+        );
+
+        bg.image = bgImage;
 
         let done = false;
         while (!done) {
@@ -174,7 +194,17 @@ function main() {
             }
         }
 
-        const powerUps = [];
+        document.addEventListener("keydown", (event) => {
+            for (let i = 0; i < players.length; i++) {
+                players[i].listenKeyDown(event);
+            }
+        });
+
+        document.addEventListener("keyup", (event) => {
+            for (let i = 0; i < players.length; i++) {
+                players[i].listenKeyUp(event);
+            }
+        });
 
         gameOver = false;
         GameConsole.clear();
@@ -217,12 +247,6 @@ function main() {
                 players[i].draw();
             }
 
-            //for (let i = 0; i < players.length; i++) {
-            //    if (players[i].health.health <= 0) {
-            //        players.splice(i, 1);
-            //    }
-            //}
-
             for (let i = 0; i < players.length; i++) {
                 players[i].health.draw();
             }
@@ -234,8 +258,46 @@ function main() {
                     if (players[i].health.health > 0) {
                         if (!gameOver) {
                             setTimeout(() => {
-                                GameConsole.log(`<span style="color: ${players[i].color};">[Player ${players[i].playerNum}]</span> won!`, "#FFFF00", true);
+                                if (players[i].health.health > 0) {
+                                    GameConsole.log(`<span style="color: ${players[i].color};">[Player ${players[i].playerNum}]</span> won!`, "#FFFF00", true);
+                                } else {
+                                    GameConsole.log(`It's a tie!`, "#FFFF00", true);
+                                }
+
                                 playerCounter = 0;
+                                teamCounter = 4;
+                                clearInterval(process);
+                                process = setInterval(mainMenu, 15);
+                            }, 1500);
+
+                            gameOver = true;
+                        }
+                    }
+                }
+            }
+
+            if (teamsEnabled) {
+                let teamsAlive = [];
+
+                for (let i = 0; i < players.length; i++) {
+                    if (players[i].health.health > 0 &&
+                        teamsAlive.indexOf(players[i].team) == -1) {
+                        teamsAlive.push(players[i].team);
+                    }
+                }
+
+                if (teamsAlive.length <= 1) {
+                    if (teamsAlive[0] < 5) {
+                        if (!gameOver) {
+                            setTimeout(() => {
+                                if (teamsAlive.length > 0) {
+                                    GameConsole.log(`<span style="color: ${teamColors[teamsAlive[0] - 1]};">[Team ${teamsAlive[0]}]</span> won!`, "#FFFF00", true);
+                                } else {
+                                    GameConsole.log(`It's a tie!`, "#FFFF00", true);
+                                }
+
+                                playerCounter = 0;
+                                teamCounter = 4;
                                 clearInterval(process);
                                 process = setInterval(mainMenu, 15);
                             }, 1500);

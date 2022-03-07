@@ -42,31 +42,15 @@
 
     <div id="settings">
         <h1>Settings</h1>
-        <p>You have accessed the super secret settings!</p>
+        <p>You have accessed the super secret settings! <b>MAKE SURE YOU HIT THE SAVE BUTTON AT THE BOTTOM!</b></p>
 
-        <div style="column-count: 4; width: 1120px;">
-            <div class="classes">
-                <h3>Classes</h3>
-                <p>There are only 5 classes:</p>
+        <div style="column-count: 5; width: 1400px;">
+            <div>
+                <div class="game">
+                    <h3>Game Settings</h3>
 
-                <ul>
-                    <li>Default</li>
-                    <li>Beserk</li>
-                    <li>Tank</li>
-                    <li>Ninja</li>
-                    <li>Warrior</li>
-                </ul>
-
-                <span>Player 1 Class: <input id="player1class" /></span>
-                <br />
-                <br />
-                <span>Player 2 Class: <input id="player2class" /></span>
-                <br />
-                <br />
-                <span>Player 3 Class: <input id="player3class" /></span>
-                <br />
-                <br />
-                <span>Player 4 Class: <input id="player4class" /></span>
+                    <p>Coming Soon...</p>
+                </div>
             </div>
 
             <div class="enabled">
@@ -78,6 +62,91 @@
                     <li>Player 3: <input id="player3enable" type="checkbox" /></li>
                     <li>Player 4: <input id="player4enable" type="checkbox" /></li>
                 </ul>
+
+                <h3>Bots (Loading...)</h3>
+
+                <h3>Teams</h3>
+                <spaen>Team Enable: <input id="teamenable" type="checkbox" /></span>
+
+                <span>Team 1: <input id="team1" placeholder="1,2" /></span>
+                <br />
+                <span>Team 2: <input id="team2" placeholder="2,3" /></span>
+                <br />
+                <span>Team 3: <input id="team3" placeholder="3,4" /></span>
+                <br />
+                <span>Team 4: <input id="team4" placeholder="1,4" /></span>
+            </div>
+
+            <div class="classes">
+                <h3>Classes</h3>
+                <p>There are 7 classes:</p>
+
+                <ul>
+                    <li>Default (It's the default.)</li>
+                    <li>Berserk</li>
+                    <li>Tank</li>
+                    <li>Ninja</li>
+                    <li>Heavyweight</li>
+                    <li>Vampire</li>
+                    <li>Support</li>
+                </ul>
+
+                <span>Player 1 Class: </span>
+
+                <select id="player1class" name="class">
+                    <option value="Default">Default</option>
+                    <option value="Berserk">Berserk</option>
+                    <option value="Tank">Tank</option>
+                    <option value="Ninja">Ninja</option>
+                    <option value="Heavyweight">Heavyweight</option>
+                    <option value="Vampire">Vampire</option>
+                    <option value="Support">Support</option>
+                </select>
+
+                <br />
+                <br />
+
+                <span>Player 2 Class: </span>
+
+                <select id="player2class" name="class">
+                    <option value="Default">Default</option>
+                    <option value="Berserk">Berserk</option>
+                    <option value="Tank">Tank</option>
+                    <option value="Ninja">Ninja</option>
+                    <option value="Heavyweight">Heavyweight</option>
+                    <option value="Vampire">Vampire</option>
+                    <option value="Support">Support</option>
+                </select>
+
+                <br />
+                <br />
+
+                <span>Player 3 Class: </span>
+
+                <select id="player3class" name="class">
+                    <option value="Default">Default</option>
+                    <option value="Berserk">Berserk</option>
+                    <option value="Tank">Tank</option>
+                    <option value="Ninja">Ninja</option>
+                    <option value="Heavyweight">Heavyweight</option>
+                    <option value="Vampire">Vampire</option>
+                    <option value="Support">Support</option>
+                </select>
+
+                <br />
+                <br />
+
+                <span>Player 4 Class: </span>
+
+                <select id="player4class" name="class">
+                    <option value="Default">Default</option>
+                    <option value="Berserk">Berserk</option>
+                    <option value="Tank">Tank</option>
+                    <option value="Ninja">Ninja</option>
+                    <option value="Heavyweight">Heavyweight</option>
+                    <option value="Vampire">Vampire</option>
+                    <option value="Support">Support</option>
+                </select>
             </div>
 
             <div>
@@ -86,35 +155,31 @@
 
                     <span>Left: <input id="player1left" placeholder="ArrowLeft" /></span>
                     <br />
-                    <br />
                     <span>Up: <input id="player1up" placeholder="ArrowUp" /></span>
-                    <br />
                     <br />
                     <span>Down: <input id="player1down" placeholder="ArrowDown" /></span>
                     <br />
-                    <br />
                     <span>Right: <input id="player1right" placeholder="ArrowRight" /></span>
                     <br />
-                    <br />
                     <span>Attack: <input id="player1attack" placeholder="/" /></span>
+                    <br />
+                    <span>Special: <input id="player1special" placeholder="." /></span>
                 </div>
 
                 <div class="p2controls">
                     <h3>Player 2 Controls</h3>
 
-                    <span>Left: <input id="player2left" placeholder="a" /></span>
+                    <span>Left: <input id="player2left" placeholder="s" /></span>
                     <br />
+                    <span>Up: <input id="player2up" placeholder="e" /></span>
                     <br />
-                    <span>Up: <input id="player2up" placeholder="w" /></span>
+                    <span>Down: <input id="player2down" placeholder="d" /></span>
                     <br />
-                    <br />
-                    <span>Down: <input id="player2down" placeholder="s" /></span>
-                    <br />
-                    <br />
-                    <span>Right: <input id="player2right" placeholder="d" /></span>
-                    <br />
+                    <span>Right: <input id="player2right" placeholder="f" /></span>
                     <br />
                     <span>Attack: <input id="player2attack" placeholder="q" /></span>
+                    <br />
+                    <span>Special: <input id="player2special" placeholder="w" /></span>
                 </div>
             </div>
 
@@ -124,17 +189,15 @@
 
                     <span>Left: <input id="player3left" placeholder="v" /></span>
                     <br />
-                    <br />
                     <span>Up: <input id="player3up"  placeholder="g" /></span>
-                    <br />
                     <br />
                     <span>Down: <input id="player3down" placeholder="b" /></span>
                     <br />
-                    <br />
                     <span>Right: <input id="player3right" placeholder="n" /></span>
                     <br />
-                    <br />
                     <span>Attack: <input id="player3attack" placeholder="' ' (spacebar)" /></span>
+                    <br />
+                    <span>Special: <input id="player3special" placeholder="c" /></span>
                 </div>
 
                 <div class="p4controls">
@@ -142,17 +205,15 @@
 
                     <span>Left: <input id="player4left" placeholder="4" /></span>
                     <br />
-                    <br />
                     <span>Up: <input id="player4up" placeholder="8" /></span>
-                    <br />
                     <br />
                     <span>Down: <input id="player4down" placeholder="5" /></span>
                     <br />
-                    <br />
                     <span>Right: <input id="player4right" placeholder="6" /></span>
                     <br />
-                    <br />
                     <span>Attack: <input id="player4attack" placeholder="7" /></span>
+                    <br />
+                    <span>Special: <input id="player4special" placeholder="1" /></span>
                 </div>
             </div>
         </div>
@@ -163,56 +224,64 @@
 
         <script type="text/javascript">
          // Use localStorage to set all the players'
-         // classes, modifiers, (very far future cosmetics)
+         // textboxes, modifiers, (very far future cosmetics)
          // and colors.
 
-         const classes = [
+         const selects = [
              document.getElementById("player1class"),
              document.getElementById("player2class"),
              document.getElementById("player3class"),
              document.getElementById("player4class"),
          ];
 
-         const enabled = [
+         const checkboxes = [
              document.getElementById("player1enable"),
              document.getElementById("player2enable"),
              document.getElementById("player3enable"),
              document.getElementById("player4enable"),
+             document.getElementById("teamenable")
          ];
 
-         const controls = [];
+         const textboxes = [];
 
          for (let i = 1; i <= 4; i++) {
-             controls.push(document.getElementById(`player${i}left`));
-             controls.push(document.getElementById(`player${i}up`));
-             controls.push(document.getElementById(`player${i}down`));
-             controls.push(document.getElementById(`player${i}right`));
-             controls.push(document.getElementById(`player${i}attack`));
+             textboxes.push(document.getElementById(`player${i}left`));
+             textboxes.push(document.getElementById(`player${i}up`));
+             textboxes.push(document.getElementById(`player${i}down`));
+             textboxes.push(document.getElementById(`player${i}right`));
+             textboxes.push(document.getElementById(`player${i}attack`));
+             textboxes.push(document.getElementById(`player${i}special`));
          }
 
-         classes.map((i) => {
+         textboxes.push(document.getElementById(`team1`));
+         textboxes.push(document.getElementById(`team2`));
+         textboxes.push(document.getElementById(`team3`));
+         textboxes.push(document.getElementById(`team4`));
+
+         selects.map((i) => {
              i.value = localStorage.getItem(i.id);
+             i.selected = localStorage.getItem(i.id);
          });
 
-         enabled.map((i) => {
+         checkboxes.map((i) => {
              if (localStorage.getItem(i.id) == "false") i.checked = false;
              else i.checked = true;
          });
 
-         controls.map((i) => {
+         textboxes.map((i) => {
              i.value = localStorage.getItem(i.id) || "";
          });
 
          function setOptions() {
-             classes.map((i) => {
+             selects.map((i) => {
                  localStorage.setItem(i.id, i.value);
              });
 
-             enabled.map((i) => {
+             checkboxes.map((i) => {
                  localStorage.setItem(i.id, i.checked);
              });
 
-             controls.map((i) => {
+             textboxes.map((i) => {
                  if (i.value != "") {
                      localStorage.setItem(i.id, i.value);
                  } else {
@@ -229,6 +298,7 @@
     <script src="lib/Button.js"></script>
     <script src="lib/Platform.js"></script>
     <script src="lib/Player.js"></script>
+    <script src="lib/VampireWing.js"></script>
     <script src="lib/PowerUpBox.js"></script>
     <script src="maps.js"></script>
     <script src="index.js"></script>
