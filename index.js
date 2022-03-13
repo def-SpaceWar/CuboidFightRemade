@@ -146,7 +146,7 @@ function main() {
         player4.otherPlayers.push(player1, player2, player3);
 
         const players = [player1, player2, player3, player4];
-        const teamsEnabled = localStorage.getItem("teamenable");
+        let teamsEnabled = localStorage.getItem("teamenable");
 
         if (teamsEnabled != "false") {
             // set player's shadow to white indicating it has no team
@@ -222,6 +222,10 @@ function main() {
             case "stock":
                 gamemode = new Stock(players, teamsEnabled);
                 break;
+            case "juggernaut":
+                teamsEnabled = true;
+                gamemode = new Juggernaut(players, teamsEnabled);
+                break;
             default:
                 gamemode = new Ffa(players, teamsEnabled);
                 break;
@@ -287,65 +291,6 @@ function main() {
                     }, 1500);
 
                     gameOver = true;
-                }
-            }
-
-            return;
-
-            if (playerScreenObjs.length == 1) {
-                // Go to win screen
-
-                for (let i = 0; i < players.length; i++) {
-                    if (players[i].health.health > 0) {
-                        if (!gameOver) {
-                            setTimeout(() => {
-                                if (players[i].health.health > 0) {
-                                    GameConsole.log(`<span style="color: ${players[i].color};">[Player ${players[i].playerNum}]</span> won!`, "#FFFF00", true);
-                                } else {
-                                    GameConsole.log(`It's a tie!`, "#FFFF00", true);
-                                }
-
-                                playerCounter = 0;
-                                teamCounter = 4;
-                                clearInterval(process);
-                                process = setInterval(mainMenu, 15);
-                            }, 1500);
-
-                            gameOver = true;
-                        }
-                    }
-                }
-            }
-
-            if (teamsEnabled) {
-                let teamsAlive = [];
-
-                for (let i = 0; i < players.length; i++) {
-                    if (players[i].health.health > 0 &&
-                        teamsAlive.indexOf(players[i].team) == -1) {
-                        teamsAlive.push(players[i].team);
-                    }
-                }
-
-                if (teamsAlive.length <= 1) {
-                    if (teamsAlive[0] < 5) {
-                        if (!gameOver) {
-                            setTimeout(() => {
-                                if (teamsAlive.length > 0) {
-                                    GameConsole.log(`<span style="color: ${teamColors[teamsAlive[0] - 1]};">[Team ${teamsAlive[0]}]</span> won!`, "#FFFF00", true);
-                                } else {
-                                    GameConsole.log(`It's a tie!`, "#FFFF00", true);
-                                }
-
-                                playerCounter = 0;
-                                teamCounter = 4;
-                                clearInterval(process);
-                                process = setInterval(mainMenu, 15);
-                            }, 1500);
-
-                            gameOver = true;
-                        }
-                    }
                 }
             }
         }

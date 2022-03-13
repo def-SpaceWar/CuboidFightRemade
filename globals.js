@@ -90,10 +90,10 @@ function lerpCamera(objs) {
             camera.h_scale = (camera.h_scale + scale) / 2;
         }
     } catch (e) {
-        camera.x = -HEIGHT;
-        camera.y = -WIDTH;
-        camera.w_scale = 0.18;
-        camera.h_scale = 0.18;
+        camera.x = WIDTH * 1.5;
+        camera.y = HEIGHT * 1.5;
+        camera.w_scale = 0.19;
+        camera.h_scale = 0.19;
     }
 }
 
