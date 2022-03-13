@@ -97,6 +97,13 @@ button {
     border: solid #FB3D54 2px;
 }
 
+.game select {
+    background-color: #1C1D21;
+    color: #FB3D54;
+    caret-color: #FB3D54;
+    border: solid #FB3D54 2px;
+}
+
 .enabled {
     background-color: #1C1D21;
     color: #EFEFEF;

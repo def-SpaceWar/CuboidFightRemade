@@ -73,18 +73,22 @@ function loadMap(mapNum, players) {
         case "1":
           players[0].x = UNIT_SIZE * x;
           players[0].y = UNIT_SIZE * y;
+          players[0].respawnPoint = [UNIT_SIZE * x, UNIT_SIZE * y];
           break;
         case "2":
           players[1].x = UNIT_SIZE * x;
           players[1].y = UNIT_SIZE * y;
+          players[1].respawnPoint = [UNIT_SIZE * x, UNIT_SIZE * y];
           break;
         case "3":
           players[2].x = UNIT_SIZE * x;
           players[2].y = UNIT_SIZE * y;
+          players[2].respawnPoint = [UNIT_SIZE * x, UNIT_SIZE * y];
           break;
         case "4":
           players[3].x = UNIT_SIZE * x;
           players[3].y = UNIT_SIZE * y;
+          players[3].respawnPoint = [UNIT_SIZE * x, UNIT_SIZE * y];
           break;
         case "g":
           const color = `#${Math.floor(Math.random() * 3) + 5}f${Math.floor(Math.random() * 3) + 2}`;

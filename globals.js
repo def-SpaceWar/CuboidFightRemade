@@ -2,6 +2,9 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+// each team has its own color
+const teamColors = ["#990000", "#999900", "#009900", "#000099"];
+
 // I'm too used to my variables being named like this.
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;

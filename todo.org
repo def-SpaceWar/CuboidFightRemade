@@ -1,5 +1,21 @@
 #+TITLE: TODO
 
+* TODO Juggernaut gamemode where everyone has LIVES and tries to kill the juggernaut, teams will be blatantly reset for all the players.
+  The juggernaut will be bigger and have more damage, health, kbDef, basically everything.
+  Slower too!
+* TODO Description for every single class on a new page.
+* TODO Red platforms with gray bottom color that does damage every half a second you stand on it and slows you! (introduced in the communist map)
+* TODO Each side of the map should have different death messages other than the one from the bottom.
+* TODO Make a communist map. (Rithvik gets the honors of bg image. 256 x 128 px just like last time.)
+* TODO Add survival gamemode where everyone is team and a buncha gray squares spawn and try to kill them.
+Basically a survival single/multiplayer mode.
+* TODO Each class should have it's own aesthetic change like the vampire having wings. [1/2]
+The vampire's wings will be of 2 different images and there will be a class for it that can draw. The player class will get an array called `cosmetics` and it will have the 2 vampire wings if it is a vampire and they're rotation will change based on the value of the jump force and their angles will be the inverse of eachother creating a flying effect when the vampire jumps. The wings will also be rendered under the player.
++ [X] Vampire Wings
++ [ ] Ninja Bandana that changes direction depending on movement
+* TODO Style the entire website.
+Add a navbar that can send you to the settings page and back to the game. And also add instructions!
+* -------------------------------------------------- Divider
 * DONE Make a console that is colored by player color and says the power up they got.
 * DONE Make an Attack Cool Down Bar that spawns above the players.
 * DONE Make player have a minimum damage requirement.
@@ -14,42 +30,30 @@ Change controls and ADD modifiers like changing damage, attack, and jump power f
 This is good for a troll. The settings panel can only be accessed if you do /settings in the url bar otherwise you can't access it.
 * DONE Red or Green Text popping up next to health bar to indicate attacks and heals.
 * DONE Fix up the screenobject.js and make angles work!
-* TODO Description for every single class on a new page.
-* TODO Red platforms with gray bottom color that does damage every half a second you stand on it and slows you! (introduced in the communist map)
 * DONE Maybe support class that can heal players on its team!
 Default but worse, and can heal teammates.
 Killbuff, heal every teammate on its team by 30% of each teammate's health and heal itself by up to 60% making sure not to go above its max health.
 * DONE Add a new control to every player called "special" and also add it to the `loadSettings()` function.
 * DONE Each class should have it's own special attack.
-* TODO Each class should have it's own aesthetic change like the vampire having wings. [1/2]
-The vampire's wings will be of 2 different images and there will be a class for it that can draw. The player class will get an array called `cosmetics` and it will have the 2 vampire wings if it is a vampire and they're rotation will change based on the value of the jump force and their angles will be the inverse of eachother creating a flying effect when the vampire jumps. The wings will also be rendered under the player.
-+ [X] Vampire Wings
-+ [ ] Ninja Bandana that changes direction depending on movement
 * DONE Teams in the settings page!
 MAKE THIS DONE AND WORKING!
 shadow color should change depending on which team a player is on and there should be 3 teams.
 Since 4 would be an FFA.
-* TODO Each side of the map should have different death messages other than the one from the bottom.
-* TODO Make a communist map. (Rithvik gets the honors of bg image. 256 x 128 px just like last time.)
-* TODO Add gamemodes like ffa most kills or last one standing like TanksRumble with a main menu!
+* DONE Add gamemodes like ffa most kills or last one standing like TanksRumble with a main menu!
 * DONE Make the controls options in the settings actually work.
 * KILL The background image needs 3d-like depth.
 * KILL Make camera only be able to see everything within the range of the bg image.
 No seeing the blank outside.
 * DONE Fun kill death msgs
 * DONE Power up stacking.
-* TODO Make more power ups! [4/5]
+* DONE Make more power ups! [5/5]
 + [X] extra jump
 + [X] fix attack speed not working
 + [X] extra speed (movement)
 + [X] knockback resistance
 + [X] knockback boost
-+ [ ] damage resistance
-* TODO Style the entire website.
-Add a navbar that can send you to the settings page and back to the game. And also add instructions!
++ [X] damage resistance
 * DONE Make a level with a bunch of platforms. (The one right now is hot garbage.)
 AKA make a good map. This has been on the back-burner for a long time.
 * DONE Make camera better?????
-IDK the answer might come to me randomly.
-* TODO Add survival gamemode where everyone is team and a buncha gray squares spawn and try to kill them.
-Basically a survival single/multiplayer mode.
+IDK the answer might come to me randomly. Edit: It did!

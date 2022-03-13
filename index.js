@@ -1,4 +1,5 @@
 function main() {
+    /** @type Button */
     const playButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 - 40, 300, 80, {
         inactive: "#0ad",
         active: "#0ef",
@@ -12,6 +13,7 @@ function main() {
         startGame();
     }, "40px sans");
 
+    /** @type Button */
     const settingsButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 + 80, 300, 80, {
         inactive: "#da0",
         active: "#fe0",
@@ -30,7 +32,8 @@ function main() {
         }
     });
 
-    const textObject = new TextObject(WIDTH / 2 - 70, HEIGHT / 2 + 33, 400, 100, "Enter also works!", "#222", "16px sans");
+    /** @type TextBox */
+    const playText = new TextObject(WIDTH / 2 - 70, HEIGHT / 2 + 33, 400, 100, "Enter also works!", "#222", "16px sans");
 
     canvas.addEventListener("mousemove", (event) => {
         playButton.listenMouseMove(event);
@@ -61,7 +64,7 @@ function main() {
         playButton.enabled = true;
         settingsButton.enabled = true;
         playButton.draw();
-        textObject.draw();
+        playText.draw();
         settingsButton.draw();
 
 
@@ -73,6 +76,7 @@ function main() {
     }
 
     function startGame() {
+        /** @type Player */
         const player1 = new Player(
             0,
             0,
@@ -88,6 +92,7 @@ function main() {
             }
         );
 
+        /** @type Player */
         const player2 = new Player(
             0,
             0,
@@ -103,6 +108,7 @@ function main() {
             }
         );
 
+        /** @type Player */
         const player3 = new Player(
             0,
             0,
@@ -118,6 +124,7 @@ function main() {
             }
         );
 
+        /** @type Player */
         const player4 = new Player(
             0,
             0,
@@ -140,10 +147,6 @@ function main() {
 
         const players = [player1, player2, player3, player4];
         const teamsEnabled = localStorage.getItem("teamenable");
-        console.log(teamsEnabled);
-
-        // each team has its own color
-        const teamColors = ["#990000", "#999900", "#009900", "#000099"];
 
         if (teamsEnabled != "false") {
             // set player's shadow to white indicating it has no team
@@ -171,6 +174,7 @@ function main() {
         const platforms = loadMap(1, players);
         const powerUps = [];
 
+        /** @type ScreenObject */
         const bg = new ScreenObject(
             -WIDTH,
             -HEIGHT,
@@ -205,6 +209,25 @@ function main() {
                 players[i].listenKeyUp(event);
             }
         });
+
+        let gamemode = new Gamemode(players, teamsEnabled);
+        
+        switch (localStorage.getItem("gamemode")) {
+            case "ffa":
+                gamemode = new Ffa(players, teamsEnabled);
+                break;
+            case "deathmatch":
+                gamemode = new Deathmatch(players, teamsEnabled);
+                break;
+            case "stock":
+                gamemode = new Stock(players, teamsEnabled);
+                break;
+            default:
+                gamemode = new Ffa(players, teamsEnabled);
+                break;
+        }
+
+        gamemode.setup();
 
         gameOver = false;
         GameConsole.clear();
@@ -250,6 +273,24 @@ function main() {
             for (let i = 0; i < players.length; i++) {
                 players[i].health.draw();
             }
+
+            if (gamemode.isGameOver()) {
+                if (!gameOver) {
+                    setTimeout(() => {
+                        let whoWon = gamemode.whoWon();
+                        GameConsole.log(`<span style="color: ${whoWon[1]};">${whoWon[0]}</span> won!`, "#FFFF00", true);
+
+                        playerCounter = 0;
+                        teamCounter = 4;
+                        clearInterval(process);
+                        process = setInterval(mainMenu, 15);
+                    }, 1500);
+
+                    gameOver = true;
+                }
+            }
+
+            return;
 
             if (playerScreenObjs.length == 1) {
                 // Go to win screen
