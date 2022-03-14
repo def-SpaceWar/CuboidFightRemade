@@ -5,8 +5,54 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="static/css/style.css" rel="stylesheet">
+        <!-- needed for dev purposes -->
+        <link href="../static/css/style.css" rel="stylesheet">
     </head>
     <body>
-    
+        <h1>Rules of the Game!</h1>
+
+        <p>You fight!</p>
+
+        <h1>Class Statistics (If stat for class isn't shown then it is default!)</h1>
+
+        <div class="cards">
+            <h1 style="color: #efefef">Default:</h3>
+
+            <p>Stats:</p>
+            <ul>
+                <li>moveSpeed 6</li>
+                <li>jumpPower 50</li>
+                <li>maxJumps 2 (can jump 2 times mid air AKA triple jump)</li>
+                <li>damage 4</li>
+                <li>attackRange 100</li>
+                <li>attackCooldown 2</li>
+                <li>kbMult 1</li>
+                <li>kbDefence 1</li>
+                <li>comboCooldownAmount (milliseconds removed from cooldown per comboed hit) 250</li>
+                <li>comboDamagePercentage (the percentage of the actual damage dealt per 1 combo) 10% (a 10-combo would deal 100% more damage or DOUBLE!)</li>
+                <li>health 100</li>
+            </ul>
+
+            <p>Special: damage x1.5 (damage multipliers are squared in combat, so 2.25)</p>
+
+            <h1 style="color: #fbee63">Berserk</h3>
+
+            <p>Stats:</p>
+            <ul>
+                <li>moveSpeed 5</li>
+                <li>jumpPower 60</li>
+                <li>maxJumps 1</li>
+                <li>damage 4.4</li>
+                <li>attackRange 110</li>
+                <li>attackCooldown 3</li>
+                <li>comboCooldownAmount 400</li>               
+                <li>comboDamagePercentage 25%</li>
+                <li>health 75</li>
+            </ul>
+
+            <p>Special: kbMult x1.5, attackRange x2</p>
+
+            <h1 style="color: #0672FA">Tank</h1>
+        </div>
     </body>
 </html>

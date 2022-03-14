@@ -218,3 +218,12 @@ button {
     caret-color: #ff4;
     border: solid #ff4 2px;
 }
+
+.cards {
+    font-family: monospace;
+    font-size: 120%;
+    font-weight: bold;
+    background-color: #1C1D21;
+    padding: 10px;
+    margin: 10px;
+}
