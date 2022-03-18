@@ -1,8 +1,11 @@
 #+TITLE: TODO
 
-* TODO Juggernaut gamemode where everyone has LIVES and tries to kill the juggernaut, teams will be blatantly reset for all the players.
-  The juggernaut will be bigger and have more damage, health, kbDef, basically everything.
-  Slower too!
+* TODO Make new class called 'Masochist'
+base stats are Default but worse
+HP is 150
+deals more damage the lower it's health
+killBuff makes it invincible for 10 seconds and making
+special is to deal damage to itself (10-20) and give bloodlust
 * TODO Description for every single class on a new page.
 * TODO Red platforms with gray bottom color that does damage every half a second you stand on it and slows you! (introduced in the communist map)
 * TODO Each side of the map should have different death messages other than the one from the bottom.
@@ -15,6 +18,9 @@ The vampire's wings will be of 2 different images and there will be a class for 
 + [ ] Ninja Bandana that changes direction depending on movement
 * TODO Style the entire website.
 Add a navbar that can send you to the settings page and back to the game. And also add instructions!
+* DONE Juggernaut gamemode where everyone has LIVES and tries to kill the juggernaut, teams will be blatantly reset for all the players.
+  The juggernaut will be bigger and have more damage, health, kbDef, basically everything.
+  Slower too!
 * -------------------------------------------------- Divider
 * DONE Make a console that is colored by player color and says the power up they got.
 * DONE Make an Attack Cool Down Bar that spawns above the players.
