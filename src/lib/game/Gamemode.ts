@@ -1,14 +1,17 @@
-class Gamemode {
-    // game defining settings
-    respawn = false
-    lives = false
-    static instance = null;
+import { teamColors } from "../../globals";
+import { Player } from "../player/Player";
 
-    constructor(players, teamsEnabled=false) {
+export class Gamemode {
+    // game defining settings
+    respawn = false;
+    lives = false;
+    static instance: Gamemode;
+
+    constructor(_players: Player[], _teamsEnabled=false) {
         return;
     }
 
-    healthText(player, lineNum) {
+    healthText(player: Player, lineNum: number) {
         if (lineNum == 1) {
             return `Combo: ${player.combo}`;
         } else {
@@ -32,12 +35,15 @@ class Gamemode {
     }
 }
 
-class Ffa extends Gamemode {
+export class Ffa extends Gamemode {
     // ffa: last player/team alive wins!
-    playersInGame = [];
-    teamsInGame = [];
+    players: Player[];
+    teamsEnabled: boolean;
 
-    constructor(players, teamsEnabled=false) {
+    playersInGame: number[] = [];
+    teamsInGame: number[] = [];
+
+    constructor(players: Player[], teamsEnabled=false) {
         super(players, teamsEnabled);
         this.players = players;
         this.respawn = false;
@@ -83,11 +89,14 @@ class Ffa extends Gamemode {
     }
 }
 
-class Deathmatch extends Gamemode { 
+export class Deathmatch extends Gamemode { 
     // First to 10 kills win and if its teams first team to 10 kills wins!
-    winner = ["Player", 0];
+    players: Player[];
+    teamsEnabled: boolean;
+
+    winner: any[] = ["Player", 0];
     
-    constructor(players, teamsEnabled=false) {
+    constructor(players: Player[], teamsEnabled=false) {
         super(players, teamsEnabled);
         this.players = players;
         this.respawn = true;
@@ -96,7 +105,7 @@ class Deathmatch extends Gamemode {
         Gamemode.instance = this;
     }
 
-    healthText(player, lineNum) {
+    healthText(player: Player, lineNum: number) {
         if (lineNum == 1) {
             return `Death Count: ${player.deaths}`;
         } else {
@@ -148,12 +157,15 @@ class Deathmatch extends Gamemode {
     }
 }
 
-class Stock extends Gamemode {
+export class Stock extends Gamemode {
     // stock: last player/team with lives left wins!
-    playersInGame = [];
-    teamsInGame = [];
+    players: Player[];
+    teamsEnabled: boolean;
 
-    constructor(players, teamsEnabled=false) {
+    playersInGame: number[] = [];
+    teamsInGame: number[] = [];
+
+    constructor(players: Player[], teamsEnabled=false) {
         super(players, teamsEnabled);
         this.players = players;
         this.respawn = true;
@@ -162,7 +174,7 @@ class Stock extends Gamemode {
         Gamemode.instance = this;
     }
 
-    healthText(player, lineNum) {
+    healthText(player: Player, lineNum: number) {
         if (lineNum == 1) {
             return `Lives: ${player.lives}`;
         } else {
@@ -207,12 +219,15 @@ class Stock extends Gamemode {
     }
 }
 
-class Juggernaut extends Gamemode {
+export class Juggernaut extends Gamemode {
     // juggernaut: the Juggernaut or the Team win
-    teamsInGame = [];
+    players: Player[];
+    teamsEnabled: boolean;
 
-    constructor(players, teamsEnabled=false) {
-        super(players, teamsEnabled);
+    teamsInGame: number[] = [];
+
+    constructor(players: Player[], _teamsEnabled: Boolean) {
+        super(players, true);
         this.players = players;
         this.respawn = false;
         this.lives = false;

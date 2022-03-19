@@ -1,20 +1,96 @@
-let playerCounter = 0;
-let teamCounter = 4;
+import { WIDTH, HEIGHT, GameConsole } from "../../globals";
+import { Accessorie } from "./Accessorie";
+import { Gamemode } from "../game/Gamemode";
+import { Platform } from "../game/Platform";
+import { abilitySpeed, damageBoost, damageDefence, healBoost, jumpBoost, kbBoost, kbDefence, PowerUpBox, regeneration, speedBoost } from "../game/PowerUpBox";
+import { ScreenObject } from "../std/ScreenObject";
+import { TextObject } from "../std/TextObject";
+import { ComboCounter } from "./ComboCounter";
+import { VampireWing } from "./VampireWing";
 
-class Player {
+type Controls = {
+    left: string,
+    right: string,
+    up: string,
+    down: string,
+    attack: string,
+    special: string
+};
+
+export class Player {
     // This is the player.
     // It will have 2 screen objects.
     // One for the health bar, and one for the player itself.
+    static playerCounter = 0;
+    static teamCounter = 4;
 
-    constructor(x, y, w, h, colors, controls) {
-        playerCounter++;
-        teamCounter++;
-        this.playerNum = playerCounter;
+    playerNum: number;
+    lastPlayerHit: Player;
+    killCount: number;
+    lives: number;
+    deaths: number;
+    team: number;
+
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+
+    color: string;
+    inactiveColor: string;
+    controls: Controls;
+
+    effectors: ((player: Player) => void)[];
+    accessoriesUnder: Accessorie[];
+    accessoriesOver: Accessorie[];
+    respawnPoint: number[];
+
+    xSpeed: number;
+    ySpeed: number;
+    otherPlayers: Player[];
+    moveSpeed: number;
+    moving: boolean;
+    moveDir: number;
+    jumpPower: number;
+    jumpCounter: number;
+    maxJumps: number;
+
+    health: PlayerHealth;
+    damage: number;
+    attackRange: number;
+    attackCooldown: number;
+    showCooldown: boolean;
+    attackable: boolean;
+    kbMult: number;
+    kbDefence: number;
+    defenceDivisor: number;
+    healMult: number;
+    combo: number;
+    comboCooldownAmount: number;
+
+    forces: { x: number; y: number; }[];
+
+    groundPounding: boolean;
+    gravity: number;
+    terminalVelocity: number;
+    drag: number;
+    grounded: boolean;
+    isPhasing: boolean;
+
+    class: string;
+
+    screenObject: any;
+    attkCooldownObjs: ScreenObject[];
+
+    constructor(x: number, y: number, w: number, h: number, colors: string[], controls: Controls) {
+        Player.playerCounter++;
+        Player.teamCounter++;
+        this.playerNum = Player.playerCounter;
         this.lastPlayerHit = null;
         this.killCount = 0;
         this.lives = 3;
         this.deaths = 0;
-        this.team = teamCounter;
+        this.team = Player.teamCounter;
 
         this.x = x;
         this.y = y;
@@ -83,7 +159,7 @@ class Player {
         this.grounded = false;
         this.isPhasing = false;
 
-        this.class = null;
+        this.class = undefined;
         this.loadSettings();
 
         this.screenObject = new ScreenObject(
@@ -93,7 +169,7 @@ class Player {
             this.h,
             this.color,
             true,
-            true,
+            true
         );
 
         this.attkCooldownObjs = [
@@ -161,7 +237,7 @@ class Player {
         if (localStorage.getItem(`player${this.playerNum}attack`) != null) this.controls.attack = localStorage.getItem(`player${this.playerNum}attack`);
         if (localStorage.getItem(`player${this.playerNum}special`) != null) this.controls.special = localStorage.getItem(`player${this.playerNum}special`);
 
-        this.lives = localStorage.getItem("stocklives") || this.lives;
+        this.lives = parseInt(localStorage.getItem("stocklives")) || this.lives;
 
         // classes
         this.class = localStorage.getItem(`player${this.playerNum}class`) || "Default";
@@ -170,8 +246,6 @@ class Player {
 
     loadClass() {
         switch (this.class) {
-            case "Default":
-                break;
             case "Berserk":
                 this.moveSpeed /= 1.2;
                 this.jumpPower *= 1.2;
@@ -283,8 +357,7 @@ class Player {
         let hasHit = false;
 
         for (let i = 0; i < this.otherPlayers.length; i++) {
-            /** @type Player */
-            let otherplayer = this.otherPlayers[i];
+            let otherplayer: Player = this.otherPlayers[i];
 
             if (otherplayer.team != this.team) {
                 var distance =
@@ -336,9 +409,6 @@ class Player {
                         hasHit = true;
 
                         switch (this.class) {
-                            case "Default":
-                                power *= 1 + 0.1 * this.combo;
-                                break;
                             case "Berserk":
                                 power *= 1 + 0.25 * this.combo;
                                 break;
@@ -416,11 +486,6 @@ class Player {
         if (!this.attackable) return;
 
         switch (this.class) {
-            case "Default":
-                this.damage *= 1.5;
-                this.attack(true);
-                this.damage /= 1.5;
-                break;
             case "Berserk":
                 this.kbMult *= 1.5;
                 this.attackRange *= 2;
@@ -516,9 +581,9 @@ class Player {
                 break;
             case "Tank":
                 this.health.maxHealth *= 1.5;
-                if (this.health.health < this.health.maxHealth) this.health.modHealth(this.health.maxHealth - this.health.health);
+                if (this.health.health < this.health.maxHealth) this.health.modHealth((this.health.maxHealth - this.health.health) / this.healMult);
                 this.kbDefence *= 2;
-                this.speed *= 1.2;
+                this.moveSpeed *= 1.2;
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00");});
                 this.effectors.push(kbDefence(8, 2));
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00");});
@@ -588,6 +653,8 @@ class Player {
                 this.effectors.push(speedBoost(3, 4));
                 this.effectors.push(kbBoost(3, 3));
                 this.effectors.push(kbDefence(3, 5));
+                this.effectors.push(damageDefence(3, 2));
+                this.effectors.push(healBoost(3, 2));
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00");});
                 break;
         }
@@ -607,7 +674,7 @@ class Player {
         }, 2500);
     }
 
-    updatePhysics(platforms, powerUps) {
+    updatePhysics(platforms: Platform[], powerUps: PowerUpBox[]) {
         this.xSpeed = 0;
         this.ySpeed = 0;
 
@@ -751,7 +818,7 @@ class Player {
         }
     }
 
-    listenKeyDown(event) {
+    listenKeyDown(event: KeyboardEvent) {
         if (this.health.health <= 0) return;
 
         switch (event.key) {
@@ -786,7 +853,7 @@ class Player {
         }
     }
 
-    listenKeyUp(event) {
+    listenKeyUp(event: KeyboardEvent) {
         if (this.health.health <= 0) return;
 
         switch (event.key) {
@@ -806,10 +873,37 @@ class Player {
     }
 }
 
-class PlayerHealth {
+export class PlayerHealth {
     // This is the player health class
     // It'll have all the powerup effects related to health and will draw a health bar.
-    constructor(health, maxHealth, color, inactiveColor, borderColor, parent) {
+    
+    health: number;
+    maxHealth: number;
+    color: string;
+    inactiveColor: string;
+    parent: Player;
+    parentNum: number;
+
+    _health: number;
+    borderMargin: number;
+
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    constX: number;
+    constW: number;
+
+    screenObject: ScreenObject;
+    backObject: ScreenObject;
+    borderObject: ScreenObject;
+    textObject: TextObject;
+    comboObject: any;
+    killObject: any;
+    textBorderObject: ScreenObject;
+    damageHealIndicators: TextObject[];
+
+    constructor(health: number, maxHealth: number, color: string, inactiveColor: string, borderColor: string, parent: Player) {
         this.health = health;
         this.maxHealth = maxHealth;
         this.color = color;
@@ -864,7 +958,7 @@ class PlayerHealth {
             this.y + this.h / 2 + this.borderMargin,
             this.w,
             this.h,
-            this.health,
+            this.health.toString(),
             borderColor,
             "38px sans"
         );
@@ -945,7 +1039,7 @@ class PlayerHealth {
 
         this.textBorderObject.draw();
 
-        this.textObject.text = Math.round(this.health * 100) / 100;
+        this.textObject.text = (Math.round(this.health * 100) / 100).toString();
         this.textObject.draw();
 
         //this.comboObject.text = `Combo: ${this.parent.combo}`;
@@ -957,7 +1051,7 @@ class PlayerHealth {
         this.killObject.draw();
     }
 
-    afterDeath(reason) {
+    afterDeath(reason: string) {
         if (this.parent.lastPlayerHit == null) {
             if (reason == "void") {
                 switch (Math.floor(Math.random() * 4)) {
@@ -1032,7 +1126,7 @@ class PlayerHealth {
         }
     }
 
-    modHealth(amount, reason=null) {
+    modHealth(amount: number, reason?: string) {
         if (this.health <= 0) return;
 
         if (amount < 0) amount *= this.parent.defenceDivisor;
@@ -1116,8 +1210,8 @@ class PlayerHealth {
     }
 }
 
-function bloodlust(time) {
-    return function(player) {
+function bloodlust(time: number) {
+    return function(player: Player) {
         GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect Bloodlust { time: ${time} }`, "#992222");
 
         player.comboCooldownAmount *= 2;

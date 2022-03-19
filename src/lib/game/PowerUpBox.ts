@@ -1,5 +1,21 @@
-class PowerUpBox {
-    constructor(x, y) {
+import { GameConsole, powerUpBoxTexture1 } from "../../globals";
+import { Player } from "../player/Player";
+import { ScreenObject } from "../std/ScreenObject";
+
+export class PowerUpBox {
+    powerUps: ((player: Player) => void)[];
+
+    screenObject: ScreenObject;
+
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+
+    chosenPowerUp: (player: Player) => void;
+    done: boolean;
+
+    constructor(x: number, y: number) {
         this.powerUps = [
             regeneration(10, 5),
             regeneration(4, 10),
@@ -24,9 +40,10 @@ class PowerUpBox {
 
         let i = Math.floor(Math.random() * this.powerUps.length);
         this.chosenPowerUp = this.powerUps[i];
+        this.done = false;
     }
 
-    givePowerUp(player) {
+    givePowerUp(player: Player) {
         if (this.done) return;
 
         player.effectors.push(this.chosenPowerUp);
@@ -43,9 +60,9 @@ class PowerUpBox {
 
 // ----------- Power Ups
 
-function regeneration(time, level) {
+export function regeneration(time: number, level: number) {
     // time * level = amount_of_health_possible_gain
-    return (player) => {
+    return (player: Player) => {
         GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect Regeneration { time: ${time}, level: ${level} }`, "#DD5599")
 
         let playerHealth = player.health;
@@ -60,8 +77,8 @@ function regeneration(time, level) {
     };
 }
 
-function abilitySpeed(time, level) {
-    return (player) => {
+export function abilitySpeed(time: number, level: number) {
+    return (player: Player) => {
         GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect AbilitySpeed { time: ${time}, level: ${level} }`, "#2255DD")
 
         player.attackCooldown /= level;
@@ -72,8 +89,8 @@ function abilitySpeed(time, level) {
     };
 }
 
-function damageBoost(time, level) {
-    return (player) => {
+export function damageBoost(time: number, level: number) {
+    return (player: Player) => {
         GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect DamageBoost { time: ${time}, level: ${level} }`, "#DD2255")
 
         player.damage *= level;
@@ -84,8 +101,8 @@ function damageBoost(time, level) {
     };
 }
 
-function jumpBoost(time, level) {
-    return (player) => {
+export function jumpBoost(time: number, level: number) {
+    return (player: Player) => {
         GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect JumpBoost { time: ${time}, level: ${level} }`, "#DD5522")
 
         player.jumpPower *= level;
@@ -96,8 +113,8 @@ function jumpBoost(time, level) {
     }
 }
 
-function speedBoost(time, level) {
-    return (player) => {
+export function speedBoost(time: number, level: number) {
+    return (player: Player) => {
         GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect SpeedBoost { time: ${time}, level: ${level} }`, "#99DD55")
 
         player.moveSpeed *= level;
@@ -108,8 +125,8 @@ function speedBoost(time, level) {
     }
 }
 
-function kbBoost(time, level) {
-    return (player) => {
+export function kbBoost(time: number, level: number) {
+    return (player: Player) => {
         GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect KbBoost { time: ${time}, level: ${level} }`, "#99DDFF")
 
         player.kbMult *= level;
@@ -120,8 +137,8 @@ function kbBoost(time, level) {
     }
 }
 
-function kbDefence(time, level) {
-    return (player) => {
+export function kbDefence(time: number, level: number) {
+    return (player: Player) => {
         GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect KbDefence { time: ${time}, level: ${level} }`, "#FFDD55")
 
         player.kbDefence *= level;
@@ -132,8 +149,8 @@ function kbDefence(time, level) {
     }
 }
 
-function damageDefence(time, level) {
-    return (player) => {
+export function damageDefence(time: number, level: number) {
+    return (player: Player) => {
         GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect DamageDefence { time: ${time}, level: ${level} }`, "#FF99DD")
 
         player.defenceDivisor /= level;
@@ -144,8 +161,8 @@ function damageDefence(time, level) {
     }
 }
 
-function healBoost(time, level) {
-    return (player) => {
+export function healBoost(time: number, level: number) {
+    return (player: Player) => {
         GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect HealBoost { time: ${time}, level: ${level} }`, "#55FF99")
 
         player.healMult *= level;

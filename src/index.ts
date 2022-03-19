@@ -1,5 +1,13 @@
+import { WIDTH, HEIGHT, canvas, ctx, bgOrig, teamColors, GameConsole, lerpCamera } from './globals';
+import { Button } from "./lib/std/Button";
+import { Player } from "./lib/player/Player";
+import { ScreenObject } from './lib/std/ScreenObject';
+import { TextObject } from './lib/std/TextObject';
+import { loadMap } from './maps';
+import { Deathmatch, Ffa, Gamemode, Juggernaut, Stock } from './lib/game/Gamemode';
+import { PowerUpBox } from './lib/game/PowerUpBox';
+
 function main() {
-    /** @type Button */
     const playButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 - 40, 300, 80, {
         inactive: "#0ad",
         active: "#0ef",
@@ -13,7 +21,6 @@ function main() {
         startGame();
     }, "40px sans");
 
-    /** @type Button */
     const settingsButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 + 80, 300, 80, {
         inactive: "#da0",
         active: "#fe0",
@@ -32,7 +39,6 @@ function main() {
         }
     });
 
-    /** @type TextBox */
     const playText = new TextObject(WIDTH / 2 - 70, HEIGHT / 2 + 33, 400, 100, "Enter also works!", "#222", "16px sans");
 
     canvas.addEventListener("mousemove", (event) => {
@@ -76,7 +82,6 @@ function main() {
     }
 
     function startGame() {
-        /** @type Player */
         const player1 = new Player(
             0,
             0,
@@ -92,7 +97,6 @@ function main() {
             }
         );
 
-        /** @type Player */
         const player2 = new Player(
             0,
             0,
@@ -108,7 +112,6 @@ function main() {
             }
         );
 
-        /** @type Player */
         const player3 = new Player(
             0,
             0,
@@ -124,7 +127,6 @@ function main() {
             }
         );
 
-        /** @type Player */
         const player4 = new Player(
             0,
             0,
@@ -161,7 +163,7 @@ function main() {
 
                     for (let j = 0; j < playersOnTeam.length; j++) {
                         for (let k = 0; k < players.length; k++) {
-                            if (playersOnTeam[j] == players[k].playerNum) {
+                            if (parseInt(playersOnTeam[j]) == players[k].playerNum) {
                                 players[k].team = i;
                                 players[k].screenObject.shadowColor = teamColors[i - 1];
                             }
@@ -171,10 +173,11 @@ function main() {
             }
         }
 
-        const platforms = loadMap(1, players);
-        const powerUps = [];
+        const data = loadMap(1, players);
 
-        /** @type ScreenObject */
+        const platforms = data[0];
+        const powerUps: PowerUpBox[] = [];
+
         const bg = new ScreenObject(
             -WIDTH,
             -HEIGHT,
@@ -183,7 +186,7 @@ function main() {
             "#FF0000"
         );
 
-        bg.image = bgImage;
+        bg.image = data[1];
 
         let done = false;
         while (!done) {
@@ -210,30 +213,30 @@ function main() {
             }
         });
 
-        let gamemode = new Gamemode(players, teamsEnabled);
+        let gamemode = new Gamemode(players, !!teamsEnabled);
         
         switch (localStorage.getItem("gamemode")) {
             case "ffa":
-                gamemode = new Ffa(players, teamsEnabled);
+                gamemode = new Ffa(players, !!teamsEnabled);
                 break;
             case "deathmatch":
-                gamemode = new Deathmatch(players, teamsEnabled);
+                gamemode = new Deathmatch(players, !!teamsEnabled);
                 break;
             case "stock":
-                gamemode = new Stock(players, teamsEnabled);
+                gamemode = new Stock(players, !!teamsEnabled);
                 break;
             case "juggernaut":
-                teamsEnabled = true;
-                gamemode = new Juggernaut(players, teamsEnabled);
+                teamsEnabled = "true";
+                gamemode = new Juggernaut(players, !!teamsEnabled);
                 break;
             default:
-                gamemode = new Ffa(players, teamsEnabled);
+                gamemode = new Ffa(players, !!teamsEnabled);
                 break;
         }
 
         gamemode.setup();
 
-        gameOver = false;
+        let gameOver = false;
         GameConsole.clear();
         process = setInterval(runningGame, 15);
 
@@ -284,8 +287,8 @@ function main() {
                         let whoWon = gamemode.whoWon();
                         GameConsole.log(`<span style="color: ${whoWon[1]};">${whoWon[0]}</span> won!`, "#FFFF00", true);
 
-                        playerCounter = 0;
-                        teamCounter = 4;
+                        Player.playerCounter = 0;
+                        Player.teamCounter = 4;
                         clearInterval(process);
                         process = setInterval(mainMenu, 15);
                     }, 1500);
@@ -297,4 +300,16 @@ function main() {
     }
 }
 
-main();
+ctx.fillStyle = "#00FFFF";
+ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+ctx.fillStyle = "black";
+ctx.font = "100px sans";
+ctx.fillText(
+    "Loading...",
+    WIDTH / 2 - 200,
+    HEIGHT / 2 + 50,
+    800
+);
+
+setTimeout(main, 2000);

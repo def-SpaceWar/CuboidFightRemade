@@ -1,23 +1,39 @@
-class ScreenObject {
+import { ctx, camera, WIDTH, HEIGHT } from "../../globals";
+
+export class ScreenObject {
     // This object/class is just something that is drawn on the screen.
     // So we don't have to keep copying and pasting the same function to draw
     // a freaking square.
     // And this could help with soon adding camera affects with zooming.
     // And detaching the actual object from the graphics.
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    color: string;
+    scale: boolean;
+    shadow: boolean;
+    shadowColor: string;
+    shadowOffset: number[];
+    shadowBlur: number;
+    image: HTMLImageElement;
+    tintPower: number;
+    angle: number;
 
-    constructor(x, y, w, h, color, scale = true, shadow = false, shadowOffset = [0, 5], shadowBlur = 15, shadowColor = undefined, image = null, tintPower = 0) {
+    constructor(x: number, y: number, w: number, h: number, color: string, scale?: boolean, shadow?: boolean, shadowOffset?: number[], shadowBlur?: number, shadowColor?: string, image?: HTMLImageElement, tintPower?: number) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.color = color;
         this.scale = scale;
-        this.shadow = shadow;
+        if (scale == undefined) this.scale = true;
+        this.shadow = shadow || false;
         this.shadowColor = shadowColor || "#000000AA";
-        this.shadowOffset = shadowOffset;
-        this.shadowBlur = shadowBlur;
+        this.shadowOffset = shadowOffset || [0, 5];
+        this.shadowBlur = shadowBlur || 15;
         this.image = image;
-        this.tintPower = tintPower;
+        this.tintPower = tintPower || 0;
         this.angle = 0; // degrees
     }
 
@@ -67,7 +83,7 @@ class ScreenObject {
         ctx.restore();
     }
 
-    isCollided(otherObj) {
+    isCollided(otherObj: ScreenObject) {
         if (otherObj.x >= this.x && otherObj.x <= this.x + this.w) {
             if (otherObj.y >= this.y && otherObj.y <= this.y + this.h) {
                 return true;

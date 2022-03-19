@@ -1,3 +1,7 @@
+import { bgOrig } from "./globals";
+import { Platform } from "./lib/game/Platform";
+import { Player } from "./lib/player/Player";
+
 const UNIT_SIZE = 80;
 
 // An Empty Map
@@ -34,7 +38,7 @@ const UNIT_SIZE = 80;
 //     [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
 // ];
 
-const maps = {
+export const maps = {
   "map1": [
     [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
     [" ", "g", "g", "g", "g", "g", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
@@ -63,8 +67,9 @@ const maps = {
   "bg1": bgOrig
 };
 
-function loadMap(mapNum, players) {
+export function loadMap(mapNum: number, players: Player[]) {
   const mapPlatforms = [];
+  // @ts-ignore: can't find type
   const map = maps[`map${mapNum}`];
 
   for (let y = 0; y < map.length; y++) {
@@ -108,13 +113,14 @@ function loadMap(mapNum, players) {
 
           break;
         case "s":
-          let val = Math.floor(Math.random() * 8) + 5;
+          let val: string = (Math.floor(Math.random() * 8) + 5).toString();
 
-          if (val > 9) {
-            if (val == 10) val = "A";
-            if (val == 11) val = "B";
-            if (val == 12) val = "C";
-            if (val == 13) val = "D";
+          let intVal = parseInt(val);
+          if (intVal > 9) {
+            if (intVal == 10) val = "A";
+            if (intVal == 11) val = "B";
+            if (intVal == 12) val = "C";
+            if (intVal == 13) val = "D";
           }
 
           mapPlatforms.push(
@@ -138,6 +144,6 @@ function loadMap(mapNum, players) {
     }
   }
 
-  bgImage = maps[`bg${mapNum}`];
-  return mapPlatforms;
+  // @ts-ignore
+  return [mapPlatforms, maps[`bg${mapNum}`]];
 }

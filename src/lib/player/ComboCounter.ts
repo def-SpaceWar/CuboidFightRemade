@@ -1,5 +1,15 @@
-class ComboCounter {
-    constructor(player, colors) {
+import { Player } from "./Player";
+import { TextObject } from "../std/TextObject";
+
+export class ComboCounter {
+    player: Player;
+    dimColor: string;
+    halfColor: string;
+    fullColor: string;
+
+    textObject: any;
+
+    constructor(player: Player, colors: string[]) {
         this.player = player;
         this.dimColor = colors[0];
         this.halfColor = colors[1];

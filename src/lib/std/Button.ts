@@ -1,4 +1,14 @@
-class Button {
+import { canvas } from "../../globals";
+import { ScreenObject } from "./ScreenObject";
+import { TextObject } from "./TextObject";
+
+export type ButtonColors = {
+    inactive: string;
+    active: string;
+    pressed: string;
+};
+
+export class Button {
     // For the button we'll have 2 screen objects and a text object.
     // 1 screenobject is the border (the border of the button) and the
     // button itself. The text is well, the text.
@@ -21,19 +31,33 @@ class Button {
     //     "20px 'Comic Sans MS'"                                  // font
     // );
 
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    colors: ButtonColors;
+    color: string;
+    borderMargin: number;
+    onClick: () => void;
+    isPressed: boolean;
+    enabled: boolean;
+    screenObject: ScreenObject;
+    borderObject: ScreenObject;
+    textObject: TextObject;
+
     constructor(
-        x,
-        y,
-        w,
-        h,
-        colors,
-        borderMargin,
-        borderColor,
-        text,
-        textOffset,
-        textColor,
-        onClick,
-        font
+        x: number,
+        y: number,
+        w: number,
+        h: number,
+        colors: ButtonColors,
+        borderMargin: number,
+        borderColor: string,
+        text: string,
+        textOffset: number[],
+        textColor: string,
+        onClick: () => void,
+        font: string
     ) {
         this.x = x;
         this.y = y;
@@ -83,7 +107,7 @@ class Button {
         this.textObject.draw();
     }
 
-    listenMouseMove(event) {
+    listenMouseMove(event: MouseEvent) {
         var rect = canvas.getBoundingClientRect();
         let mouseX = event.clientX - rect.left;
         let mouseY = event.clientY - rect.top;
@@ -100,7 +124,7 @@ class Button {
         }
     }
 
-    listenMouseDown(event) {
+    listenMouseDown(event: MouseEvent) {
         var rect = canvas.getBoundingClientRect();
         let mouseX = event.clientX - rect.left;
         let mouseY = event.clientY - rect.top;
@@ -116,7 +140,7 @@ class Button {
         }
     }
 
-    listenMouseUp(event) {
+    listenMouseUp(event: MouseEvent) {
         var rect = canvas.getBoundingClientRect();
         let mouseX = event.clientX - rect.left;
         let mouseY = event.clientY - rect.top;

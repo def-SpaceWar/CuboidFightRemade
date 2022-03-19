@@ -1,15 +1,16 @@
-/** @type HTMLCanvasElement */
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+import { ScreenObject } from "./lib/std/ScreenObject";
+
+export const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+export const ctx = canvas.getContext("2d");
 
 // each team has its own color
-const teamColors = ["#990000", "#999900", "#009900", "#000099"];
+export const teamColors = ["#990000", "#999900", "#009900", "#000099"];
 
 // I'm too used to my variables being named like this.
-const WIDTH = canvas.width;
-const HEIGHT = canvas.height;
+export const WIDTH = canvas.width;
+export const HEIGHT = canvas.height;
 
-const camera = {
+export const camera = {
     x: 0,
     y: 0,
     w_scale: 1,
@@ -17,7 +18,7 @@ const camera = {
 };
 
 
-function lerpCamera(objs) {
+export function lerpCamera(objs: ScreenObject[]) {
     // objs is an array of ScreenObjects
 
     // get midpounts
@@ -50,6 +51,7 @@ function lerpCamera(objs) {
 
     for (let i = 0; i < objs.length; i++) {
         dataStorage.push([]);
+
         for (let j = i + 1; j < objs.length; j++) {
             // find distance between objects
             dataStorage[i][j] = Math.sqrt(Math.pow(objs[i].x - objs[j].x, 2) + Math.pow(objs[i].y - objs[j].y, 2));
@@ -58,11 +60,13 @@ function lerpCamera(objs) {
 
     let largestDistance = 0;
     let farthestObjs = [0, 0];
+
     for (let i = 0; i < objs.length; i++) {
         for (let j = i + 1; j < objs.length; j++) {
-            // get index for two farthest objects
+            // @ts-ignore: Object is possibly 'undefined'
             if (dataStorage[i][j] > largestDistance) {
                 largestDistance = dataStorage[i][j];
+                // get index for two farthest objects
                 farthestObjs = [i, j];
             }
         }
@@ -97,9 +101,9 @@ function lerpCamera(objs) {
     }
 }
 
-const gameConsole = document.getElementById("console");
-const GameConsole = {
-    log: (msg, color="inherit", bold=false) => {
+const gameConsole = document.getElementById("console") as HTMLElement;
+export const GameConsole = {
+    log: (msg: string, color="inherit", bold=false) => {
         if (!bold) {
             gameConsole.innerHTML += `<p>> <span style="color: ${color};">${msg}</span></p>`;
         } else {
@@ -108,7 +112,7 @@ const GameConsole = {
         gameConsole.scrollTop = gameConsole.scrollHeight; // autoscrolling
     },
 
-    debug: (msg) => {
+    debug: (msg: string) => {
         GameConsole.log("[Debug]: " + msg, "#FF9900");
     },
 
@@ -117,22 +121,20 @@ const GameConsole = {
     }
 }
 
-let bgImage = new Image();
-
-const bgOrig = new Image();
+export const bgOrig = new Image();
 bgOrig.src = "./static/img/bg1.png";
 
-const ditherTexture = new Image();
+export const ditherTexture = new Image();
 ditherTexture.src = "./static/img/dithertexture.png";
 
-const grassTexture = new Image();
+export const grassTexture = new Image();
 grassTexture.src = "./static/img/grasstexture.png";
 
-const powerUpBoxTexture1 = new Image();
+export const powerUpBoxTexture1 = new Image();
 powerUpBoxTexture1.src = "./static/img/powerupbox1.png";
 
-const vampireLeftWingTexture = new Image();
+export const vampireLeftWingTexture = new Image();
 vampireLeftWingTexture.src = "./static/img/vampireleftwing.png";
 
-const vampireRightWingTexture = new Image();
+export const vampireRightWingTexture = new Image();
 vampireRightWingTexture.src = "./static/img/vampirerightwing.png";

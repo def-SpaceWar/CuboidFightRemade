@@ -1,9 +1,23 @@
-class TextObject {
+import { camera, ctx, HEIGHT, WIDTH } from "../../globals";
+
+export class TextObject {
     // Text object.
     // `font` paramater is used in this format:
     // "18px 'Comic Sans MS'"
+    
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    text: string;
+    color: string;
+    font: string;
+    scale: boolean;
+    lineWidth: number;
+    strokeStyle: string;
+    angle: number;
 
-    constructor(x, y, w, h, text, color, font, scale=false, lineWidth, strokeStyle) {
+    constructor(x: number, y: number, w: number, h: number, text: string, color: string, font: string, scale=false, lineWidth?: number, strokeStyle?: string) {
         this.x = x;
         this.y = y;
         this.w = w;
@@ -41,7 +55,7 @@ class TextObject {
                 this.w / 2 * (-1),
                 this.h / 2 * (-1),
                 this.w,
-                this.h
+                // this.h
             );
         }
 
@@ -50,7 +64,7 @@ class TextObject {
             this.w / 2 * (-1),
             this.h / 2 * (-1),
             this.w,
-            this.h
+            // this.h
         );
 
         ctx.restore();

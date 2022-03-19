@@ -1,13 +1,32 @@
-class Platform {
+import { bgOrig, ditherTexture, grassTexture } from "../../globals";
+import { ScreenObject } from "../std/ScreenObject";
+
+export type PlatformColors = {
+    top: string;
+    bottom: string;
+};
+
+export type Material = "grass" | "stone";
+
+export class Platform {
     // This is the platform class.
     // We'll have an Array with every single platform so that players
     // Don't go straight through them.
     // The Array will be passed in the player update physics function like
     // this:
     // `player.updatePhysics(platforms);`
-
     // colors: { top: "#9f1", bottom: "#320" }
-    constructor(x, y, w, h, colors, material, unpassable = false) {
+    
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    colors: PlatformColors;
+    material: Material;
+    unpassable: boolean;
+    screenObjects: ScreenObject[];
+
+    constructor(x: number, y: number, w: number, h: number, colors: PlatformColors, material: Material, unpassable = false) {
         this.x = x;
         this.y = y;
         this.w = w;
@@ -33,7 +52,7 @@ class Platform {
                     this.screenObjects[i].tintPower = 0.8;
                     break;
                 default:
-                    this.screenObjects[i].image = bgImage;
+                    this.screenObjects[i].image = bgOrig;
                     this.screenObjects[i].tintPower = 0.75;
                     break;
             }
