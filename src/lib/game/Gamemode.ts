@@ -94,6 +94,7 @@ export class Deathmatch extends Gamemode {
     players: Player[];
     teamsEnabled: boolean;
 
+    killsToWin: number;
     winner: any[] = ["Player", 0];
     
     constructor(players: Player[], teamsEnabled=false) {
@@ -103,6 +104,8 @@ export class Deathmatch extends Gamemode {
         this.lives = false;
         this.teamsEnabled = teamsEnabled;
         Gamemode.instance = this;
+
+        this.killsToWin = parseInt(localStorage.getItem("deathmatchkills")) || 5;
     }
 
     healthText(player: Player, lineNum: number) {
@@ -117,7 +120,7 @@ export class Deathmatch extends Gamemode {
         if (this.winner[1] != 0) return true;
 
         for (let i = 0; i < this.players.length; i++) {
-            if (this.players[i].killCount >= 10 && this.players[i].team > 4) {
+            if (this.players[i].killCount >= this.killsToWin && this.players[i].team > 4) {
                 this.winner = ["Player", this.players[i].playerNum];
                 return true;
             }
@@ -134,7 +137,7 @@ export class Deathmatch extends Gamemode {
             }
 
             for (let i = 0; i < teamXkillCount.length; i++) {
-                if (teamXkillCount[i] >= 10) {
+                if (teamXkillCount[i] >= this.killsToWin) {
                     this.winner = ["Team", i + 1];
                     return true;
                 }
@@ -229,8 +232,8 @@ export class Juggernaut extends Gamemode {
     constructor(players: Player[], _teamsEnabled: Boolean) {
         super(players, true);
         this.players = players;
-        this.respawn = false;
-        this.lives = false;
+        this.respawn = true;
+        this.lives = true;
         this.teamsEnabled = true;
         Gamemode.instance = this;
     }
@@ -251,6 +254,7 @@ export class Juggernaut extends Gamemode {
                 this.players[randomPlayer].class = "Juggernaut";
                 this.players[randomPlayer].reload();
                 this.players[randomPlayer].team = 1;
+                this.players[randomPlayer].lives = 1;
                 this.players[randomPlayer].screenObject.shadowColor = "#A254DF";
 
                 // set all other players to team 2
@@ -270,7 +274,7 @@ export class Juggernaut extends Gamemode {
         this.teamsInGame = [];
 
         for (let i = 0; i < this.players.length; i++) {
-            if (this.teamsInGame.indexOf(this.players[i].team) == -1 && this.players[i].health.health > 0) {
+            if (this.teamsInGame.indexOf(this.players[i].team) == -1 && this.players[i].lives > 0) {
                 this.teamsInGame.push(this.players[i].team);
             }
         }

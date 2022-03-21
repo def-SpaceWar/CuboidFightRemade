@@ -23,6 +23,8 @@
         <h6>Remade</h6>
     </center>
 
+    <p id="fpsCount">FPS: 0</p>
+
     <div id="game">
         <canvas id="canvas" width="1200" height="600">
 
@@ -44,6 +46,13 @@
         <h1>Settings</h1>
         <p>You have accessed the super secret settings! <b>MAKE SURE YOU HIT THE SAVE BUTTON AT THE BOTTOM!</b></p>
 
+        <br />
+
+        <button onclick="setOptions();" style="font-size: 50px;">Save</button>
+
+        <br />
+        <br />
+
         <div style="column-count: 5; width: 1400px;">
             <div>
                 <div class="game">
@@ -55,13 +64,35 @@
                         <option value="ffa">FFA</option>
                         <option value="deathmatch">Deathmatch</option>
                         <option value="stock">Stock</option>
-                        <option value="juggernaut">Juggernaut</option>
+                        <option value="juggernaut">Juggernaut (has stock lives)</option>
                     </select>
 
                     <br />
                     <br />
 
-                    <span>Stock Lives: <input id="stocklives" type="number" placeholder="3" min="0" max="99" style="width: 40px;" /></span>
+                    <span>Stock Lives: <input id="stocklives" type="number" placeholder="3" min="0" max="99" style="width: 40px;" onkeydown="return false;" /></span>
+
+                    <br />
+                    <br />
+
+                    <span>Deathmatch Kills: <input id="deathmatchkills" type="number" placeholder="5" min="0" max="99" style="width: 40px;" onkeydown="return false;" /></span>
+
+                    <br />
+                    <br />
+
+                    <span>Map: (WIP)</span>
+
+                    <select id="map" name="map">
+                        <option value="1">Original</option>
+                        <option value="2">???</option>
+                        <option value="3">???</option>
+                        <option value="4">???</option>
+                    </select>
+
+                    <br />
+                    <br />
+
+                    <span>FPS Cap (not 100% precise): <input id="fpslimit" type="number" placeholder="500" min="1" max="1000" style="width: 40px;" /></span>
                 </div>
             </div>
 
@@ -91,16 +122,17 @@
 
             <div class="classes">
                 <h3>Classes</h3>
-                <p>There are 7 classes:</p>
+                <p>There are 8 classes:</p>
 
                 <ul>
-                    <li>Default (It's the default.)</li>
+                    <li>Default</li>
                     <li>Berserk</li>
                     <li>Tank</li>
                     <li>Ninja</li>
                     <li>Heavyweight</li>
                     <li>Vampire</li>
                     <li>Support</li>
+                    <li>Physcopath</li>
                 </ul>
 
                 <span>Player 1 Class: </span>
@@ -113,6 +145,7 @@
                     <option value="Heavyweight">Heavyweight</option>
                     <option value="Vampire">Vampire</option>
                     <option value="Support">Support</option>
+                    <option value="Physcopath">Physcopath</option>
                 </select>
 
                 <br />
@@ -128,6 +161,7 @@
                     <option value="Heavyweight">Heavyweight</option>
                     <option value="Vampire">Vampire</option>
                     <option value="Support">Support</option>
+                    <option value="Physcopath">Physcopath</option>
                 </select>
 
                 <br />
@@ -143,6 +177,7 @@
                     <option value="Heavyweight">Heavyweight</option>
                     <option value="Vampire">Vampire</option>
                     <option value="Support">Support</option>
+                    <option value="Physcopath">Physcopath</option>
                 </select>
 
                 <br />
@@ -158,6 +193,7 @@
                     <option value="Heavyweight">Heavyweight</option>
                     <option value="Vampire">Vampire</option>
                     <option value="Support">Support</option>
+                    <option value="Physcopath">Physcopath</option>
                 </select>
             </div>
 
@@ -230,10 +266,6 @@
             </div>
         </div>
 
-        <br />
-
-        <button onclick="setOptions();">Save</button>
-
         <script type="text/javascript">
             // Use localStorage to set all the players'
             // textboxes, modifiers, (very far future cosmetics)
@@ -257,6 +289,8 @@
 
             const textboxes = [
                 document.getElementById("stocklives"),
+                document.getElementById("deathmatchkills"),
+                document.getElementById("fpslimit"),
             ];
 
             for (let i = 1; i <= 4; i++) {

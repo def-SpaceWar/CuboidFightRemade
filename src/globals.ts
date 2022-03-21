@@ -17,6 +17,8 @@ export const camera = {
     h_scale: 1
 };
 
+export const globalFrameLength = (1000 / parseInt(localStorage.getItem("fpslimit"))) || 2; // 500 fps cap or you choose
+export const globalPhysicsTick = 20; // Physics reloads every 20 milliseconds
 
 export function lerpCamera(objs: ScreenObject[]) {
     // objs is an array of ScreenObjects

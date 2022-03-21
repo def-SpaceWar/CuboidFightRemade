@@ -1,4 +1,4 @@
-import { WIDTH, HEIGHT, canvas, ctx, bgOrig, teamColors, GameConsole, lerpCamera } from './globals';
+import { WIDTH, HEIGHT, canvas, ctx, bgOrig, teamColors, GameConsole, lerpCamera, globalFrameLength, globalPhysicsTick } from './globals';
 import { Button } from "./lib/std/Button";
 import { Player } from "./lib/player/Player";
 import { ScreenObject } from './lib/std/ScreenObject';
@@ -8,7 +8,7 @@ import { Deathmatch, Ffa, Gamemode, Juggernaut, Stock } from './lib/game/Gamemod
 import { PowerUpBox } from './lib/game/PowerUpBox';
 
 function main() {
-    const playButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 - 40, 300, 80, {
+    const playButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 - 80, 300, 80, {
         inactive: "#0ad",
         active: "#0ef",
         pressed: "#aff"
@@ -16,12 +16,13 @@ function main() {
         // Start the game
         playButton.enabled = false;
         settingsButton.enabled = false;
+        infoButton.enabled = false;
         if (document.getElementById("settings").style.display == "block") document.getElementById("settings").style.display = "none";
         clearInterval(process);
         startGame();
     }, "40px sans");
 
-    const settingsButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 + 80, 300, 80, {
+    const settingsButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 + 40, 300, 80, {
         inactive: "#da0",
         active: "#fe0",
         pressed: "#ffa"
@@ -33,31 +34,55 @@ function main() {
         }
     }, "40px sans");
 
+    const infoButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 + 160, 300, 80, {
+        inactive: "#d0a",
+        active: "#f0e",
+        pressed: "#faf"
+    }, 10, "#555", "Info", [-40, 10], "#000", () => {
+        playButton.enabled = false;
+        settingsButton.enabled = false;
+        infoButton.enabled = false;
+        if (document.getElementById("settings").style.display == "block") document.getElementById("settings").style.display = "none";
+        clearInterval(process);
+        showInfo();
+    }, "40px sans");
+
     document.addEventListener("keydown", (e) => {
         if (e.key == "Enter" && playButton.enabled) {
             playButton.onClick();
         }
     });
 
-    const playText = new TextObject(WIDTH / 2 - 70, HEIGHT / 2 + 33, 400, 100, "Enter also works!", "#222", "16px sans");
+    const playText = new TextObject(WIDTH / 2 - 70, playButton.y + 75, 400, 100, "Enter also works!", "#222", "16px sans");
 
     canvas.addEventListener("mousemove", (event) => {
         playButton.listenMouseMove(event);
         settingsButton.listenMouseMove(event);
+        infoButton.listenMouseMove(event);
     });
 
     canvas.addEventListener("mousedown", (event) => {
         playButton.listenMouseDown(event);
         settingsButton.listenMouseDown(event);
+        infoButton.listenMouseDown(event);
     });
 
     canvas.addEventListener("mouseup", (event) => {
         playButton.listenMouseUp(event);
         settingsButton.listenMouseUp(event);
+        infoButton.listenMouseUp(event);
     });
 
+    let frames = 0;
+    const fpsText = document.getElementById("fpsCount");
+
+    setInterval(() => {
+        fpsText.innerHTML = `FPS: ${frames}`;
+        frames = 0;
+    }, 1000)
+
     let firstTime = true;
-    let process = setInterval(mainMenu, 15);
+    let process = setInterval(mainMenu, globalFrameLength);
 
     function mainMenu() {
         if (firstTime) {
@@ -67,18 +92,24 @@ function main() {
             firstTime = false;
         }
 
-        playButton.enabled = true;
-        settingsButton.enabled = true;
+        if (!playButton.enabled) {
+            playButton.enabled = true;
+            settingsButton.enabled = true;
+            infoButton.enabled = true;
+        }
+
         playButton.draw();
         playText.draw();
         settingsButton.draw();
-
+        infoButton.draw();
 
         // if (document.getElementById("idk").value == "idk") {
         //     document.getElementById("settings").style.display = "block";
         // } else {
         //     document.getElementById("settings").style.display = "none";
         // }
+
+        frames++;
     }
 
     function startGame() {
@@ -238,11 +269,23 @@ function main() {
 
         let gameOver = false;
         GameConsole.clear();
-        process = setInterval(runningGame, 15);
+        process = setInterval(drawingGame, globalFrameLength);
+        const gameLoop = setInterval(runGame, globalPhysicsTick);
 
-        function runningGame() {
-            // This function runs every frame
-            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        function runGame() {
+            for (let i = 0; i < players.length; i++) {
+                players[i].updatePhysics(platforms, powerUps);
+            }
+
+            for (let i = 0; i < powerUps.length; i++) {
+                powerUps[i].updatePhysics();
+            }
+
+            if (Math.random() * 1500 < 1) {
+                powerUps.push(new PowerUpBox(Math.random() * WIDTH * 2 + WIDTH / 2, Math.random() * HEIGHT * 2 + HEIGHT / 2));
+                GameConsole.log("A Power Up has spawned!");
+            }
+
 
             const playerScreenObjs = [];
 
@@ -254,16 +297,29 @@ function main() {
 
             lerpCamera(playerScreenObjs);
 
-            for (let i = 0; i < players.length; i++) {
-                players[i].updatePhysics(platforms, powerUps);
+            if (gamemode.isGameOver()) {
+                if (!gameOver) {
+                    setTimeout(() => {
+                        let whoWon = gamemode.whoWon();
+                        GameConsole.log(`<span style="color: ${whoWon[1]};">${whoWon[0]}</span> won!`, "#FFFF00", true);
+
+                        Player.playerCounter = 0;
+                        Player.teamCounter = 4;
+                        clearInterval(process);
+                        clearInterval(gameLoop);
+                        process = setInterval(mainMenu, globalFrameLength);
+                    }, 1500);
+
+                    gameOver = true;
+                }
             }
+        }
+
+        function drawingGame() {
+            // This function runs every frame
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
             bg.draw();
-
-            if (Math.random() * 1500 < 1) {
-                powerUps.push(new PowerUpBox(Math.random() * WIDTH * 2 + WIDTH / 2, Math.random() * HEIGHT * 2 + HEIGHT / 2));
-                GameConsole.log("A Power Up has spawned!");
-            }
 
             for (let i = 0; i < platforms.length; i++) {
                 platforms[i].draw();
@@ -281,21 +337,72 @@ function main() {
                 players[i].health.draw();
             }
 
-            if (gamemode.isGameOver()) {
-                if (!gameOver) {
-                    setTimeout(() => {
-                        let whoWon = gamemode.whoWon();
-                        GameConsole.log(`<span style="color: ${whoWon[1]};">${whoWon[0]}</span> won!`, "#FFFF00", true);
+            frames++;
+        }
+    }
 
-                        Player.playerCounter = 0;
-                        Player.teamCounter = 4;
-                        clearInterval(process);
-                        process = setInterval(mainMenu, 15);
-                    }, 1500);
+    function showInfo() {
+        const classNames = ["Default", "Berserk", "Tank", "Ninja", "Heavyweight", "Vampire", "Support"];
+        const classColors = ["#0DF"];
+        const classDescs = [
+            [
+                "This is the default class.",
+                "There is nothing special here."
+            ]
+        ]; 
 
-                    gameOver = true;
-                }
+        let currentClass = 0;
+
+        const border = new ScreenObject(50, 50, WIDTH - 100, HEIGHT - 100, "#333", false);
+        const displayBox = new ScreenObject(100, 100, 400, HEIGHT - 200, classColors[currentClass], false);
+
+        const platformThingy = new ScreenObject(150, 400, 300, 80, "#345", false);
+        const playerShowcase = new ScreenObject(250, 340, 100, 100, "#f43", false);
+
+        const textBorder = new ScreenObject(550, 100, 550, HEIGHT - 200, "#444", false);
+        //const titleText = new TextObject(600, 200, 450, 100, classNames[currentClass], "#efefef", "60px sans");
+        //const descText = new TextObject(600, 300, 450, 400, classDescs[currentClass], "#cfdfef", "30px sans")
+
+        let done = false;
+        process = setInterval(runRules, globalFrameLength);
+
+        function runRules() {
+            ctx.fillStyle = "#0DF";
+            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+            ctx.drawImage(bgOrig, 0, 0, WIDTH, HEIGHT);
+
+            if (done) {
+                clearInterval(process);
+                process = setInterval(mainMenu, globalFrameLength)
             }
+
+            while (currentClass >= classNames.length) {
+                currentClass -= classNames.length;
+            }
+
+            // Run info drawing code here!
+            border.draw();
+            displayBox.color = classColors[currentClass] || "#000";
+            displayBox.draw();
+
+            platformThingy.draw();
+            playerShowcase.draw();
+            
+            textBorder.draw();
+
+            {
+                ctx.fillStyle = "#efefef";
+                ctx.font = "60px sans";
+                ctx.fillText(classNames[currentClass], 600, 200, 450);
+            }
+
+            for (let i = 0; i < classDescs[currentClass].length; i++) {
+                ctx.fillStyle = "#cfdfef";
+                ctx.font = "20px sans";
+                ctx.fillText(classDescs[currentClass][i], 600, 250 + 20 * i, 450);
+            }
+
+            frames++;
         }
     }
 }

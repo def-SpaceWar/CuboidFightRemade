@@ -45,10 +45,10 @@ export class Player {
     accessoriesOver: Accessorie[];
     respawnPoint: number[];
 
-    xSpeed: number;
-    ySpeed: number;
+    xVelocity: number;
+    yVelocity: number;
     otherPlayers: Player[];
-    moveSpeed: number;
+    speed: number;
     moving: boolean;
     moveDir: number;
     jumpPower: number;
@@ -107,10 +107,10 @@ export class Player {
         ];
         this.respawnPoint = [0, 0];
 
-        this.xSpeed = 0;
-        this.ySpeed = 0;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
         this.otherPlayers = [];
-        this.moveSpeed = 6;
+        this.speed = 6;
         this.moving = false;
         this.moveDir = 0;
         this.jumpPower = 50;
@@ -188,7 +188,7 @@ export class Player {
             new ComboCounter(this, ["#333", this.inactiveColor, this.color])
         ];
 
-        this.moveSpeed = 6;
+        this.speed = 6;
         this.jumpPower = 50;
         this.jumpCounter = 0;
         this.maxJumps = 2;
@@ -247,7 +247,7 @@ export class Player {
     loadClass() {
         switch (this.class) {
             case "Berserk":
-                this.moveSpeed /= 1.2;
+                this.speed /= 1.2;
                 this.jumpPower *= 1.2;
                 this.maxJumps = 1;
                 this.damage *= 1.1;
@@ -261,7 +261,7 @@ export class Player {
                 this.health.maxHealth = 75;
                 break;
             case "Tank":
-                this.moveSpeed /= 1.5;
+                this.speed /= 1.5;
                 this.attackCooldown *= 1.6;
                 this.damage *= 1.1;
                 this.comboCooldownAmount = 200;
@@ -273,7 +273,7 @@ export class Player {
                 this.kbDefence = 2;
                 break;
             case "Ninja":
-                this.moveSpeed *= 1.5;
+                this.speed *= 1.5;
                 this.attackCooldown /= 1.5;
                 this.damage /= 1.15;
                 this.comboCooldownAmount = 300;
@@ -286,7 +286,7 @@ export class Player {
                 this.kbDefence = 0.9;
                 break;
             case "Heavyweight":
-                this.moveSpeed /= 1.3;
+                this.speed /= 1.3;
                 this.attackCooldown *= 1.2;
                 this.attackRange *= 1.1;
                 this.damage *= 1.25;
@@ -300,7 +300,7 @@ export class Player {
                 this.kbDefence = 1.5;
                 break;
             case "Vampire":
-                this.moveSpeed *= 1.2;
+                this.speed *= 1.2;
                 this.attackCooldown /= 1.15;
                 this.attackRange *= 1.2;
                 this.damage /= 1.2;
@@ -325,17 +325,30 @@ export class Player {
                 this.kbMult = 1.5;
                 this.kbDefence = 1.5;
                 break;
+            case "Physcopath":
+                this.speed /= 1.5;
+                this.jumpPower /= 1.5;
+                this.maxJumps = 1;
+                this.health.health = 150;
+                this.health._health = 150;
+                this.health.maxHealth = 150;
+                this.damage /= 1.5;
+                this.attackCooldown *= 1.5;
+                this.kbMult /= 1.5;
+                this.kbDefence /= 1.5;
+                this.comboCooldownAmount = 750;
+                break;
             case "Juggernaut":
-                this.w *= 2;
-                this.h *= 2;
-                this.moveSpeed /= 2;
-                this.attackRange *= 2;
+                this.w *= 1.4;
+                this.h *= 1.4;
+                this.speed /= 2;
+                this.attackRange *= 1.25;
                 this.attackCooldown *= 2;
-                this.health.health = 500;
-                this.health._health = 500;
-                this.health.maxHealth = 500;
-                this.kbDefence *= 2;
-                this.kbMult = 2;
+                this.health.health = 300;
+                this.health._health = 300;
+                this.health.maxHealth = 300;
+                this.kbDefence *= 5;
+                this.kbMult = 1.25;
                 break;
             default:
                 break;
@@ -357,7 +370,7 @@ export class Player {
         let hasHit = false;
 
         for (let i = 0; i < this.otherPlayers.length; i++) {
-            let otherplayer: Player = this.otherPlayers[i];
+            let otherplayer = this.otherPlayers[i];
 
             if (otherplayer.team != this.team) {
                 var distance =
@@ -436,7 +449,11 @@ export class Player {
                                 this.health.modHealth(healAmount);
                                 break;
                             case "Support":
-                                this.health.modHealth(this.combo);
+                                this.health.modHealth(this.combo * 2);
+                                break;
+                            case "Physcopath":
+                                power *= 1 + (2 - this.health.health / this.health.maxHealth) * this.combo;
+                                break;
                             default:
                                 power *= 1 + 0.5 * this.combo;
                                 break;
@@ -449,15 +466,15 @@ export class Player {
                     otherplayer.health.modHealth(-power, "attack");
                 }
             } else {
-                if (special && otherplayer.team == this.team) {
+                if (otherplayer.team == this.team) {
                     switch (this.class) {
                         case "Support":
                             let healAmount = otherplayer.health.maxHealth - otherplayer.health.health;
 
                             if (healAmount < 0) {
                                 healAmount = 0;
-                            } else if (healAmount > otherplayer.health.maxHealth * 0.3) {
-                                healAmount = otherplayer.health.maxHealth * 0.3;
+                            } else if (healAmount > otherplayer.health.maxHealth * 0.1) {
+                                healAmount = otherplayer.health.maxHealth * 0.1;
                             }
 
                             otherplayer.health.modHealth(healAmount);
@@ -487,6 +504,7 @@ export class Player {
 
         switch (this.class) {
             case "Berserk":
+                this.effectors.push(kbBoost(20, 1.25));
                 this.kbMult *= 1.5;
                 this.attackRange *= 2;
                 this.attack(true);
@@ -494,11 +512,16 @@ export class Player {
                 this.attackRange /= 2;
                 break;
             case "Tank":
-                this.health.modHealth(30);
+                this.health.modHealth(10);
+                this.effectors.push(damageDefence(20, 1.25));
                 break;
             case "Ninja":
-                this.effectors.push(regeneration(3, 2));
+                this.effectors.push(regeneration(10, 10));
                 this.effectors.push(kbDefence(5, 2));
+                this.speed *= 0.01;
+                setTimeout(() => {
+                    this.speed /= 0.01;
+                }, 8000);
                 break;
             case "Heavyweight":
                 this.damage *= 1.25;
@@ -508,21 +531,51 @@ export class Player {
                 this.kbMult /= 2.5;
                 break;
             case "Vampire":
-                this.health.maxHealth += 5;
-                this.health.modHealth(-5);
-                this.moveSpeed /= 3;
+                this.health.maxHealth += 10;
+                this.health.modHealth(-10);
+                this.maxJumps = 4;
+                this.speed /= 4;
                 setTimeout(() => {
-                    this.moveSpeed *= 3;
+                    this.maxJumps = 24;
+                    this.speed *= 4;
                 }, 8000);
                 break;
             case "Support":
                 this.health.modHealth(10);
-                this.attack(true);
+                
+                for (let i = 0; i < this.otherPlayers.length; i++) {
+                    if (this.otherPlayers[i].team == this.team) {
+                        let otherplayer = this.otherPlayers[i];
+
+                        let healAmount = otherplayer.health.maxHealth - otherplayer.health.health;
+
+                        if (healAmount < 0) {
+                            healAmount = 0;
+                        } else if (healAmount > otherplayer.health.maxHealth * 0.3) {
+                            healAmount = otherplayer.health.maxHealth * 0.3;
+                        }
+
+                        otherplayer.health.modHealth(healAmount);
+
+                        if (healAmount > 0) {
+                            this.health.modHealth(25);
+                        }
+                    }
+                }
+                
+                break;
+            case "Physcopath":
+                this.health.modHealth(-20 - Math.floor(Math.random() * 10));
+                this.effectors.push(bloodlust(20))
+                break;
+            case "Juggernaut":
+                // Make it rain meteors!
+                return; // for now...
                 break;
             default:
-                this.damage *= 1.5;
-                this.attack(true);
-                this.damage /= 1.5;
+                this.effectors.push(kbDefence(10, 2));
+                this.effectors.push(damageDefence(10, 2));
+                this.effectors.push(regeneration(10, 2));
                 break;
         }
 
@@ -561,9 +614,10 @@ export class Player {
     groundPound() {
         if (this.grounded) return;
 
-        if (this.class == "Vampire") return;
         if (this.class == "Heavyweight") return;
+        if (this.class == "Vampire") return;
         if (this.class == "Support") return;
+        if (this.class == "Physcopath") return;
 
         this.groundPounding = true;
     }
@@ -576,44 +630,46 @@ export class Player {
                 this.health.modHealth(15);
                 this.kbMult *= 1.1;
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00");});
-                this.effectors.push(bloodlust(5));
+                this.effectors.push(bloodlust(15));
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00");});
                 break;
             case "Tank":
-                this.health.maxHealth *= 1.5;
+                this.health.maxHealth += 50;
                 if (this.health.health < this.health.maxHealth) this.health.modHealth((this.health.maxHealth - this.health.health) / this.healMult);
                 this.kbDefence *= 2;
-                this.moveSpeed *= 1.2;
+                this.speed /= 1.1;
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00");});
-                this.effectors.push(kbDefence(8, 2));
+                this.effectors.push(kbDefence(18, 2));
+                this.effectors.push(kbBoost(18, 2));
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00");});
                 break;
             case "Ninja":
-                this.attackCooldown /= 2;
-                this.moveSpeed *= 1.3;
+                this.attackCooldown /= 1.2;
+                this.speed *= 1.1;
                 this.jumpPower *= 1.1;
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00");});
-                this.effectors.push(damageBoost(10, 4));
+                this.effectors.push(damageBoost(16, 2));
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00");});
                 this.maxJumps += 1;
                 break;
             case "Heavyweight":
                 this.damage *= 1.15;
-                this.moveSpeed *= 1.2;
-                this.jumpPower *= 1.2;
+                this.speed *= 1.1;
+                this.kbDefence *= 1.2;
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00");});
-                this.effectors.push(regeneration(40, 2));
+                this.effectors.push(regeneration(30, 1));
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00");});
                 break;
             case "Vampire":
                 this.damage *= 1.1;
-                this.kbDefence *= 1.25;
+                this.kbDefence *= 1.3;
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00");});
-                this.effectors.push(speedBoost(20, 1.25));
-                this.effectors.push(jumpBoost(20, 1.25));
+                this.effectors.push(speedBoost(20, 1.5));
+                this.effectors.push(jumpBoost(20, 1.5));
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00");});
                 break;
             case "Support":
+                this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00");});
                 for (let i = 0; i < this.otherPlayers.length; i++) {
                     if (this.otherPlayers[i].team == this.team) {
                         //this.otherPlayers[i].killBuff();
@@ -625,7 +681,9 @@ export class Player {
                             jumpBoost(5, 2),
                             speedBoost(5, 4),
                             kbBoost(5, 3),
-                            kbDefence(5, 5)
+                            kbDefence(5, 5),
+                            damageDefence(5, 5),
+                            healBoost(5, 5),
                         ];
 
                         let ab1 = Math.floor(Math.random() * abilities.length);
@@ -637,12 +695,19 @@ export class Player {
                         let ab3 = Math.floor(Math.random() * abilities.length);
                         if (ab3 == abilities.length) ab3 = -1;
 
+                        this.otherPlayers[i].effectors.push(regeneration(10, 1));
                         this.otherPlayers[i].effectors.push(abilities[ab1]);
                         this.otherPlayers[i].effectors.push(abilities[ab2]);
                         this.otherPlayers[i].effectors.push(abilities[ab3]);
                     }
                 }
+                this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00");});
 
+                break;
+            case "Physcopath":
+                this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00");});
+                this.effectors.push(damageDefence(10, 999999))
+                this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00");});
                 break;
             default:
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00");});
@@ -675,8 +740,12 @@ export class Player {
     }
 
     updatePhysics(platforms: Platform[], powerUps: PowerUpBox[]) {
-        this.xSpeed = 0;
-        this.ySpeed = 0;
+        this.xVelocity = 0;
+        this.yVelocity = 0;
+
+        if (this.class == "Physcopath") {
+            this.speed = 6 - (this.health.health / this.health.maxHealth) * 2;
+        }
 
         if (this.health.health > 0) {
             if (this.defenceDivisor > 0) {
@@ -691,7 +760,7 @@ export class Player {
         }
 
         if (this.moving) {
-            this.forces[0].x = this.moveSpeed * this.moveDir;
+            this.forces[0].x = this.speed * this.moveDir;
 
             if (this.health.health <= 0) this.moving = false;
         }
@@ -749,20 +818,20 @@ export class Player {
 
         for (let i = 0; i < this.forces.length; i++) {
             if (i == 1) {
-                this.xSpeed += this.forces[i].x / this.kbDefence;
-                this.ySpeed -= this.forces[i].y / this.kbDefence;
+                this.xVelocity += this.forces[i].x / this.kbDefence;
+                this.yVelocity -= this.forces[i].y / this.kbDefence;
             } else {
-                this.xSpeed += this.forces[i].x;
-                this.ySpeed -= this.forces[i].y;
+                this.xVelocity += this.forces[i].x;
+                this.yVelocity -= this.forces[i].y;
             }
         }
 
-        this.x += this.xSpeed;
-        this.y += this.ySpeed;
+        this.x += this.xVelocity;
+        this.y += this.yVelocity;
 
         for (let i = 0; i < platforms.length; i++) {
             if (platforms[i].screenObjects[0].isCollided(this.screenObject)
-                && this.ySpeed >= 0
+                && this.yVelocity >= 0
                 && (this.y <= platforms[i].y || this.groundPounding)) {
 
                 if (!this.isPhasing || platforms[i].unpassable) {
@@ -807,9 +876,9 @@ export class Player {
         this.screenObject.w = this.w;
         this.screenObject.h = this.h;
 
-        this.accessoriesUnder.map((i) => {i.draw();});
+        this.accessoriesUnder.map((acc) => {acc.draw();});
         this.screenObject.draw();
-        this.accessoriesOver.map((i) => {i.draw();});
+        this.accessoriesOver.map((acc) => {acc.draw();});
 
         if (this.showCooldown) {
             for (let i = 0; i < this.attkCooldownObjs.length; i++) {
@@ -1122,7 +1191,7 @@ export class PlayerHealth {
                 // in this function the player will get
                 // invincibility and respawn at their spawn point
                 this.parent.respawn(); 
-            }, 5000);
+            }, 2500);
         }
     }
 
@@ -1215,14 +1284,14 @@ function bloodlust(time: number) {
         GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect Bloodlust { time: ${time} }`, "#992222");
 
         player.comboCooldownAmount *= 2;
-        player.moveSpeed *= 1.5;
+        player.speed *= 1.5;
         player.jumpPower *= 1.5;
         player.kbDefence *= 1.5;
         player.damage *= 1.25;
 
         setTimeout(() => {
             player.comboCooldownAmount /= 2;
-            player.moveSpeed /= 1.5;
+            player.speed /= 1.5;
             player.jumpPower /= 1.5;
             player.kbDefence /= 1.5;
             player.damage /= 1.25;

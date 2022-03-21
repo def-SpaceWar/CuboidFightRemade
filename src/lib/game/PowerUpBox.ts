@@ -50,11 +50,14 @@ export class PowerUpBox {
         this.done = true;
     }
 
+    updatePhysics() {
+        this.screenObject.angle += 1;
+    }
+
     draw() {
         if (this.done) return;
 
         this.screenObject.draw();
-        this.screenObject.angle += 1;
     }
 }
 
@@ -117,10 +120,10 @@ export function speedBoost(time: number, level: number) {
     return (player: Player) => {
         GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect SpeedBoost { time: ${time}, level: ${level} }`, "#99DD55")
 
-        player.moveSpeed *= level;
+        player.speed *= level;
 
         setTimeout(() => {
-            player.moveSpeed /= level;
+            player.speed /= level;
         }, time * 1000);
     }
 }

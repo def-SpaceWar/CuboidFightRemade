@@ -1,12 +1,15 @@
 #+TITLE: TODO
 
-* TODO Make new class called 'Masochist'
-base stats are Default but worse
-HP is 150
-deals more damage the lower it's health
-killBuff makes it invincible for 10 seconds and making
-special is to deal damage to itself (10-20) and give bloodlust
-* TODO Description for every single class on a new page.
+* TODO Using multiplayer firebase tutorial make single player button that plays ONLINE!
+* TODO Make new class called 'Zombie'
+base stats are Berserk but worse
+HP is 100
+after it dies it stays alive for 10 more seconds and has damageBoost(10, 10) which is very OP.
+and then it dies
+killBuff is to buff its overall stats.
+special is to kill anyone <=10 hp and make its HP 10 so another zombie could theoretically kill another zombie that just used its special.
+* TODO Juggernaut class will have meteor rain.
+* TODO Description for every single class on ~~a new page~~ the main screen that you can scroll through!
 * TODO Red platforms with gray bottom color that does damage every half a second you stand on it and slows you! (introduced in the communist map)
 * TODO Each side of the map should have different death messages other than the one from the bottom.
 * TODO Make a communist map. (Rithvik gets the honors of bg image. 256 x 128 px just like last time.)
@@ -16,12 +19,16 @@ Basically a survival single/multiplayer mode.
 The vampire's wings will be of 2 different images and there will be a class for it that can draw. The player class will get an array called `cosmetics` and it will have the 2 vampire wings if it is a vampire and they're rotation will change based on the value of the jump force and their angles will be the inverse of eachother creating a flying effect when the vampire jumps. The wings will also be rendered under the player.
 + [X] Vampire Wings
 + [ ] Ninja Bandana that changes direction depending on movement
-* TODO Style the entire website.
-Add a navbar that can send you to the settings page and back to the game. And also add instructions!
-* DONE Juggernaut gamemode where everyone has LIVES and tries to kill the juggernaut, teams will be blatantly reset for all the players.
-  The juggernaut will be bigger and have more damage, health, kbDef, basically everything.
-  Slower too!
 * -------------------------------------------------- Divider
+* DONE Make new class called 'Physcopath'
+base stats are Default but worse
+HP is 150
+deals more damage the lower it's health
+killBuff makes it invincible for 10 seconds and making its health to 1 before setting it to max.
+special is to deal damage to itself (10-20) and give bloodlust
+* DONE Juggernaut gamemode where everyone has LIVES and tries to kill the juggernaut, teams will be blatantly reset for all the players.
+The juggernaut will be bigger and have more damage, health, kbDef, basically everything.
+Slower too!
 * DONE Make a console that is colored by player color and says the power up they got.
 * DONE Make an Attack Cool Down Bar that spawns above the players.
 * DONE Make player have a minimum damage requirement.
