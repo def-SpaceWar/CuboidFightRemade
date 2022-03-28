@@ -59,6 +59,7 @@ export class Player {
     damage: number;
     attackRange: number;
     attackCooldown: number;
+    specialCooldownMult: number;
     showCooldown: boolean;
     attackable: boolean;
     kbMult: number;
@@ -121,6 +122,7 @@ export class Player {
         this.damage = 4;
         this.attackRange = 100;
         this.attackCooldown = 2;
+        this.specialCooldownMult = 5;
         this.showCooldown = false;
         this.attackable = true;
         this.kbMult = 1;
@@ -263,6 +265,7 @@ export class Player {
             case "Tank":
                 this.speed /= 1.5;
                 this.attackCooldown *= 1.6;
+                this.specialCooldownMult = 3;
                 this.damage *= 1.1;
                 this.comboCooldownAmount = 200;
                 this.jumpPower /= 1.5;
@@ -275,6 +278,7 @@ export class Player {
             case "Ninja":
                 this.speed *= 1.5;
                 this.attackCooldown /= 1.5;
+                this.specialCooldownMult = 10;
                 this.damage /= 1.15;
                 this.comboCooldownAmount = 300;
                 this.jumpPower /= 1.4;
@@ -288,6 +292,7 @@ export class Player {
             case "Heavyweight":
                 this.speed /= 1.3;
                 this.attackCooldown *= 1.2;
+                this.specialCooldownMult = 4;
                 this.attackRange *= 1.1;
                 this.damage *= 1.25;
                 this.comboCooldownAmount = 100;
@@ -302,6 +307,7 @@ export class Player {
             case "Vampire":
                 this.speed *= 1.2;
                 this.attackCooldown /= 1.15;
+                this.specialCooldownMult = 4;
                 this.attackRange *= 1.2;
                 this.damage /= 1.2;
                 this.comboCooldownAmount = 150;
@@ -319,13 +325,14 @@ export class Player {
             case "Support":
                 this.damage /= 1.5;
                 this.attackCooldown *= 1.5;
+                this.specialCooldownMult = 6;
                 this.health.health = 120;
                 this.health._health = 120;
                 this.health.maxHealth = 120;
                 this.kbMult = 1.5;
                 this.kbDefence = 1.5;
                 break;
-            case "Physcopath":
+            case "Psycopath":
                 this.speed /= 1.5;
                 this.jumpPower /= 1.5;
                 this.maxJumps = 1;
@@ -334,6 +341,7 @@ export class Player {
                 this.health.maxHealth = 150;
                 this.damage /= 1.5;
                 this.attackCooldown *= 1.5;
+                this.specialCooldownMult = 2;
                 this.kbMult /= 1.5;
                 this.kbDefence /= 1.5;
                 this.comboCooldownAmount = 750;
@@ -451,8 +459,9 @@ export class Player {
                             case "Support":
                                 this.health.modHealth(this.combo * 2);
                                 break;
-                            case "Physcopath":
+                            case "Psycopath":
                                 power *= 1 + (2 - this.health.health / this.health.maxHealth) * this.combo;
+                                this.effectors.push(killingMachine(this.combo, 180));
                                 break;
                             default:
                                 power *= 1 + 0.5 * this.combo;
@@ -504,7 +513,7 @@ export class Player {
 
         switch (this.class) {
             case "Berserk":
-                this.effectors.push(kbBoost(20, 1.25));
+                this.effectors.push(kbBoost(20, 1.5));
                 this.kbMult *= 1.5;
                 this.attackRange *= 2;
                 this.attack(true);
@@ -512,16 +521,18 @@ export class Player {
                 this.attackRange /= 2;
                 break;
             case "Tank":
-                this.health.modHealth(10);
+                this.health.modHealth(20);
                 this.effectors.push(damageDefence(20, 1.25));
                 break;
             case "Ninja":
-                this.effectors.push(regeneration(10, 10));
-                this.effectors.push(kbDefence(5, 2));
+                this.effectors.push(regeneration(5, 8));
+                this.effectors.push(kbDefence(5, 8));
                 this.speed *= 0.01;
+                this.jumpPower *= 0.01;
                 setTimeout(() => {
                     this.speed /= 0.01;
-                }, 8000);
+                    this.jumpPower /= 0.01;
+                }, 12000);
                 break;
             case "Heavyweight":
                 this.damage *= 1.25;
@@ -564,14 +575,22 @@ export class Player {
                 }
                 
                 break;
-            case "Physcopath":
-                this.health.modHealth(-20 - Math.floor(Math.random() * 10));
-                this.effectors.push(bloodlust(20))
+            case "Psycopath":
+                if (this.health.health > 30) {
+                    this.effectors.push(regeneration(Math.floor(Math.min(10, (this.health.health - 30) / 5)), -5));
+                } else if (this.health.health > 10) {
+                    this.effectors.push(regeneration(Math.floor((this.health.health - 10) / 5), -5));
+                } else {
+                    return;
+                }
+
+                this.effectors.push(bloodlust(20));
+
                 break;
             case "Juggernaut":
                 // Make it rain meteors!
+                //break;
                 return; // for now...
-                break;
             default:
                 this.effectors.push(kbDefence(10, 2));
                 this.effectors.push(damageDefence(10, 2));
@@ -593,7 +612,7 @@ export class Player {
             let cooldownTime = (this.attackCooldown * 1000) - (this.combo * this.comboCooldownAmount)
 
             if (special) {
-                cooldownTime = (this.attackCooldown * 1000) * 5;
+                cooldownTime = (this.attackCooldown * 1000) * this.specialCooldownMult;
             }
 
             if (step >= cooldownTime) {
@@ -617,7 +636,7 @@ export class Player {
         if (this.class == "Heavyweight") return;
         if (this.class == "Vampire") return;
         if (this.class == "Support") return;
-        if (this.class == "Physcopath") return;
+        if (this.class == "Psycopath") return;
 
         this.groundPounding = true;
     }
@@ -704,7 +723,7 @@ export class Player {
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00");});
 
                 break;
-            case "Physcopath":
+            case "Psycopath":
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00");});
                 this.effectors.push(damageDefence(10, 999999))
                 this.effectors.push((_player) => {GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00");});
@@ -743,10 +762,6 @@ export class Player {
         this.xVelocity = 0;
         this.yVelocity = 0;
 
-        if (this.class == "Physcopath") {
-            this.speed = 6 - (this.health.health / this.health.maxHealth) * 2;
-        }
-
         if (this.health.health > 0) {
             if (this.defenceDivisor > 0) {
                 for (let i = 0; i < this.effectors.length; i++) {
@@ -761,6 +776,7 @@ export class Player {
 
         if (this.moving) {
             this.forces[0].x = this.speed * this.moveDir;
+            if (this.class == "Psycopath") this.forces[0].x *= 3 - (this.health.health / this.health.maxHealth) * 2;
 
             if (this.health.health <= 0) this.moving = false;
         }
@@ -1296,5 +1312,29 @@ function bloodlust(time: number) {
             player.kbDefence /= 1.5;
             player.damage /= 1.25;
         }, time * 1000);
+    }
+}
+
+function killingMachine(level: number, time: number) {
+    return function(player: Player) {
+        //GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect KillingMachine { level: ${level} }`, "#7722aa");
+
+        player.comboCooldownAmount *= 1 + 0.01 * level;
+        player.speed *= 1 + 0.01 * level;
+        player.jumpPower *= 1 + 0.01 * level;
+        player.kbDefence *= 1 + 0.01 * level;
+        player.damage *= 1 + 0.01 * level;
+        player.kbDefence *= 1 + 0.01 * level;
+        player.kbMult *= 1 + 0.01 * level;
+
+        setTimeout(() => {
+            player.comboCooldownAmount /= 1 + 0.01 * level;
+            player.speed /= 1 + 0.01 * level;
+            player.jumpPower /= 1 + 0.01 * level;
+            player.kbDefence /= 1 + 0.01 * level;
+            player.damage /= 1 + 0.01 * level;
+            player.kbDefence /= 1 + 0.01 * level;
+            player.kbMult /= 1 + 0.01 * level;
+        }, time * 1000)
     }
 }

@@ -6,7 +6,7 @@ export type PlatformColors = {
     bottom: string;
 };
 
-export type Material = "grass" | "stone";
+export type Material = "grass" | "stone" | "deadly";
 
 export class Platform {
     // This is the platform class.
@@ -25,6 +25,7 @@ export class Platform {
     material: Material;
     unpassable: boolean;
     screenObjects: ScreenObject[];
+    damaging: boolean;
 
     constructor(x: number, y: number, w: number, h: number, colors: PlatformColors, material: Material, unpassable = false) {
         this.x = x;
@@ -34,6 +35,7 @@ export class Platform {
         this.colors = colors;
         this.material = material;
         this.unpassable = unpassable;
+        this.damaging = false;
 
         this.screenObjects = [
             new ScreenObject(x, y + 0.5, w, h * 0.5, colors.bottom),
@@ -51,9 +53,14 @@ export class Platform {
                     this.screenObjects[i].image = ditherTexture;
                     this.screenObjects[i].tintPower = 0.8;
                     break;
+                case "deadly":
+                    this.screenObjects[i].image = ditherTexture;
+                    this.screenObjects[i].tintPower = 0.8;
+                    this.screenObjects[2].tintPower = 0;
+                    break;
                 default:
                     this.screenObjects[i].image = bgOrig;
-                    this.screenObjects[i].tintPower = 0.75;
+                    this.screenObjects[i].tintPower = 0.5;
                     break;
             }
         }

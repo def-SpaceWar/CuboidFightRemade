@@ -6,6 +6,16 @@ import { TextObject } from './lib/std/TextObject';
 import { loadMap } from './maps';
 import { Deathmatch, Ffa, Gamemode, Juggernaut, Stock } from './lib/game/Gamemode';
 import { PowerUpBox } from './lib/game/PowerUpBox';
+import { app } from './firebase';
+
+import { signInAnonymously, getAuth } from 'firebase/auth';
+
+// Get user credentials
+const userCredential = signInAnonymously(getAuth(app)).then((cred) => {
+    console.log(cred);
+    main();
+    // online game instead of `main();`
+}).catch((e) => { console.log(e); });
 
 function main() {
     const playButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 - 80, 300, 80, {
@@ -138,8 +148,8 @@ function main() {
                 right: "f",
                 up: "e",
                 down: "d",
-                attack: "q",
-                special: "w"
+                attack: "w",
+                special: "q"
             }
         );
 
@@ -204,7 +214,7 @@ function main() {
             }
         }
 
-        const data = loadMap(1, players);
+        const data = loadMap(parseInt(localStorage.getItem("map")) || 1, players);
 
         const platforms = data[0];
         const powerUps: PowerUpBox[] = [];
@@ -418,5 +428,3 @@ ctx.fillText(
     HEIGHT / 2 + 50,
     800
 );
-
-setTimeout(main, 2000);

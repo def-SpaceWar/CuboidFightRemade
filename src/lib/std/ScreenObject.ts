@@ -67,17 +67,18 @@ export class ScreenObject {
         if (this.image != null) {
             // draw image
             ctx.drawImage(this.image, this.w / 2 * (-1), this.h / 2 * (-1), this.w, this.h);
-
-            if (this.tintPower != 0) {
-                ctx.globalAlpha = this.tintPower;
-
-                ctx.fillRect(this.w / 2 * (-1), this.h / 2 * (-1), this.w, this.h);
-
-                ctx.globalAlpha = 1;
-            }
         } else {
             // fill rect
             ctx.fillRect(this.w / 2 * (-1), this.h / 2 * (-1), this.w, this.h);
+        }
+
+
+        if (this.tintPower != 0) {
+            ctx.globalAlpha = this.tintPower;
+
+            ctx.fillRect(this.w / 2 * (-1), this.h / 2 * (-1), this.w, this.h);
+
+            ctx.globalAlpha = 1;
         }
 
         ctx.restore();
