@@ -6,9 +6,9 @@ import { TextObject } from './lib/std/TextObject';
 import { loadMap } from './maps';
 import { Deathmatch, Ffa, Gamemode, Juggernaut, Stock } from './lib/game/Gamemode';
 import { PowerUpBox } from './lib/game/PowerUpBox';
-import { app } from './firebase';
+//import { app } from './firebase';
 
-import { signInAnonymously, getAuth } from 'firebase/auth';
+//import { signInAnonymously, getAuth } from 'firebase/auth';
 
 // For Debug Purposes
 let player1: Player;
@@ -18,11 +18,13 @@ let player4: Player;
 
 (async function() {
     // Get user credentials
-    const userCredentials = await signInAnonymously(getAuth(app))
-        .then((cred) => {
-            console.log(cred);
-            main();
-        }).catch((e) => { console.log(e); });
+    //const userCredentials = await signInAnonymously(getAuth(app))
+    //    .then((cred) => {
+    //        console.log(cred);
+    //        main();
+    //    }).catch((e) => { console.log(e); });
+
+    setTimeout(main, 1000);
     
     function main() {
         const playButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 - 80, 300, 80, {
