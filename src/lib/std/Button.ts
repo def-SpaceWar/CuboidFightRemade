@@ -108,6 +108,8 @@ export class Button {
     }
 
     listenMouseMove(event: MouseEvent) {
+        if (!this.enabled) return;
+
         var rect = canvas.getBoundingClientRect();
         let mouseX = event.clientX - rect.left;
         let mouseY = event.clientY - rect.top;
@@ -125,6 +127,8 @@ export class Button {
     }
 
     listenMouseDown(event: MouseEvent) {
+        if (!this.enabled) return;
+
         var rect = canvas.getBoundingClientRect();
         let mouseX = event.clientX - rect.left;
         let mouseY = event.clientY - rect.top;
@@ -141,6 +145,8 @@ export class Button {
     }
 
     listenMouseUp(event: MouseEvent) {
+        if (!this.enabled) return;
+
         var rect = canvas.getBoundingClientRect();
         let mouseX = event.clientX - rect.left;
         let mouseY = event.clientY - rect.top;
@@ -149,10 +155,8 @@ export class Button {
 
         if (mouseX >= this.x && mouseX <= this.x + this.w) {
             if (mouseY >= this.y && mouseY <= this.y + this.h) {
-                if (this.enabled) {
                     this.onClick();
                     this.isPressed = false;
-                }
             }
         }
     }

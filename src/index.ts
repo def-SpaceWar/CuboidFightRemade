@@ -1,4 +1,4 @@
-import { WIDTH, HEIGHT, canvas, ctx, bgOrig, teamColors, GameConsole, lerpCamera, globalFrameLength, globalPhysicsTick } from './globals';
+import { WIDTH, HEIGHT, canvas, ctx, bgOrig, teamColors, GameConsole, lerpCamera, globalFrameLength, globalPhysicsTick, vampireLeftWingTexture, vampireRightWingTexture } from './globals';
 import { Button } from "./lib/std/Button";
 import { Player } from "./lib/player/Player";
 import { ScreenObject } from './lib/std/ScreenObject';
@@ -6,435 +6,626 @@ import { TextObject } from './lib/std/TextObject';
 import { loadMap } from './maps';
 import { Deathmatch, Ffa, Gamemode, Juggernaut, Stock } from './lib/game/Gamemode';
 import { PowerUpBox } from './lib/game/PowerUpBox';
-//import { app } from './firebase';
 
-//import { signInAnonymously, getAuth } from 'firebase/auth';
+window.onload = () => {
+  let player1: Player,
+    player2: Player,
+    player3: Player,
+    player4: Player;
 
-// For Debug Purposes
-let player1: Player;
-let player2: Player;
-let player3: Player;
-let player4: Player;
+  let frames = 0;
+  const fpsText = document.getElementById("fpsCount");
 
-(async function() {
-    // Get user credentials
-    //const userCredentials = await signInAnonymously(getAuth(app))
-    //    .then((cred) => {
-    //        console.log(cred);
-    //        main();
-    //    }).catch((e) => { console.log(e); });
+  setInterval(() => {
+    fpsText.innerHTML = `FPS: ${frames}`;
+    frames = 0;
+  }, 1000);
 
-    setTimeout(main, 1000);
-    
-    function main() {
-        const playButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 - 80, 300, 80, {
-            inactive: "#0ad",
-            active: "#0ef",
-            pressed: "#aff"
-        }, 10, "#555", "Start Game", [-110, 10], "#000", () => {
-            // Start the game
-            playButton.enabled = false;
-            settingsButton.enabled = false;
-            infoButton.enabled = false;
-            if (document.getElementById("settings").style.display == "block") document.getElementById("settings").style.display = "none";
-            clearInterval(process);
-            startGame();
-        }, "40px sans");
-    
-        const settingsButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 + 40, 300, 80, {
-            inactive: "#da0",
-            active: "#fe0",
-            pressed: "#ffa"
-        }, 10, "#555", "Settings", [-80, 10], "#000", () => {
-            if (document.getElementById("settings").style.display == "block") {
-                document.getElementById("settings").style.display = "none";
-            } else {
-                document.getElementById("settings").style.display = "block";
-            }
-        }, "40px sans");
-    
-        const infoButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 + 160, 300, 80, {
-            inactive: "#d0a",
-            active: "#f0e",
-            pressed: "#faf"
-        }, 10, "#555", "Info", [-40, 10], "#000", () => {
-            playButton.enabled = false;
-            settingsButton.enabled = false;
-            infoButton.enabled = false;
-            if (document.getElementById("settings").style.display == "block") document.getElementById("settings").style.display = "none";
-            clearInterval(process);
-            showInfo();
-        }, "40px sans");
-    
-        document.addEventListener("keydown", (e) => {
-            if (e.key == "Enter" && playButton.enabled) {
-                playButton.onClick();
-            }
-        });
-    
-        const playText = new TextObject(WIDTH / 2 - 70, playButton.y + 75, 400, 100, "Enter also works!", "#222", "16px sans");
-    
-        canvas.addEventListener("mousemove", (event) => {
-            playButton.listenMouseMove(event);
-            settingsButton.listenMouseMove(event);
-            infoButton.listenMouseMove(event);
-        });
-    
-        canvas.addEventListener("mousedown", (event) => {
-            playButton.listenMouseDown(event);
-            settingsButton.listenMouseDown(event);
-            infoButton.listenMouseDown(event);
-        });
-    
-        canvas.addEventListener("mouseup", (event) => {
-            playButton.listenMouseUp(event);
-            settingsButton.listenMouseUp(event);
-            infoButton.listenMouseUp(event);
-        });
-    
-        let frames = 0;
-        const fpsText = document.getElementById("fpsCount");
-    
-        setInterval(() => {
-            fpsText.innerHTML = `FPS: ${frames}`;
-            frames = 0;
-        }, 1000)
-    
-        let firstTime = true;
-        let process = setInterval(mainMenu, globalFrameLength);
-    
-        function mainMenu() {
-            if (firstTime) {
-                ctx.fillStyle = "#0DF";
-                ctx.fillRect(0, 0, WIDTH, HEIGHT);
-                ctx.drawImage(bgOrig, 0, 0, WIDTH, HEIGHT);
-                firstTime = false;
-            }
-    
-            if (!playButton.enabled) {
-                playButton.enabled = true;
-                settingsButton.enabled = true;
-                infoButton.enabled = true;
-            }
-    
-            playButton.draw();
-            playText.draw();
-            settingsButton.draw();
-            infoButton.draw();
-    
-            // if (document.getElementById("idk").value == "idk") {
-            //     document.getElementById("settings").style.display = "block";
-            // } else {
-            //     document.getElementById("settings").style.display = "none";
-            // }
-    
-            frames++;
-        }
-    
-        function startGame() {
-            player1 = new Player(
-                0,
-                0,
-                75,
-                75,
-                ["#f43", "#821"], {
-                    left: "ArrowLeft",
-                    right: "ArrowRight",
-                    up: "ArrowUp",
-                    down: "ArrowDown",
-                    attack: "/",
-                    special: "."
-                }
-            );
-    
-            player2 = new Player(
-                0,
-                0,
-                75,
-                75,
-                ["#09f", "#058"], {
-                    left: "s",
-                    right: "f",
-                    up: "e",
-                    down: "d",
-                    attack: "w",
-                    special: "q"
-                }
-            );
-    
-            player3 = new Player(
-                0,
-                0,
-                75,
-                75,
-                ["#3f4", "#182"], {
-                    left: "v",
-                    right: "n",
-                    up: "g",
-                    down: "b",
-                    attack: " ",
-                    special: "c"
-                }
-            );
-    
-            player4 = new Player(
-                0,
-                0,
-                75,
-                75,
-                ["#ff4", "#ba2"], {
-                    left: "4",
-                    right: "6",
-                    up: "8",
-                    down: "5",
-                    attack: "7",
-                    special: "1"
-                }
-            );
-    
-            player1.otherPlayers.push(player2, player3, player4);
-            player2.otherPlayers.push(player1, player3, player4);
-            player3.otherPlayers.push(player1, player2, player4);
-            player4.otherPlayers.push(player1, player2, player3);
-    
-            const players = [player1, player2, player3, player4];
-            let teamsEnabled = localStorage.getItem("teamenable");
-    
-            if (teamsEnabled != "false") {
-                // set player's shadow to white indicating it has no team
-                for (let p = 0; p < players.length; p++) {
-                    players[p].screenObject.shadowColor = "#AAAAAA";
-                }
-    
-                // Team Code (set everyone on their teams)
-                for (let i = 1; i < 4; i++) {
-                    if (localStorage.getItem(`team${i}`)) {
-                        let playersOnTeam = localStorage.getItem(`team${i}`).split(",");
-    
-                        for (let j = 0; j < playersOnTeam.length; j++) {
-                            for (let k = 0; k < players.length; k++) {
-                                if (parseInt(playersOnTeam[j]) == players[k].playerNum) {
-                                    players[k].team = i;
-                                    players[k].screenObject.shadowColor = teamColors[i - 1];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-    
-            const data = loadMap(parseInt(localStorage.getItem("map")) || 1, players);
-    
-            const platforms = data[0];
-            const powerUps: PowerUpBox[] = [];
-    
-            const bg = new ScreenObject(
-                -WIDTH,
-                -HEIGHT,
-                WIDTH * 5,
-                HEIGHT * 5,
-                "#FF0000"
-            );
-    
-            bg.image = data[1];
-    
-            let done = false;
-            while (!done) {
-                done = true;
-                for (let i = 0; i < players.length; i++) {
-                    if (localStorage.getItem(`player${i + 1}enable`) == "false") {
-                        players[i].x = -1000;
-                        players[i].y = -1000;
-                        players.splice(i, 1);
-                        done = false;
-                    }
-                }
-            }
-    
-            document.addEventListener("keydown", (event) => {
-                for (let i = 0; i < players.length; i++) {
-                    players[i].listenKeyDown(event);
-                }
-            });
-    
-            document.addEventListener("keyup", (event) => {
-                for (let i = 0; i < players.length; i++) {
-                    players[i].listenKeyUp(event);
-                }
-            });
-    
-            let gamemode = new Gamemode(players, !!teamsEnabled);
-            
-            switch (localStorage.getItem("gamemode")) {
-                case "ffa":
-                    gamemode = new Ffa(players, !!teamsEnabled);
-                    break;
-                case "deathmatch":
-                    gamemode = new Deathmatch(players, !!teamsEnabled);
-                    break;
-                case "stock":
-                    gamemode = new Stock(players, !!teamsEnabled);
-                    break;
-                case "juggernaut":
-                    teamsEnabled = "true";
-                    gamemode = new Juggernaut(players, !!teamsEnabled);
-                    break;
-                default:
-                    gamemode = new Ffa(players, !!teamsEnabled);
-                    break;
-            }
-    
-            gamemode.setup();
-    
-            let gameOver = false;
-            GameConsole.clear();
-            process = setInterval(drawingGame, globalFrameLength);
-            const gameLoop = setInterval(runGame, globalPhysicsTick);
-    
-            function runGame() {
-                for (let i = 0; i < players.length; i++) {
-                    players[i].updatePhysics(platforms, powerUps);
-                }
-    
-                for (let i = 0; i < powerUps.length; i++) {
-                    powerUps[i].updatePhysics();
-                }
-    
-                if (Math.random() * 1500 < 1) {
-                    powerUps.push(new PowerUpBox(Math.random() * WIDTH * 2 + WIDTH / 2, Math.random() * HEIGHT * 2 + HEIGHT / 2));
-                    GameConsole.log("A Power Up has spawned!");
-                }
-    
-    
-                const playerScreenObjs = [];
-    
-                for (let i = 0; i < players.length; i++) {
-                    if (players[i].health.health > 0) {
-                        playerScreenObjs.push(players[i].screenObject);
-                    }
-                }
-    
-                lerpCamera(playerScreenObjs);
-    
-                if (gamemode.isGameOver()) {
-                    if (!gameOver) {
-                        setTimeout(() => {
-                            let whoWon = gamemode.whoWon();
-                            GameConsole.log(`<span style="color: ${whoWon[1]};">${whoWon[0]}</span> won!`, "#FFFF00", true);
-    
-                            Player.playerCounter = 0;
-                            Player.teamCounter = 4;
-                            clearInterval(process);
-                            clearInterval(gameLoop);
-                            process = setInterval(mainMenu, globalFrameLength);
-                        }, 1500);
-    
-                        gameOver = true;
-                    }
-                }
-            }
-    
-            function drawingGame() {
-                // This function runs every frame
-                ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    
-                bg.draw();
-    
-                for (let i = 0; i < platforms.length; i++) {
-                    platforms[i].draw();
-                }
-    
-                for (let i = 0; i < powerUps.length; i++) {
-                    powerUps[i].draw();
-                }
-    
-                for (let i = 0; i < players.length; i++) {
-                    players[i].draw();
-                }
-    
-                for (let i = 0; i < players.length; i++) {
-                    players[i].health.draw();
-                }
-    
-                frames++;
-            }
-        }
-    
-        function showInfo() {
-            const classNames = ["Default", "Berserk", "Tank", "Ninja", "Heavyweight", "Vampire", "Support"];
-            const classColors = ["#0DF"];
-            const classDescs = [
-                [
-                    "This is the default class.",
-                    "There is nothing special here."
-                ]
-            ]; 
-    
-            let currentClass = 0;
-    
-            const border = new ScreenObject(50, 50, WIDTH - 100, HEIGHT - 100, "#333", false);
-            const displayBox = new ScreenObject(100, 100, 400, HEIGHT - 200, classColors[currentClass], false);
-    
-            const platformThingy = new ScreenObject(150, 400, 300, 80, "#345", false);
-            const playerShowcase = new ScreenObject(250, 340, 100, 100, "#f43", false);
-    
-            const textBorder = new ScreenObject(550, 100, 550, HEIGHT - 200, "#444", false);
-            //const titleText = new TextObject(600, 200, 450, 100, classNames[currentClass], "#efefef", "60px sans");
-            //const descText = new TextObject(600, 300, 450, 400, classDescs[currentClass], "#cfdfef", "30px sans")
-    
-            let done = false;
-            process = setInterval(runRules, globalFrameLength);
-    
-            function runRules() {
-                ctx.fillStyle = "#0DF";
-                ctx.fillRect(0, 0, WIDTH, HEIGHT);
-                ctx.drawImage(bgOrig, 0, 0, WIDTH, HEIGHT);
-    
-                if (done) {
-                    clearInterval(process);
-                    process = setInterval(mainMenu, globalFrameLength)
-                }
-    
-                while (currentClass >= classNames.length) {
-                    currentClass -= classNames.length;
-                }
-    
-                // Run info drawing code here!
-                border.draw();
-                displayBox.color = classColors[currentClass] || "#000";
-                displayBox.draw();
-    
-                platformThingy.draw();
-                playerShowcase.draw();
-                
-                textBorder.draw();
-    
-                {
-                    ctx.fillStyle = "#efefef";
-                    ctx.font = "60px sans";
-                    ctx.fillText(classNames[currentClass], 600, 200, 450);
-                }
-    
-                for (let i = 0; i < classDescs[currentClass].length; i++) {
-                    ctx.fillStyle = "#cfdfef";
-                    ctx.font = "20px sans";
-                    ctx.fillText(classDescs[currentClass][i], 600, 250 + 20 * i, 450);
-                }
-    
-                frames++;
-            }
-        }
+  const setCustomInterval = (callBack: () => any) => {
+    if (globalFrameLength > 0) return setInterval(callBack, globalFrameLength);
+    return requestAnimationFrame(callBack);
+  };
+
+  const clearCustomInterval = (id: number | NodeJS.Timer) => {
+    if (globalFrameLength > 0) clearInterval(id as NodeJS.Timer);
+    cancelAnimationFrame(id as number);
+  }
+
+  //ctx.webkitImageSmoothingEnabled = false;
+  //ctx.mozImageSmoothingEnabled = false;
+  //ctx.msImageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = false;
+
+  // loading screen is now useless because multiplayer implementation couldn't be done.
+  ctx.fillStyle = "#00FFFF";
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  ctx.fillStyle = "black";
+  ctx.font = "100px sans";
+  ctx.fillText(
+    "Loading...",
+    WIDTH / 2 - 200,
+    HEIGHT / 2 + 50,
+    800
+  );
+
+  // start game immediately
+  (() => {
+    const playButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 - 80, 300, 80, {
+      inactive: "#0ad",
+      active: "#0ef",
+      pressed: "#aff"
+    }, 10, "#555", "Start Game", [-110, 10], "#000", () => {
+      // Start the game
+      playButton.enabled = false;
+      settingsButton.enabled = false;
+      infoButton.enabled = false;
+      if (document.getElementById("settings").style.display == "block") document.getElementById("settings").style.display = "none";
+      clearCustomInterval(process);
+      startGame();
+    }, "40px sans");
+
+    const settingsButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 + 40, 300, 80, {
+      inactive: "#da0",
+      active: "#fe0",
+      pressed: "#ffa"
+    }, 10, "#555", "Settings", [-80, 10], "#000", () => {
+      if (document.getElementById("settings").style.display == "block") {
+        document.getElementById("settings").style.display = "none";
+      } else {
+        document.getElementById("settings").style.display = "block";
+      }
+    }, "40px sans");
+
+    const infoButton = new Button(WIDTH / 2 - 150, HEIGHT / 2 + 160, 300, 80, {
+      inactive: "#d0a",
+      active: "#f0e",
+      pressed: "#faf"
+    }, 10, "#555", "Info", [-40, 10], "#000", () => {
+      playButton.enabled = false;
+      settingsButton.enabled = false;
+      infoButton.enabled = false;
+      if (document.getElementById("settings").style.display == "block") document.getElementById("settings").style.display = "none";
+      clearCustomInterval(process);
+      showInfo();
+    }, "40px sans");
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key == "Enter" && playButton.enabled) {
+        playButton.onClick();
+      }
+    });
+
+    const playText = new TextObject(WIDTH / 2 - 70, playButton.y + 75, 400, 100, "Enter also works!", "#222", "16px sans");
+
+    canvas.addEventListener("mousemove", (event) => {
+      playButton.listenMouseMove(event);
+      settingsButton.listenMouseMove(event);
+      infoButton.listenMouseMove(event);
+    });
+
+    canvas.addEventListener("mousedown", (event) => {
+      playButton.listenMouseDown(event);
+      settingsButton.listenMouseDown(event);
+      infoButton.listenMouseDown(event);
+    });
+
+    canvas.addEventListener("mouseup", (event) => {
+      playButton.listenMouseUp(event);
+      settingsButton.listenMouseUp(event);
+      infoButton.listenMouseUp(event);
+    });
+
+    let process = setCustomInterval(mainMenu);
+
+    let firstTime = true;
+    function mainMenu() {
+      if (firstTime) {
+        ctx.fillStyle = "#0DF";
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        ctx.drawImage(bgOrig, 0, 0, WIDTH, HEIGHT);
+
+        ctx.fillStyle = "#09f";
+        ctx.strokeStyle = "#3f4";
+        ctx.lineWidth = 3;
+        ctx.font = "120px Comic Sans MS";
+        ctx.fillText("Cuboid Fight!", WIDTH / 2 - 365, 120);
+        ctx.strokeText("Cuboid Fight!", WIDTH / 2 - 365, 120);
+
+        ctx.fillStyle = "#ff4";
+        ctx.strokeStyle = "#f43";
+        ctx.lineWidth = 3;
+        ctx.font = "90px Comic Sans MS";
+        ctx.fillText("Remade", WIDTH / 2 - 165, 160);
+        ctx.strokeText("Remade", WIDTH / 2 - 165, 160);
+        firstTime = false;
+      }
+
+      if (!playButton.enabled) {
+        playButton.enabled = true;
+        settingsButton.enabled = true;
+        infoButton.enabled = true;
+      }
+
+      playButton.draw();
+      playText.draw();
+      settingsButton.draw();
+      infoButton.draw();
+
+      frames++;
     }
-    
-    ctx.fillStyle = "#00FFFF";
-    ctx.fillRect(0, 0, WIDTH, HEIGHT);
-    
-    ctx.fillStyle = "black";
-    ctx.font = "100px sans";
-    ctx.fillText(
-        "Loading...",
-        WIDTH / 2 - 200,
-        HEIGHT / 2 + 50,
-        800
-    );
-})();
+
+    function startGame() {
+      player1 = new Player(
+        0,
+        0,
+        75,
+        75,
+        ["#f43", "#821"], {
+        left: "ArrowLeft",
+        right: "ArrowRight",
+        up: "ArrowUp",
+        down: "ArrowDown",
+        attack: "/",
+        special: "."
+      }
+      );
+
+      player2 = new Player(
+        0,
+        0,
+        75,
+        75,
+        ["#09f", "#058"], {
+        left: "s",
+        right: "f",
+        up: "e",
+        down: "d",
+        attack: "w",
+        special: "q"
+      }
+      );
+
+      player3 = new Player(
+        0,
+        0,
+        75,
+        75,
+        ["#3f4", "#182"], {
+        left: "v",
+        right: "n",
+        up: "g",
+        down: "b",
+        attack: " ",
+        special: "c"
+      }
+      );
+
+      player4 = new Player(
+        0,
+        0,
+        75,
+        75,
+        ["#ff4", "#ba2"], {
+        left: "4",
+        right: "6",
+        up: "8",
+        down: "5",
+        attack: "7",
+        special: "1"
+      }
+      );
+
+      player1.otherPlayers.push(player2, player3, player4);
+      player2.otherPlayers.push(player1, player3, player4);
+      player3.otherPlayers.push(player1, player2, player4);
+      player4.otherPlayers.push(player1, player2, player3);
+
+      const players = [player1, player2, player3, player4];
+      let teamsEnabled = localStorage.getItem("teamenable");
+
+      if (teamsEnabled != "false") {
+        // set player's shadow to white indicating it has no team
+        for (let p = 0; p < players.length; p++) {
+          players[p].screenObject.shadowColor = "#AAAAAA";
+        }
+
+        // Team Code (set everyone on their teams)
+        for (let i = 1; i < 4; i++) {
+          if (localStorage.getItem(`team${i}`)) {
+            let playersOnTeam = localStorage.getItem(`team${i}`).split(",");
+
+            for (let j = 0; j < playersOnTeam.length; j++) {
+              for (let k = 0; k < players.length; k++) {
+                if (parseInt(playersOnTeam[j]) == players[k].playerNum) {
+                  players[k].team = i;
+                  players[k].screenObject.shadowColor = teamColors[i - 1];
+                }
+              }
+            }
+          }
+        }
+      }
+
+      const data = loadMap(parseInt(localStorage.getItem("map")) || 1, players);
+
+      const platforms = data[0];
+      const powerUps: PowerUpBox[] = [];
+
+      const bg = new ScreenObject(
+        -WIDTH,
+        -HEIGHT,
+        WIDTH * 5,
+        HEIGHT * 5,
+        "#FF0000"
+      );
+
+      bg.image = data[1];
+
+      let done = false;
+      while (!done) {
+        done = true;
+        for (let i = 0; i < players.length; i++) {
+          if (localStorage.getItem(`player${i + 1}enable`) == "false") {
+            players[i].x = -1000;
+            players[i].y = -1000;
+            players.splice(i, 1);
+            done = false;
+          }
+        }
+      }
+
+      document.addEventListener("keydown", (event) => {
+        for (let i = 0; i < players.length; i++) {
+          players[i].listenKeyDown(event);
+        }
+      });
+
+      document.addEventListener("keyup", (event) => {
+        for (let i = 0; i < players.length; i++) {
+          players[i].listenKeyUp(event);
+        }
+      });
+
+      let gamemode = new Gamemode(players, !!teamsEnabled);
+
+      switch (localStorage.getItem("gamemode")) {
+        case "ffa":
+          gamemode = new Ffa(players, !!teamsEnabled);
+          break;
+        case "deathmatch":
+          gamemode = new Deathmatch(players, !!teamsEnabled);
+          break;
+        case "stock":
+          gamemode = new Stock(players, !!teamsEnabled);
+          break;
+        case "juggernaut":
+          teamsEnabled = "true";
+          gamemode = new Juggernaut(players, !!teamsEnabled);
+          break;
+        default:
+          gamemode = new Ffa(players, !!teamsEnabled);
+          break;
+      }
+
+      gamemode.setup();
+
+      let gameOver = false;
+      GameConsole.clear();
+
+      clearCustomInterval(process);
+      process = setCustomInterval(drawingGame);
+      const gameLoop = setInterval(runGame, globalPhysicsTick);
+
+      function runGame() {
+        // runs every physics update
+        for (let i = 0; i < players.length; i++) {
+          players[i].updatePhysics(platforms, powerUps);
+        }
+
+        for (let i = 0; i < powerUps.length; i++) {
+          powerUps[i].updatePhysics();
+        }
+
+        if (Math.random() * 1500 < 1) {
+          powerUps.push(new PowerUpBox(Math.random() * WIDTH * 2 + WIDTH / 2, Math.random() * HEIGHT * 2 + HEIGHT / 2));
+          GameConsole.log("A Power Up has spawned!");
+        }
+
+
+        const playerScreenObjs: ScreenObject[] = [];
+
+        for (let i = 0; i < players.length; i++) {
+          if (players[i].health.health > 0) {
+            playerScreenObjs.push(players[i].screenObject);
+          }
+        }
+
+        lerpCamera(playerScreenObjs);
+
+        if (gamemode.isGameOver()) {
+          if (!gameOver) {
+            setTimeout(() => {
+              let whoWon = gamemode.whoWon();
+              GameConsole.log(`<span style="color: ${whoWon[1]};">${whoWon[0]}</span> won!`, "#FFFF00", true);
+
+              Player.playerCounter = 0;
+              Player.teamCounter = 4;
+
+              clearCustomInterval(process);
+              process = setCustomInterval(mainMenu);
+              clearInterval(gameLoop);
+            }, 1500);
+
+            gameOver = true;
+          }
+        }
+      }
+
+      function drawingGame() {
+        // This function runs every frame
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+        bg.draw();
+
+        for (let i = 0; i < platforms.length; i++) {
+          platforms[i].draw();
+        }
+
+        for (let i = 0; i < powerUps.length; i++) {
+          powerUps[i].draw();
+        }
+
+        for (let i = 0; i < players.length; i++) {
+          players[i].draw();
+        }
+
+        for (let i = 0; i < players.length; i++) {
+          players[i].health.draw();
+        }
+
+        frames++;
+      }
+    }
+
+    function showInfo() {
+      showClasses();
+
+      function showRules() {
+        let pageIdx = 0;
+
+        const nextButton = new Button(
+          WIDTH - 75, HEIGHT - 75, 55, 55,
+          { inactive: "#999", active: "#CCC", pressed: "#FFF" },
+          10,
+          "#555",
+          ">",
+          [-25, 25],
+          "#333",
+          () => { pageIdx++; },
+          "100px monospace"
+        );
+
+        const prevButton = new Button(
+          20, HEIGHT - 75, 55, 55,
+          { inactive: "#999", active: "#CCC", pressed: "#FFF" },
+          10,
+          "#555",
+          "<",
+          [-30, 25],
+          "#333",
+          () => { pageIdx--; },
+          "100px monospace"
+        );
+
+        let done = false;
+        const exitButton = new Button(
+          WIDTH - 75, 20, 55, 55,
+          { inactive: "#F00", active: "#F55", pressed: "#F99" },
+          10,
+          "#555",
+          "x",
+          [-28, 20],
+          "#333",
+          () => { done = true; },
+          "100px monospace"
+        );
+
+        clearCustomInterval(process);
+        process = setCustomInterval(runRules);
+
+        function runRules() { }
+      }
+
+      function showClasses() {
+        const classNames = ["Default", "Berserk", "Tank", "Ninja", "Heavyweight", "Vampire", "Support", "Juggernaut"];
+        const classColors = ["#0DF", "#F75", "#9FE", "#77F", "#999", "#246", "#9FA", "#A5F"];
+        const classDescs = [
+          [
+            ["It can triple jump, and ground pound."],
+            [""],
+            ["Special Move: Gain more protection and regenerate", "#FF9900"],
+            ["3 HP.", "#FF9900"],
+            [""],
+            ["Kill Buff: On each kill, many positive effects are", "#99FF00"],
+            ["applied.", "#99FF00"],
+            [""],
+            ["**For every other class assume it has default level traits unless otherwise specified.", undefined, "13px sans"]
+          ],
+          [
+            ["It is ~16% slower, but jumps 20% higher."],
+            ["It can only double jump, not triple jump."],
+            ["Buffed damage and range, but longer cooldown."],
+            ["It also has increased knockback"],
+            ["and higher knockback resistence."],
+            ["But only 75% of regular HP."],
+            [""],
+            ["Special Move: does a very knockback boosted attack,", "#FF9900"],
+            ["and boosted knockback remains for 20 seconds.", "#FF9900"],
+            [""],
+            ["Kill Buff: Gains bloodlust for 15 seconds.", "#99FF00"],
+          ],
+          [
+            ["It is two thirds the speed, and has a 60%"],
+            ["longer cooldown. Deals more damage, but can't"],
+            ["jump as high. Higher resistence to knockback,"],
+            ["and lower knockback power, and double HP."],
+            [""],
+            ["Special Move: gains 30 HP and DamageDefence.", "#FF9900"],
+            [""],
+            ["Kill Buff: Max HP increased by 50 and HP", "#99FF00"],
+            ["resets to full.", "#99FF00"],
+          ],
+          [
+            ["Cooldown ~33% faster, 50% faster movement,"],
+            ["and 40% more jump power. Can quadruple jump."],
+          ],
+          [
+            [""]
+          ],
+          [
+            [""]
+          ],
+          [
+            [""]
+          ],
+          [
+            [""]
+          ]
+        ];
+
+        // Enums are useful for giving numbers, some more readable meaning.
+        enum PlayerClass {
+          Default = 0,
+          Berserk = 1,
+          Tank = 2,
+          Ninja = 3,
+          Heavyweight = 4,
+          Vampire = 5,
+          Support = 6,
+          Juggernaut = 7
+        }
+        let classIdx = PlayerClass.Default;
+
+        const border = new ScreenObject(50, 50, WIDTH - 100, HEIGHT - 100, "#333", false);
+        const displayBox = new ScreenObject(100, 100, 400, HEIGHT - 200, classColors[classIdx], false);
+
+        const platformThingy = new ScreenObject(150, 400, 300, 80, "#345", false);
+        const playerShowcase = new ScreenObject(250, 340, 100, 100, "#f43", false);
+
+        const nextButton = new Button(
+          WIDTH - 75, HEIGHT - 75, 55, 55,
+          { inactive: "#999", active: "#CCC", pressed: "#FFF" },
+          10,
+          "#555",
+          ">",
+          [-25, 25],
+          "#333",
+          () => { classIdx++; },
+          "100px monospace"
+        );
+
+        const prevButton = new Button(
+          20, HEIGHT - 75, 55, 55,
+          { inactive: "#999", active: "#CCC", pressed: "#FFF" },
+          10,
+          "#555",
+          "<",
+          [-30, 25],
+          "#333",
+          () => { classIdx--; },
+          "100px monospace"
+        );
+
+        let done = false;
+        const exitButton = new Button(
+          WIDTH - 75, 20, 55, 55,
+          { inactive: "#F00", active: "#F55", pressed: "#F99" },
+          10,
+          "#555",
+          "x",
+          [-28, 20],
+          "#333",
+          () => { done = true; },
+          "100px monospace"
+        );
+
+        document.addEventListener("mousemove", (e: MouseEvent) => {
+          nextButton.listenMouseMove(e);
+          prevButton.listenMouseMove(e);
+          exitButton.listenMouseMove(e);
+        });
+
+        document.addEventListener("mousedown", (e: MouseEvent) => {
+          nextButton.listenMouseDown(e);
+          prevButton.listenMouseDown(e);
+          exitButton.listenMouseDown(e);
+        });
+
+        document.addEventListener("mouseup", (e: MouseEvent) => {
+          nextButton.listenMouseUp(e);
+          prevButton.listenMouseUp(e);
+          exitButton.listenMouseUp(e);
+        });
+
+        const textBorder = new ScreenObject(550, 100, 550, HEIGHT - 200, "#444", false);
+
+        process = setCustomInterval(runClasses);
+
+        function runClasses() {
+          if (done) {
+            clearCustomInterval(process);
+            process = setCustomInterval(mainMenu)
+          }
+
+          ctx.fillStyle = "#0DF";
+          ctx.fillRect(0, 0, WIDTH, HEIGHT);
+          ctx.drawImage(bgOrig, 0, 0, WIDTH, HEIGHT);
+
+          if (classIdx < 0) classIdx += classNames.length;
+          classIdx = classIdx % classNames.length;
+
+          // Run info drawing code here!
+          border.draw();
+          displayBox.color = classColors[classIdx] || "#000";
+          displayBox.draw();
+
+          platformThingy.draw();
+          if (classIdx == PlayerClass.Vampire) {
+            ctx.drawImage(vampireLeftWingTexture, playerShowcase.x - 100, playerShowcase.y, 100, 100);
+            ctx.drawImage(vampireRightWingTexture, playerShowcase.x + 100, playerShowcase.y, 100, 100);
+          }
+          if (classIdx == PlayerClass.Juggernaut) {
+            ctx.fillStyle = playerShowcase.color;
+            ctx.fillRect(
+              playerShowcase.x - (playerShowcase.w * 0.2),
+              playerShowcase.y - (playerShowcase.h * 0.4),
+              playerShowcase.w * 1.4,
+              playerShowcase.h * 1.4
+            );
+          } else {
+            playerShowcase.draw();
+          }
+
+          nextButton.draw();
+          prevButton.draw();
+          exitButton.draw();
+
+          textBorder.draw();
+
+          ctx.fillStyle = "#efefef";
+          ctx.font = "60px sans";
+          ctx.fillText(classNames[classIdx], 600, 200, 450);
+
+          for (let i = 0; i < classDescs[classIdx].length; i++) {
+            ctx.fillStyle = classDescs[classIdx][i][1] || "#cfdfef";
+            ctx.font = classDescs[classIdx][i][2] || "20px sans";
+            ctx.fillText(classDescs[classIdx][i][0], 600, 250 + 20 * i, 450);
+          }
+
+          frames++;
+        }
+      }
+    }
+  })();
+};

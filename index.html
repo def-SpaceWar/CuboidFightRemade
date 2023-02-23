@@ -3,7 +3,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,11 +10,9 @@
     <title>Cuboid Fight Remade</title>
 
     <link rel="stylesheet" href="static/css/style.css">
-
 </head>
 
 <body>
-
     <input id="idk" />
 
     <center>
@@ -38,7 +35,7 @@
         <p class="invis" style="height: 600px;">To access settings you type "idk" in the random input at the top and "no" to make it disappear!</p>
 
         <div id="console">
-            <h1>The Blackboard:</h1>
+            <h1>Console:</h1>
         </div>
     </div>
 
@@ -92,7 +89,18 @@
                     <br />
                     <br />
 
-                    <span>FPS Cap (not 100% precise): <input id="fpslimit" type="number" placeholder="500" min="1" max="1000" style="width: 40px;" /></span>
+                    <span>FPS Cap (not 100% precise): <input id="fpslimit" type="number" placeholder="0" min="0" max="1000" style="width: 40px;" /></span>
+
+                    <br />
+
+                    <p>(0 means VSYNC, *recommended*)</p>
+
+                    <span>Detail Options:</span>
+
+                    <select id="ldm" name="ldm">
+                        <option value="0">High Detail</option>
+                        <option value="1">Low Detail</option>
+                    </select>
                 </div>
             </div>
 
@@ -106,6 +114,9 @@
                     <li>Player 4: <input id="player4enable" type="checkbox" /></li>
                 </ul>
 
+                <!-- This was an April Fool's prank.
+                    This one person kept asking for bots to be added.
+                    These never did anything.
                 <h3>Bots<h3>
 
                 <ul>
@@ -114,6 +125,7 @@
                     <li>Player 3 Bot: <input id="" type="checkbox" /></li>
                     <li>Player 4 Bot: <input id="" type="checkbox" /></li>
                 </ul>
+                -->
 
                 <h3>Teams</h3>
                 <span>Team Enable: <input id="teamenable" type="checkbox" /></span>
@@ -244,7 +256,7 @@
 
                     <span>Left: <input id="player3left" placeholder="v" /></span>
                     <br />
-                    <span>Up: <input id="player3up"  placeholder="g" /></span>
+                    <span>Up: <input id="player3up" placeholder="g" /></span>
                     <br />
                     <span>Down: <input id="player3down" placeholder="b" /></span>
                     <br />
@@ -272,34 +284,42 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <script type="text/javascript">
-            // Use localStorage to set all the players'
-            // textboxes, modifiers, (very far future cosmetics)
-            // and colors.
+    <script type="text/javascript" defer>
+        // Use localStorage to set all the players'
+        // textboxes, modifiers, (very far future cosmetics)
+        // and colors.
+        const selects = [];
+        const checkboxes = [];
+        const textboxes = [];
 
-            const selects = [
+        function getSettings() {
+            console.log("got settings!");
+
+            selects.push.apply(selects, [
                 document.getElementById("player1class"),
                 document.getElementById("player2class"),
                 document.getElementById("player3class"),
                 document.getElementById("player4class"),
                 document.getElementById("gamemode"),
                 document.getElementById("map"),
-            ];
+                document.getElementById("ldm"),
+            ]);
 
-            const checkboxes = [
+            checkboxes.push.apply(checkboxes, [
                 document.getElementById("player1enable"),
                 document.getElementById("player2enable"),
                 document.getElementById("player3enable"),
                 document.getElementById("player4enable"),
                 document.getElementById("teamenable"),
-            ];
+            ]);
 
-            const textboxes = [
+            textboxes.push.apply(textboxes, [
                 document.getElementById("stocklives"),
                 document.getElementById("deathmatchkills"),
                 document.getElementById("fpslimit"),
-            ];
+            ]);
 
             for (let i = 1; i <= 4; i++) {
                 textboxes.push(document.getElementById(`player${i}left`));
@@ -316,38 +336,42 @@
             textboxes.push(document.getElementById(`team4`));
 
             selects.map((i) => {
+                const output = localStorage.getItem(i.id);
+                if (!output) return;
                 i.value = localStorage.getItem(i.id);
                 i.selected = localStorage.getItem(i.id);
             });
 
             checkboxes.map((i) => {
                 if (localStorage.getItem(i.id) == "false") i.checked = false;
-                else i.checked = true;
+                else if (localStorage.getItem(i.id) == "true") i.checked = true;
             });
 
             textboxes.map((i) => {
                 i.value = localStorage.getItem(i.id) || "";
             });
+        }
 
-            function setOptions() {
-                selects.map((i) => {
+        function setOptions() {
+            selects.map((i) => {
+                localStorage.setItem(i.id, i.value);
+            });
+
+            checkboxes.map((i) => {
+                localStorage.setItem(i.id, i.checked);
+            });
+
+            textboxes.map((i) => {
+                if (i.value != "") {
                     localStorage.setItem(i.id, i.value);
-                });
+                } else {
+                    localStorage.removeItem(i.id);
+                }
+            });
+        }
 
-                checkboxes.map((i) => {
-                    localStorage.setItem(i.id, i.checked);
-                });
-
-                textboxes.map((i) => {
-                    if (i.value != "") {
-                        localStorage.setItem(i.id, i.value);
-                    } else {
-                        localStorage.removeItem(i.id);
-                    }
-                });
-            }
-        </script>
-    </div>
+        getSettings();
+    </script>
 
     <!--
     <script src="globals.js"></script>
@@ -362,7 +386,7 @@
     <script src="lib/player/VampireWing.js"></script>
     <script src="maps.js"></script>
     -->
-    <script src="./src/index.js" type="module"></script>
+    <script src="./src/index.js" type="module" defer></script>
 </body>
 
 </html>

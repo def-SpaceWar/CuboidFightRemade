@@ -27,6 +27,7 @@ export class PowerUpBox {
             kbDefence(20, 5),
             damageDefence(10, 1.5),
             healBoost(20, 2),
+            bloodlust(30)
         ];
 
         this.screenObject = new ScreenObject(x, y, 80, 80, "#742", true, true);
@@ -172,6 +173,26 @@ export function healBoost(time: number, level: number) {
 
         setTimeout(() => {
             player.healMult /= level;
+        }, time * 1000);
+    }
+}
+
+export function bloodlust(time: number) {
+    return function(player: Player) {
+        GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect Bloodlust { time: ${time} }`, "#992222");
+
+        player.comboCooldownAmount *= 2;
+        player.speed *= 1.5;
+        player.jumpPower *= 1.5;
+        player.kbDefence *= 1.5;
+        player.damage *= 1.25;
+
+        setTimeout(() => {
+            player.comboCooldownAmount /= 2;
+            player.speed /= 1.5;
+            player.jumpPower /= 1.5;
+            player.kbDefence /= 1.5;
+            player.damage /= 1.25;
         }, time * 1000);
     }
 }
