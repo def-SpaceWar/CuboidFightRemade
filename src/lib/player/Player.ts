@@ -461,7 +461,7 @@ export class Player {
                 break;
               case "Psycopath":
                 power *= 1 + ((2 - this.health.health / this.health.maxHealth) * this.combo * ((this.killCount + 1) / 2));
-                this.effectors.push(killingMachine(this.combo * (this.killCount + 1), 10 * (this.killCount + 1)));
+                this.effectors.push(killingMachine(this.combo * (this.killCount + 1), 4 * (this.killCount + 1)));
                 break;
               default:
                 power *= 1 + 0.5 * this.combo;
@@ -1313,7 +1313,7 @@ export class PlayerHealth {
 
 function killingMachine(level: number, time: number) {
   return function(player: Player) {
-    GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect KillingMachine { level: ${level} }`, "#7722aa");
+    GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect KillingMachine { time: ${time}, level: ${level} }`, "#7722aa");
 
     player.comboCooldownAmount *= 1 + 0.01 * level;
     player.speed *= 1 + 0.01 * level;
