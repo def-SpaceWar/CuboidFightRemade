@@ -1313,7 +1313,7 @@ export class PlayerHealth {
 
 function killingMachine(level: number, time: number) {
   return function(player: Player) {
-    //GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect KillingMachine { level: ${level} }`, "#7722aa");
+    GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect KillingMachine { level: ${level} }`, "#7722aa");
 
     player.comboCooldownAmount *= 1 + 0.01 * level;
     player.speed *= 1 + 0.01 * level;
