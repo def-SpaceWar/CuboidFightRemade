@@ -762,6 +762,7 @@ export class Player {
     this.defenceDivisor = 0;
     this.x = this.respawnPoint[0];
     this.y = this.respawnPoint[1];
+    this.grounded = false;
     this.screenObject.color = this.health.color;
 
     setTimeout(() => {
