@@ -460,8 +460,8 @@ export class Player {
                 this.health.modHealth(this.combo * 2);
                 break;
               case "Psycopath":
-                power *= 1 + (2 - this.health.health / this.health.maxHealth) * this.combo;
-                this.effectors.push(killingMachine(this.combo, 180));
+                power *= 1 + ((2 - this.health.health / this.health.maxHealth) * this.combo * ((this.killCount + 1) / 2));
+                this.effectors.push(killingMachine(this.combo * (this.killCount + 1), 10 * (this.killCount + 1)));
                 break;
               default:
                 power *= 1 + 0.5 * this.combo;
@@ -483,7 +483,7 @@ export class Player {
           Math.abs(otherplayer.y + otherplayer.h / 2 - (this.y + this.h / 2));
 
         if (otherplayer.team == this.team
-          && distance <= this.attackRange * this.attackRange * 9 && otherplayer.health.health > 0) {
+          && distance <= this.attackRange * this.attackRange * (9 * (this.killCount + 1)) && otherplayer.health.health > 0) {
           switch (this.class) {
             case "Support":
               let healAmount = otherplayer.health.maxHealth - otherplayer.health.health;
@@ -728,12 +728,15 @@ export class Player {
             this.otherPlayers[i].effectors.push(abilities[ab3]);
           }
         }
+        this.damage *= 1.1;
+      this.health.maxHealth += 20;
+        this.health.modHealth(Math.max(0, this.health.maxHealth - this.health.health));
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00"); });
 
         break;
       case "Psycopath":
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00"); });
-        this.effectors.push(damageDefence(10, 999999))
+        this.effectors.push(damageDefence(8, 999999))
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00"); });
         break;
       default:
