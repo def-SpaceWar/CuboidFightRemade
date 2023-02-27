@@ -358,6 +358,7 @@ export class Player {
         this.kbDefence *= 5;
         this.kbMult = 1.25;
         break;
+      case "Zombie":
       default:
         break;
     }
@@ -463,6 +464,7 @@ export class Player {
                 power *= 1 + ((2 - this.health.health / this.health.maxHealth) * this.combo * ((this.killCount + 1) / 2));
                 this.effectors.push(killingMachine(this.combo * (this.killCount + 1), 4 * (this.killCount + 1)));
                 break;
+              case "Zombie":
               default:
                 power *= 1 + 0.5 * this.combo;
                 break;
@@ -500,6 +502,7 @@ export class Player {
                 this.health.modHealth(this.health.maxHealth * 0.025);
               }
               break;
+            case "Zombie":
             default:
               break;
           }
@@ -599,6 +602,7 @@ export class Player {
         //break;
         return; // for now...
       // maybe at some point I'll finally get to adding meteors.
+      case "Zombie":
       default:
         this.effectors.push(kbDefence(10, 1));
         this.effectors.push(damageDefence(10, 1));
@@ -645,6 +649,7 @@ export class Player {
     if (this.class == "Vampire") return;
     if (this.class == "Support") return;
     if (this.class == "Psycopath") return;
+    if (this.class == "Zombie") return;
 
     this.groundPounding = true;
   }
@@ -729,7 +734,7 @@ export class Player {
           }
         }
         this.damage *= 1.1;
-      this.health.maxHealth += 20;
+        this.health.maxHealth += 20;
         this.health.modHealth(Math.max(0, this.health.maxHealth - this.health.health));
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00"); });
 
@@ -739,6 +744,7 @@ export class Player {
         this.effectors.push(damageDefence(8, 999999))
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00"); });
         break;
+      case "Zombie":
       default:
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00"); });
         this.effectors.push(regeneration(3, 5));
@@ -1216,6 +1222,12 @@ export class PlayerHealth {
     if (Gamemode.instance.lives) this.parent.lives -= 1;
     this.parent.deaths++;
 
+    if (this.parent.class == "Zombie") {
+      // STAY ALIVE FOR 10 MORE SECONDS WITH DAMAGE BOOST 10
+      // this will be very tricky hardcoding so many things
+      // but this is the final class being added to the game!
+      // so it doesnt matter
+    }
     // if the gamemode has respawning respawn
     if (Gamemode.instance.respawn) {
       if (this.parent.lives <= 0) return;

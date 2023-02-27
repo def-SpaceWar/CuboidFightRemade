@@ -2,16 +2,18 @@
 
 * TODO Make new class called 'Zombie'
 base stats are Berserk but worse
-HP is 100
-slower
-no ground pound
-decent jump
-low reload speed
-low damage
-after it dies it stays alive for 10 more seconds and has damageBoost(10, 10) and speedBoost(10, 4) which is very OP
-and then it dies
-killBuff is to buff its overall stats
-special is to kill anyone <=10 hp and make its HP 10 so another zombie could theoretically kill another zombie that just used its special.
++ HP is 100
+- slower
+- no ground pound
++ decent jump (2x)
+- low reload speed
+- low damage
++ after it dies it stays alive for 10 more seconds and has damageBoost(10, 10) and speedBoost(10, 4) which is very OP
++ while its a "zombie" give a accessory that goes on top that only shows when its hp is 0 that is just a moldy green with
+  the players colored eye sockets.
++ killBuff is to buff its overall stats by 5% in EVERYTHING (including health).
++ special is to kill anyone <=10 hp and make its HP 10 so another zombie could theoretically kill another zombie that just used its special.
++ for every person the zombie kills (in special), it gets a LOT OF killingMachine and bloodLust.
 * TODO Description for every single class on ~~a new page~~ the main screen that you can scroll through!
 * TODO Juggernaut class will have meteor rain special.
 * TODO Each class should have it's own aesthetic change like the vampire having wings. [1/2]
