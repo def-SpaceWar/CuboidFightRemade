@@ -17,6 +17,86 @@ type Controls = {
   special: string
 };
 
+export type Class = "Default"
+  | "Berserk"
+  | "Tank"
+  | "Ninja"
+  | "Heavyweight"
+  | "Vampire"
+  | "Support"
+  | "Psycopath"
+  | "Angel"
+  | "Zombie"
+  | "Juggernaut";
+
+export const numberToClass = (n: number): Class => {
+  return (n == 0) ? "Default" :
+    (n == 1) ? "Berserk" :
+      (n == 2) ? "Tank" :
+        (n == 3) ? "Ninja" :
+          (n == 4) ? "Heavyweight" :
+            (n == 5) ? "Vampire" :
+              (n == 6) ? "Support" :
+                (n == 7) ? "Psycopath" :
+                  (n == 8) ? "Angel" :
+                    (n == 9) ? "Zombie" :
+                      (n == 10) ? "Juggernaut" :
+                        "Default"
+}
+
+export const classColor = (playerClass: Class) => {
+  return (playerClass == "Default") ? "#0DF" :
+    (playerClass == "Berserk") ? "#F75" :
+      (playerClass == "Tank") ? "#9FE" :
+        (playerClass == "Ninja") ? "#77F" :
+          (playerClass == "Heavyweight") ? "#999" :
+            (playerClass == "Vampire") ? "#246" :
+              (playerClass == "Support") ? "#9FA" :
+                (playerClass == "Psycopath") ? "#201" :
+                  (playerClass == "Angel") ? "#2CD" :
+                    (playerClass == "Zombie") ? "#3A4" :
+                      (playerClass == "Juggernaut") ? "#A5F" :
+                        "#FFF"
+};
+
+export const classDescription = (playerClass: Class) => {
+  return (playerClass == "Default") ? [
+    ["It can triple jump, and ground pound."],
+    [""],
+    ["Special Move: Gain more protection and regenerate", "#FF9900"],
+    ["3 HP.", "#FF9900"],
+    [""],
+    ["Kill Buff: On each kill, many positive effects are", "#99FF00"],
+    ["applied.", "#99FF00"],
+    [""],
+    ["**For every other class assume it has default level traits unless otherwise specified.", undefined, "13px sans"]
+  ] :
+    (playerClass == "Berserk") ? [
+      ["It is ~16% slower, but jumps 20% higher."],
+      ["It can only double jump, not triple jump."],
+      ["Buffed damage and range, but longer cooldown."],
+      ["It also has increased knockback"],
+      ["and higher knockback resistence."],
+      ["But only 75% of regular HP."],
+      [""],
+      ["Special Move: does a very knockback boosted attack,", "#FF9900"],
+      ["and boosted knockback remains for 20 seconds.", "#FF9900"],
+      [""],
+      ["Kill Buff: Gains bloodlust for 15 seconds.", "#99FF00"],
+    ] :
+      (playerClass == "Tank") ? [
+        ["It is two thirds the speed, and has a 60%"],
+        ["longer cooldown. Deals more damage, but can't"],
+        ["jump as high. Higher resistence to knockback,"],
+        ["and lower knockback power, and double HP."],
+        [""],
+        ["Special Move: gains 30 HP and DamageDefence.", "#FF9900"],
+        [""],
+        ["Kill Buff: Max HP increased by 50 and HP", "#99FF00"],
+        ["resets to full.", "#99FF00"],
+      ] : [[""]]
+};
+
 export class Player {
   // This is the player.
   // It will have 2 screen objects.
@@ -71,6 +151,7 @@ export class Player {
 
   forces: { x: number; y: number; }[];
 
+  groundPoundable: boolean;
   groundPounding: boolean;
   gravity: number;
   terminalVelocity: number;
@@ -78,7 +159,7 @@ export class Player {
   grounded: boolean;
   isPhasing: boolean;
 
-  class: string;
+  class: Class;
 
   screenObject: any;
   attkCooldownObjs: ScreenObject[];
@@ -154,6 +235,7 @@ export class Player {
     }, // Gravity
     ];
 
+    this.groundPoundable = true;
     this.groundPounding = false;
     this.gravity = 0.2;
     this.terminalVelocity = -30;
@@ -242,7 +324,7 @@ export class Player {
     this.lives = parseInt(localStorage.getItem("stocklives")) || this.lives;
 
     // classes
-    this.class = localStorage.getItem(`player${this.playerNum}class`) || "Default";
+    this.class = (localStorage.getItem(`player${this.playerNum}class`) as Class) || "Default";
     this.loadClass();
   }
 
@@ -272,7 +354,7 @@ export class Player {
         this.health.health = 200;
         this.health._health = 200;
         this.health.maxHealth = 200;
-        this.kbMult = 0.5;
+        this.kbMult = 0.2;
         this.kbDefence = 2;
         break;
       case "Ninja":
@@ -357,6 +439,8 @@ export class Player {
         this.health.maxHealth = 300;
         this.kbDefence *= 5;
         this.kbMult = 1.25;
+        break;
+      case "Angel":
         break;
       case "Zombie":
       default:
@@ -464,6 +548,7 @@ export class Player {
                 power *= 1 + ((2 - this.health.health / this.health.maxHealth) * this.combo * ((this.killCount + 1) / 2));
                 this.effectors.push(killingMachine(this.combo * (this.killCount + 1), 4 * (this.killCount + 1)));
                 break;
+              case "Angel":
               case "Zombie":
               default:
                 power *= 1 + 0.5 * this.combo;
@@ -502,6 +587,7 @@ export class Player {
                 this.health.modHealth(this.health.maxHealth * 0.025);
               }
               break;
+            case "Angel":
             case "Zombie":
             default:
               break;
@@ -598,10 +684,9 @@ export class Player {
         this.effectors.push(bloodlust(20));
         break;
       case "Juggernaut":
-        // Make it rain meteors!
-        //break;
-        return; // for now...
-      // maybe at some point I'll finally get to adding meteors.
+        // Use the Gamemode.instance and make it METEOR RAIN!
+        break; // for now...
+      case "Angel":
       case "Zombie":
       default:
         this.effectors.push(kbDefence(10, 1));
@@ -644,6 +729,7 @@ export class Player {
 
   groundPound() {
     if (this.grounded) return;
+    if (!this.groundPoundable) return;
 
     if (this.class == "Heavyweight") return;
     if (this.class == "Vampire") return;
@@ -651,6 +737,7 @@ export class Player {
     if (this.class == "Psycopath") return;
     if (this.class == "Zombie") return;
 
+    this.isPhasing = false;
     this.groundPounding = true;
   }
 
@@ -744,6 +831,7 @@ export class Player {
         this.effectors.push(damageDefence(8, 999999))
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00"); });
         break;
+      case "Angel":
       case "Zombie":
       default:
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00"); });
@@ -869,7 +957,7 @@ export class Player {
         && (this.y <= platforms[i].y || this.groundPounding)) {
 
         if (!this.isPhasing || platforms[i].unpassable) {
-          this.y = platforms[i].y - this.h;
+          this.y = platforms[i].y - this.h + 1;
           this.forces[4].y = 0;
           if (this.groundPounding) {
             this.attack(false, true);
@@ -878,13 +966,20 @@ export class Player {
           this.groundPounding = false;
           this.grounded = true;
         }
+      }
 
+      if (this.isPhasing) {
+        let isTouchingPlatform = false;
+        for (let i = 0; i < platforms.length; i++) {
+          if (platforms[i].screenObjects[0].isCollided(this.screenObject)) isTouchingPlatform = true;
+        }
+        this.isPhasing = isTouchingPlatform;
       }
     }
 
-    if (this.forces[4].y < -1) {
-      this.grounded = false;
-    }
+    //if (this.forces[4].y < -1) {
+    //  this.grounded = false;
+    //}
 
     for (let i = 0; i < this.forces.length; i++) {
       if (Math.abs(this.forces[i].x) < 0.01) this.forces[i].x = 0;
@@ -944,10 +1039,11 @@ export class Player {
       case this.controls.down:
         if (this.grounded) {
           this.isPhasing = true;
-
+          this.grounded = false;
+          this.groundPoundable = false;
           setTimeout(() => {
-            this.isPhasing = false;
-          }, 400);
+            this.groundPoundable = true;
+          }, 1000)
         } else {
           this.groundPound();
         }

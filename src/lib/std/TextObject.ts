@@ -32,11 +32,11 @@ export class TextObject {
     }
 
     draw() {
+        ctx.save();
+
         ctx.fillStyle = this.color;
         ctx.font = this.font;
         ctx.lineWidth = this.lineWidth;
-
-        ctx.save();
 
         if (this.scale) {
             // ctx.scale here

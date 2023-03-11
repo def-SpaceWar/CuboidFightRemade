@@ -254,8 +254,6 @@ export class Juggernaut extends Gamemode {
       // make random number
       let randomPlayer = Math.floor(Math.random() * 4);
 
-      console.log(selected, randomPlayer, localStorage.getItem(`player${randomPlayer + 1}enable`));
-
       // check if that random number's player is enabled
       if (localStorage.getItem(`player${randomPlayer + 1}enable`) == "true") {
         // set the random player to juggernaut and make it team 1

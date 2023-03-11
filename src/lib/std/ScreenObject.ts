@@ -24,7 +24,6 @@ export class ScreenObject {
 
   constructor(x: number, y: number, w: number, h: number, color: string, scale?: boolean, shadow?: boolean, shadowOffset?: number[], shadowBlur?: number, shadowColor?: string, image?: HTMLImageElement, tintPower?: number) {
     ScreenObject.ldm = (localStorage.getItem("ldm") == "0") ? false : true;
-    console.log(ScreenObject.ldm);
 
     this.x = x;
     this.y = y;
@@ -36,7 +35,7 @@ export class ScreenObject {
     this.shadow = shadow || false;
     if (ScreenObject.ldm) this.shadow = false;
     this.shadowColor = shadowColor || "#000000AA";
-    this.shadowOffset = shadowOffset || [0, 5];
+    this.shadowOffset = shadowOffset || [0, 4];
     this.shadowBlur = shadowBlur || 5;
     this.image = image;
     this.tintPower = tintPower || 0;
@@ -44,19 +43,17 @@ export class ScreenObject {
   }
 
   draw() {
-    ctx.restore();
+    ctx.save();
     ctx.fillStyle = this.color;
 
     if (this.shadow) {
       ctx.shadowColor = this.shadowColor;
-      ctx.shadowOffsetX = this.shadowOffset[0];
-      ctx.shadowOffsetY = this.shadowOffset[1];
-      ctx.shadowBlur = this.shadowBlur;
+      ctx.shadowOffsetX = this.shadowOffset[0] * (this.scale ? camera.w_scale : 1);
+      ctx.shadowOffsetY = this.shadowOffset[1] * (this.scale ? camera.h_scale : 1);
+      //ctx.shadowBlur = this.shadowBlur;
     } else {
       ctx.shadowColor = "#00000000";
     }
-
-    ctx.save();
 
     if (this.scale) {
       // ctx.scale here
@@ -92,7 +89,6 @@ export class ScreenObject {
         ctx.globalCompositeOperation = "source-over";
       }
     }
-
     ctx.restore();
   }
 

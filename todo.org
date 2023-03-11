@@ -1,5 +1,18 @@
 #+TITLE: TODO
 
+* TODO Customizable Power Ups
+* TODO (Easier) Make a new class called Guardian
+Another support-based class.
++ HP is 125
++ fast
+- slow attack speed
++ fast attack speed
+- less damage
++ killBuff is to heal all teammates to full health
+- can't groundpound
++ special is to give itself damageDefence and all teammates damageBoost.
++ killBuff is to get angelicAura which lasts 20 seconds and regenerates it to max health and gives damageDefence.
++ combo gives damageDefence to angel for a short time multiplying by combo and kill count.
 * TODO Make new class called 'Zombie'
 base stats are Berserk but worse
 + HP is 100
@@ -13,7 +26,7 @@ base stats are Berserk but worse
   the players colored eye sockets.
 + killBuff is to buff its overall stats by 5% in EVERYTHING (including health).
 + special is to kill anyone <=10 hp and make its HP 10 so another zombie could theoretically kill another zombie that just used its special.
-+ for every person the zombie kills (in special), it gets a LOT OF killingMachine and bloodLust.
+  - for every person the zombie kills (in special), it gets a LOT OF killingMachine and bloodLust.
 * TODO Description for every single class on ~~a new page~~ the main screen that you can scroll through!
 * TODO Juggernaut class will have meteor rain special.
 * TODO Each class should have it's own aesthetic change like the vampire having wings. [1/2]

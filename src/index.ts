@@ -8,6 +8,8 @@ import { Deathmatch, Ffa, Gamemode, Juggernaut, Stock } from './lib/game/Gamemod
 import { PowerUpBox } from './lib/game/PowerUpBox';
 
 window.onload = () => {
+  let process: number | NodeJS.Timer = -1;
+
   let player1: Player,
     player2: Player,
     player3: Player,
@@ -23,7 +25,11 @@ window.onload = () => {
 
   const setCustomInterval = (callBack: () => any) => {
     if (globalFrameLength > 0) return setInterval(callBack, globalFrameLength);
-    return requestAnimationFrame(callBack);
+    const newCallback = () => {
+      process = requestAnimationFrame(newCallback);
+      callBack();
+    }
+    return requestAnimationFrame(newCallback);
   };
 
   const clearCustomInterval = (id: number | NodeJS.Timer) => {
@@ -116,7 +122,7 @@ window.onload = () => {
       infoButton.listenMouseUp(event);
     });
 
-    let process = setCustomInterval(mainMenu);
+    process = setCustomInterval(mainMenu);
 
     let firstTime = true;
     function mainMenu() {
@@ -438,75 +444,6 @@ window.onload = () => {
       }
 
       function showClasses() {
-        const classNames = ["Default", "Berserk", "Tank", "Ninja", "Heavyweight", "Vampire", "Support", "Juggernaut"];
-        const classColors = ["#0DF", "#F75", "#9FE", "#77F", "#999", "#246", "#9FA", "#A5F"];
-        const classDescs = [
-          [
-            ["It can triple jump, and ground pound."],
-            [""],
-            ["Special Move: Gain more protection and regenerate", "#FF9900"],
-            ["3 HP.", "#FF9900"],
-            [""],
-            ["Kill Buff: On each kill, many positive effects are", "#99FF00"],
-            ["applied.", "#99FF00"],
-            [""],
-            ["**For every other class assume it has default level traits unless otherwise specified.", undefined, "13px sans"]
-          ],
-          [
-            ["It is ~16% slower, but jumps 20% higher."],
-            ["It can only double jump, not triple jump."],
-            ["Buffed damage and range, but longer cooldown."],
-            ["It also has increased knockback"],
-            ["and higher knockback resistence."],
-            ["But only 75% of regular HP."],
-            [""],
-            ["Special Move: does a very knockback boosted attack,", "#FF9900"],
-            ["and boosted knockback remains for 20 seconds.", "#FF9900"],
-            [""],
-            ["Kill Buff: Gains bloodlust for 15 seconds.", "#99FF00"],
-          ],
-          [
-            ["It is two thirds the speed, and has a 60%"],
-            ["longer cooldown. Deals more damage, but can't"],
-            ["jump as high. Higher resistence to knockback,"],
-            ["and lower knockback power, and double HP."],
-            [""],
-            ["Special Move: gains 30 HP and DamageDefence.", "#FF9900"],
-            [""],
-            ["Kill Buff: Max HP increased by 50 and HP", "#99FF00"],
-            ["resets to full.", "#99FF00"],
-          ],
-          [
-            ["Cooldown ~33% faster, 50% faster movement,"],
-            ["and 40% more jump power. Can quadruple jump."],
-          ],
-          [
-            [""]
-          ],
-          [
-            [""]
-          ],
-          [
-            [""]
-          ],
-          [
-            [""]
-          ]
-        ];
-
-        // Enums are useful for giving numbers, some more readable meaning.
-        enum PlayerClass {
-          Default = 0,
-          Berserk = 1,
-          Tank = 2,
-          Ninja = 3,
-          Heavyweight = 4,
-          Vampire = 5,
-          Support = 6,
-          Juggernaut = 7
-        }
-        let classIdx = PlayerClass.Default;
-
         const border = new ScreenObject(50, 50, WIDTH - 100, HEIGHT - 100, "#333", false);
         const displayBox = new ScreenObject(100, 100, 400, HEIGHT - 200, classColors[classIdx], false);
 

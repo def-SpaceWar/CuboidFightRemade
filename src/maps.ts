@@ -98,15 +98,38 @@ export const maps = {
         [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
     ],
     "bg2": bgOrig,
+    "map3": [[""]],
+    "bg3": bgOrig
+};
+
+const randomMap = (): string[][] => {
+    const newMap = [];
+    for (let y = 0; y < 30; y++) {
+        newMap.push([]);
+        for (let x = 0; x < 45; x++) {
+            let random = Math.random();
+            newMap[y].push(
+                (random > 0.97) ? "s":
+                (random > 0.80) ? "g" :
+                " "
+            );
+        }
+    }
+    newMap[2][3] = "1";
+    newMap[2][16] = "2";
+    newMap[2][29] = "3";
+    newMap[2][42] = "4";
+    return newMap;
 };
 
 export function loadMap(mapNum: number, players: Player[]) {
+    maps["map3"] = randomMap();
     const mapPlatforms = [];
     // @ts-ignore: can't find type
     const map = maps[`map${mapNum}`];
 
     for (let y = 0; y < map.length; y++) {
-        for (let x = 0; x < map[y].length; x++) {
+        for (let x = map[y].length - 1; 0 <= x; x--) {
             switch (map[y][x]) {
                 case "1":
                     players[0].x = UNIT_SIZE * x;

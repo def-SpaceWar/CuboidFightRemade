@@ -3,118 +3,122 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Cuboid Fight Remade</title>
+  <title>Cuboid Fight Remade</title>
 
-    <link rel="stylesheet" href="static/css/style.css">
+  <link rel="stylesheet" href="static/css/style.css">
 </head>
 
 <body>
-    <input id="idk" />
+  <input id="idk" />
 
-    <center>
-        <h1>Cuboid Fight!</h1>
-        <h3>Remade</h3>
-    </center>
+  <center>
+    <h1>Cuboid Fight!</h1>
+    <h3>Remade</h3>
+  </center>
 
-    <p id="fpsCount">FPS: 0</p>
+  <p id="fpsCount">FPS: 0</p>
 
-    <div id="game">
-        <canvas id="canvas" width="1200" height="600">
+  <div id="game">
+    <canvas id="canvas" width="1200" height="600">
 
-            If you can see this:
-            You need to stop using a browser from the dark ages.
-            :>
-            <!-- You can only see this if your browser no support html canvas -->
+      If you can see this:
+      You need to stop using a browser from the dark ages.
+      :>
+      <!-- You can only see this if your browser no support html canvas -->
 
-        </canvas>
+    </canvas>
 
-        <p class="invis" style="height: 600px;">To access settings you type "idk" in the random input at the top and "no" to make it disappear!</p>
+    <p class="invis" style="height: 600px;">To access settings you type "idk" in the random input at the top and "no" to
+      make it disappear!</p>
 
-        <div id="console">
-            <h1>Console:</h1>
-        </div>
+    <div id="console">
+      <h1>Console:</h1>
     </div>
+  </div>
 
-    <div id="settings">
-        <h1>Settings</h1>
-        <p>You have accessed the super secret settings! <b>MAKE SURE YOU HIT THE SAVE BUTTON!</b></p>
+  <div id="settings">
+    <h1>Settings</h1>
+    <p>You have accessed the super secret settings! <b>MAKE SURE YOU HIT THE SAVE BUTTON!</b></p>
 
-        <br />
+    <br />
 
-        <button onclick="setOptions();" style="font-size: 50px;">Save</button>
+    <button onclick="setOptions();" style="font-size: 50px;">Save</button>
 
-        <br />
-        <br />
+    <br />
+    <br />
 
-        <div style="column-count: 5; width: 1400px;">
-            <div>
-                <div class="game">
-                    <h3>Game Settings</h3>
+    <div style="column-count: 5; width: 1400px;">
+      <div>
+        <div class="game">
+          <h3>Game Settings</h3>
 
-                    <span>Gamemode: </span>
+          <span>Gamemode: </span>
 
-                    <select id="gamemode" name="gamemode">
-                        <option value="ffa">FFA</option>
-                        <option value="deathmatch">Deathmatch</option>
-                        <option value="stock">Stock</option>
-                        <option value="juggernaut">Juggernaut (has stock lives)</option>
-                    </select>
+          <select id="gamemode" name="gamemode">
+            <option value="ffa">FFA</option>
+            <option value="deathmatch">Deathmatch</option>
+            <option value="stock">Stock</option>
+            <option value="juggernaut">Juggernaut (has stock lives)</option>
+          </select>
 
-                    <br />
-                    <br />
+          <br />
+          <br />
 
-                    <span>Stock Lives: <input id="stocklives" type="number" placeholder="3" min="0" max="99" style="width: 40px;" onkeydown="return false;" /></span>
+          <span>Stock Lives: <input id="stocklives" type="number" placeholder="3" min="0" max="99" style="width: 40px;"
+              onkeydown="return false;" /></span>
 
-                    <br />
-                    <br />
+          <br />
+          <br />
 
-                    <span>Deathmatch Kills: <input id="deathmatchkills" type="number" placeholder="5" min="0" max="99" style="width: 40px;" onkeydown="return false;" /></span>
+          <span>Deathmatch Kills: <input id="deathmatchkills" type="number" placeholder="5" min="0" max="99"
+              style="width: 40px;" onkeydown="return false;" /></span>
 
-                    <br />
-                    <br />
+          <br />
+          <br />
 
-                    <span>Map: (WIP)</span>
+          <span>Map: (WIP)</span>
 
-                    <select id="map" name="map">
-                        <option value="1">Original</option>
-                        <option value="2">Hi there</option>
-                        <option value="3">???</option>
-                        <option value="4">???</option>
-                    </select>
+          <select id="map" name="map">
+            <option value="1">Original</option>
+            <option value="2">Hi there</option>
+            <option value="3">Random (ALPHA)</option>
+            <option value="4">???</option>
+          </select>
 
-                    <br />
-                    <br />
+          <br />
+          <br />
 
-                    <span>FPS Cap (not 100% precise): <input id="fpslimit" type="number" placeholder="0" min="0" max="1000" style="width: 40px;" /></span>
+          <span>FPS Cap (not 100% precise): <input id="fpslimit" type="number" placeholder="0" min="0" max="1000"
+              style="width: 40px;" /></span>
 
-                    <br />
+          <br />
 
-                    <p>(0 means VSYNC, *recommended*)</p>
+          <p>(0 means VSYNC, *recommended*)</p>
 
-                    <span>Detail Options:</span>
+          <span>Detail Options:</span>
 
-                    <select id="ldm" name="ldm">
-                        <option value="0">High Detail</option>
-                        <option value="1">Low Detail</option>
-                    </select>
-                </div>
-            </div>
+          <select id="ldm" name="ldm">
+            <option value="0">High Detail</option>
+            <option value="1">Low Detail</option>
+          </select>
+        </div>
+      </div>
 
-            <div class="enabled">
-                <h3>Enable/Disable Players</h3>
+      <div class="enabled">
+        <h3>Enable/Disable Players</h3>
 
-                <ul>
-                    <li>Player 1: <input id="player1enable" type="checkbox" /></li>
-                    <li>Player 2: <input id="player2enable" type="checkbox" /></li>
-                    <li>Player 3: <input id="player3enable" type="checkbox" /></li>
-                    <li>Player 4: <input id="player4enable" type="checkbox" /></li>
-                </ul>
+        <ul>
+          <li>Player 1: <input id="player1enable" type="checkbox" /></li>
+          <li>Player 2: <input id="player2enable" type="checkbox" /></li>
+          <li>Player 3: <input id="player3enable" type="checkbox" /></li>
+          <li>Player 4: <input id="player4enable" type="checkbox" /></li>
+        </ul>
 
-                <!-- This was an April Fool's prank.
+        <!-- This was an April Fool's prank.
                     This one person kept asking for bots to be added.
                     These never did anything.
                 <h3>Bots<h3>
@@ -127,253 +131,263 @@
                 </ul>
                 -->
 
-                <h3>Teams</h3>
-                <span>Team Enable: <input id="teamenable" type="checkbox" /></span>
+        <h3>Teams</h3>
+        <span>Team Enable: <input id="teamenable" type="checkbox" /></span>
 
-                <span>Team 1: <input id="team1" placeholder="1,2" /></span>
-                <br />
-                <span>Team 2: <input id="team2" placeholder="2,3" /></span>
-                <br />
-                <span>Team 3: <input id="team3" placeholder="3,4" /></span>
-                <br />
-                <span>Team 4: <input id="team4" placeholder="1,4" /></span>
-            </div>
+        <span>Team 1: <input id="team1" placeholder="1,2" /></span>
+        <br />
+        <span>Team 2: <input id="team2" placeholder="2,3" /></span>
+        <br />
+        <span>Team 3: <input id="team3" placeholder="3,4" /></span>
+        <br />
+        <span>Team 4: <input id="team4" placeholder="1,4" /></span>
+      </div>
 
-            <div class="classes">
-                <h3>Classes</h3>
-                <p>There are 8 classes:</p>
+      <div class="classes">
+        <h3>Classes</h3>
+        <p>There are 10 classes:</p>
 
-                <ul>
-                    <li>Default</li>
-                    <li>Berserk</li>
-                    <li>Tank</li>
-                    <li>Ninja</li>
-                    <li>Heavyweight</li>
-                    <li>Vampire</li>
-                    <li>Support</li>
-                    <li>Psycopath</li>
-                </ul>
+        <ul>
+          <li>Default</li>
+          <li>Berserk</li>
+          <li>Tank</li>
+          <li>Ninja</li>
+          <li>Heavyweight</li>
+          <li>Vampire</li>
+          <li>Support</li>
+          <li>Psycopath</li>
+          <li>Angel</li>
+          <li>Zombie</li>
+        </ul>
 
-                <span>Player 1 Class: </span>
+        <span>Player 1 Class: </span>
 
-                <select id="player1class" name="class">
-                    <option value="Default">Default</option>
-                    <option value="Berserk">Berserk</option>
-                    <option value="Tank">Tank</option>
-                    <option value="Ninja">Ninja</option>
-                    <option value="Heavyweight">Heavyweight</option>
-                    <option value="Vampire">Vampire</option>
-                    <option value="Support">Support</option>
-                    <option value="Psycopath">Psycopath</option>
-                </select>
+        <select id="player1class" name="class">
+          <option value="Default">Default</option>
+          <option value="Berserk">Berserk</option>
+          <option value="Tank">Tank</option>
+          <option value="Ninja">Ninja</option>
+          <option value="Heavyweight">Heavyweight</option>
+          <option value="Vampire">Vampire</option>
+          <option value="Support">Support</option>
+          <option value="Psycopath">Psycopath</option>
+          <option value="Angel">Angel</option>
+          <option value="Zombie">Zombie</option>
+        </select>
 
-                <br />
-                <br />
+        <br />
+        <br />
 
-                <span>Player 2 Class: </span>
+        <span>Player 2 Class: </span>
 
-                <select id="player2class" name="class">
-                    <option value="Default">Default</option>
-                    <option value="Berserk">Berserk</option>
-                    <option value="Tank">Tank</option>
-                    <option value="Ninja">Ninja</option>
-                    <option value="Heavyweight">Heavyweight</option>
-                    <option value="Vampire">Vampire</option>
-                    <option value="Support">Support</option>
-                    <option value="Psycopath">Psycopath</option>
-                </select>
+        <select id="player2class" name="class">
+          <option value="Default">Default</option>
+          <option value="Berserk">Berserk</option>
+          <option value="Tank">Tank</option>
+          <option value="Ninja">Ninja</option>
+          <option value="Heavyweight">Heavyweight</option>
+          <option value="Vampire">Vampire</option>
+          <option value="Support">Support</option>
+          <option value="Psycopath">Psycopath</option>
+          <option value="Angel">Angel</option>
+          <option value="Zombie">Zombie</option>
+        </select>
 
-                <br />
-                <br />
+        <br />
+        <br />
 
-                <span>Player 3 Class: </span>
+        <span>Player 3 Class: </span>
 
-                <select id="player3class" name="class">
-                    <option value="Default">Default</option>
-                    <option value="Berserk">Berserk</option>
-                    <option value="Tank">Tank</option>
-                    <option value="Ninja">Ninja</option>
-                    <option value="Heavyweight">Heavyweight</option>
-                    <option value="Vampire">Vampire</option>
-                    <option value="Support">Support</option>
-                    <option value="Psycopath">Psycopath</option>
-                </select>
+        <select id="player3class" name="class">
+          <option value="Default">Default</option>
+          <option value="Berserk">Berserk</option>
+          <option value="Tank">Tank</option>
+          <option value="Ninja">Ninja</option>
+          <option value="Heavyweight">Heavyweight</option>
+          <option value="Vampire">Vampire</option>
+          <option value="Support">Support</option>
+          <option value="Psycopath">Psycopath</option>
+          <option value="Angel">Angel</option>
+          <option value="Zombie">Zombie</option>
+        </select>
 
-                <br />
-                <br />
+        <br />
+        <br />
 
-                <span>Player 4 Class: </span>
+        <span>Player 4 Class: </span>
 
-                <select id="player4class" name="class">
-                    <option value="Default">Default</option>
-                    <option value="Berserk">Berserk</option>
-                    <option value="Tank">Tank</option>
-                    <option value="Ninja">Ninja</option>
-                    <option value="Heavyweight">Heavyweight</option>
-                    <option value="Vampire">Vampire</option>
-                    <option value="Support">Support</option>
-                    <option value="Psycopath">Psycopath</option>
-                </select>
-            </div>
+        <select id="player4class" name="class">
+          <option value="Default">Default</option>
+          <option value="Berserk">Berserk</option>
+          <option value="Tank">Tank</option>
+          <option value="Ninja">Ninja</option>
+          <option value="Heavyweight">Heavyweight</option>
+          <option value="Vampire">Vampire</option>
+          <option value="Support">Support</option>
+          <option value="Psycopath">Psycopath</option>
+          <option value="Angel">Angel</option>
+          <option value="Zombie">Zombie</option>
+        </select>
+      </div>
 
-            <div>
-                <div class="p1controls">
-                    <h3>Player 1 Controls</h3>
+      <div>
+        <div class="p1controls">
+          <h3>Player 1 Controls</h3>
 
-                    <span>Left: <input id="player1left" placeholder="ArrowLeft" /></span>
-                    <br />
-                    <span>Up: <input id="player1up" placeholder="ArrowUp" /></span>
-                    <br />
-                    <span>Down: <input id="player1down" placeholder="ArrowDown" /></span>
-                    <br />
-                    <span>Right: <input id="player1right" placeholder="ArrowRight" /></span>
-                    <br />
-                    <span>Attack: <input id="player1attack" placeholder="/" /></span>
-                    <br />
-                    <span>Special: <input id="player1special" placeholder="." /></span>
-                </div>
-
-                <div class="p2controls">
-                    <h3>Player 2 Controls</h3>
-
-                    <span>Left: <input id="player2left" placeholder="s" /></span>
-                    <br />
-                    <span>Up: <input id="player2up" placeholder="e" /></span>
-                    <br />
-                    <span>Down: <input id="player2down" placeholder="d" /></span>
-                    <br />
-                    <span>Right: <input id="player2right" placeholder="f" /></span>
-                    <br />
-                    <span>Attack: <input id="player2attack" placeholder="q" /></span>
-                    <br />
-                    <span>Special: <input id="player2special" placeholder="w" /></span>
-                </div>
-            </div>
-
-            <div>
-                <div class="p3controls">
-                    <h3>Player 3 Controls</h3>
-
-                    <span>Left: <input id="player3left" placeholder="v" /></span>
-                    <br />
-                    <span>Up: <input id="player3up" placeholder="g" /></span>
-                    <br />
-                    <span>Down: <input id="player3down" placeholder="b" /></span>
-                    <br />
-                    <span>Right: <input id="player3right" placeholder="n" /></span>
-                    <br />
-                    <span>Attack: <input id="player3attack" placeholder="' ' (spacebar)" /></span>
-                    <br />
-                    <span>Special: <input id="player3special" placeholder="c" /></span>
-                </div>
-
-                <div class="p4controls">
-                    <h3>Player 4 Controls</h3>
-
-                    <span>Left: <input id="player4left" placeholder="4" /></span>
-                    <br />
-                    <span>Up: <input id="player4up" placeholder="8" /></span>
-                    <br />
-                    <span>Down: <input id="player4down" placeholder="5" /></span>
-                    <br />
-                    <span>Right: <input id="player4right" placeholder="6" /></span>
-                    <br />
-                    <span>Attack: <input id="player4attack" placeholder="7" /></span>
-                    <br />
-                    <span>Special: <input id="player4special" placeholder="1" /></span>
-                </div>
-            </div>
+          <span>Left: <input id="player1left" placeholder="ArrowLeft" /></span>
+          <br />
+          <span>Up: <input id="player1up" placeholder="ArrowUp" /></span>
+          <br />
+          <span>Down: <input id="player1down" placeholder="ArrowDown" /></span>
+          <br />
+          <span>Right: <input id="player1right" placeholder="ArrowRight" /></span>
+          <br />
+          <span>Attack: <input id="player1attack" placeholder="/" /></span>
+          <br />
+          <span>Special: <input id="player1special" placeholder="." /></span>
         </div>
+
+        <div class="p2controls">
+          <h3>Player 2 Controls</h3>
+
+          <span>Left: <input id="player2left" placeholder="s" /></span>
+          <br />
+          <span>Up: <input id="player2up" placeholder="e" /></span>
+          <br />
+          <span>Down: <input id="player2down" placeholder="d" /></span>
+          <br />
+          <span>Right: <input id="player2right" placeholder="f" /></span>
+          <br />
+          <span>Attack: <input id="player2attack" placeholder="q" /></span>
+          <br />
+          <span>Special: <input id="player2special" placeholder="w" /></span>
+        </div>
+      </div>
+
+      <div>
+        <div class="p3controls">
+          <h3>Player 3 Controls</h3>
+
+          <span>Left: <input id="player3left" placeholder="v" /></span>
+          <br />
+          <span>Up: <input id="player3up" placeholder="g" /></span>
+          <br />
+          <span>Down: <input id="player3down" placeholder="b" /></span>
+          <br />
+          <span>Right: <input id="player3right" placeholder="n" /></span>
+          <br />
+          <span>Attack: <input id="player3attack" placeholder="' ' (spacebar)" /></span>
+          <br />
+          <span>Special: <input id="player3special" placeholder="c" /></span>
+        </div>
+
+        <div class="p4controls">
+          <h3>Player 4 Controls</h3>
+
+          <span>Left: <input id="player4left" placeholder="4" /></span>
+          <br />
+          <span>Up: <input id="player4up" placeholder="8" /></span>
+          <br />
+          <span>Down: <input id="player4down" placeholder="5" /></span>
+          <br />
+          <span>Right: <input id="player4right" placeholder="6" /></span>
+          <br />
+          <span>Attack: <input id="player4attack" placeholder="7" /></span>
+          <br />
+          <span>Special: <input id="player4special" placeholder="1" /></span>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script type="text/javascript" defer>
-        // Use localStorage to set all the players'
-        // textboxes, modifiers, (very far future cosmetics)
-        // and colors.
-        const selects = [];
-        const checkboxes = [];
-        const textboxes = [];
+  <script type="text/javascript" defer>
+    // Use localStorage to set all the players'
+    // textboxes, modifiers, (very far future cosmetics)
+    // and colors.
+    const selects = [];
+    const checkboxes = [];
+    const textboxes = [];
 
-        function getSettings() {
-            console.log("got settings!");
+    function getSettings() {
+      console.log("got settings!");
 
-            selects.push.apply(selects, [
-                document.getElementById("player1class"),
-                document.getElementById("player2class"),
-                document.getElementById("player3class"),
-                document.getElementById("player4class"),
-                document.getElementById("gamemode"),
-                document.getElementById("map"),
-                document.getElementById("ldm"),
-            ]);
+      selects.push.apply(selects, [
+        document.getElementById("player1class"),
+        document.getElementById("player2class"),
+        document.getElementById("player3class"),
+        document.getElementById("player4class"),
+        document.getElementById("gamemode"),
+        document.getElementById("map"),
+        document.getElementById("ldm"),
+      ]);
 
-            checkboxes.push.apply(checkboxes, [
-                document.getElementById("player1enable"),
-                document.getElementById("player2enable"),
-                document.getElementById("player3enable"),
-                document.getElementById("player4enable"),
-                document.getElementById("teamenable"),
-            ]);
+      checkboxes.push.apply(checkboxes, [
+        document.getElementById("player1enable"),
+        document.getElementById("player2enable"),
+        document.getElementById("player3enable"),
+        document.getElementById("player4enable"),
+        document.getElementById("teamenable"),
+      ]);
 
-            textboxes.push.apply(textboxes, [
-                document.getElementById("stocklives"),
-                document.getElementById("deathmatchkills"),
-                document.getElementById("fpslimit"),
-            ]);
+      textboxes.push.apply(textboxes, [
+        document.getElementById("stocklives"),
+        document.getElementById("deathmatchkills"),
+        document.getElementById("fpslimit"),
+      ]);
 
-            for (let i = 1; i <= 4; i++) {
-                textboxes.push(document.getElementById(`player${i}left`));
-                textboxes.push(document.getElementById(`player${i}up`));
-                textboxes.push(document.getElementById(`player${i}down`));
-                textboxes.push(document.getElementById(`player${i}right`));
-                textboxes.push(document.getElementById(`player${i}attack`));
-                textboxes.push(document.getElementById(`player${i}special`));
-            }
+      for (let i = 1; i <= 4; i++) {
+        textboxes.push(document.getElementById(`player${i}left`));
+        textboxes.push(document.getElementById(`player${i}up`));
+        textboxes.push(document.getElementById(`player${i}down`));
+        textboxes.push(document.getElementById(`player${i}right`));
+        textboxes.push(document.getElementById(`player${i}attack`));
+        textboxes.push(document.getElementById(`player${i}special`));
+      }
 
-            textboxes.push(document.getElementById(`team1`));
-            textboxes.push(document.getElementById(`team2`));
-            textboxes.push(document.getElementById(`team3`));
-            textboxes.push(document.getElementById(`team4`));
+      textboxes.push(document.getElementById(`team1`));
+      textboxes.push(document.getElementById(`team2`));
+      textboxes.push(document.getElementById(`team3`));
+      textboxes.push(document.getElementById(`team4`));
 
-            selects.map((i) => {
-                const output = localStorage.getItem(i.id);
-                if (!output) return;
-                i.value = localStorage.getItem(i.id);
-                i.selected = localStorage.getItem(i.id);
-            });
+      selects.map((i) => {
+        const output = localStorage.getItem(i.id);
+        if (!output) return;
+        i.value = localStorage.getItem(i.id);
+        i.selected = localStorage.getItem(i.id);
+      });
 
-            checkboxes.map((i) => {
-                if (localStorage.getItem(i.id) == "false") i.checked = false;
-                else if (localStorage.getItem(i.id) == "true") i.checked = true;
-            });
+      checkboxes.map((i) => {
+        if (localStorage.getItem(i.id) == "false") i.checked = false;
+        else if (localStorage.getItem(i.id) == "true") i.checked = true;
+      });
 
-            textboxes.map((i) => {
-                i.value = localStorage.getItem(i.id) || "";
-            });
+      textboxes.map((i) => {
+        i.value = localStorage.getItem(i.id) || "";
+      });
+    }
+
+    function setOptions() {
+      selects.map((i) => {
+        localStorage.setItem(i.id, i.value);
+      });
+
+      checkboxes.map((i) => {
+        localStorage.setItem(i.id, i.checked);
+      });
+
+      textboxes.map((i) => {
+        if (i.value != "") {
+          localStorage.setItem(i.id, i.value);
+        } else {
+          localStorage.removeItem(i.id);
         }
+      });
+    }
 
-        function setOptions() {
-            selects.map((i) => {
-                localStorage.setItem(i.id, i.value);
-            });
+    getSettings();
+  </script>
 
-            checkboxes.map((i) => {
-                localStorage.setItem(i.id, i.checked);
-            });
-
-            textboxes.map((i) => {
-                if (i.value != "") {
-                    localStorage.setItem(i.id, i.value);
-                } else {
-                    localStorage.removeItem(i.id);
-                }
-            });
-        }
-
-        getSettings();
-    </script>
-
-    <!--
+  <!--
     <script src="globals.js"></script>
     <script src="lib/std/ScreenObject.js"></script>
     <script src="lib/std/TextObject.js"></script>
@@ -386,7 +400,7 @@
     <script src="lib/player/VampireWing.js"></script>
     <script src="maps.js"></script>
     -->
-    <script src="./src/index.js" type="module" defer></script>
+  <script src="./src/index.js" type="module" defer></script>
 </body>
 
 </html>

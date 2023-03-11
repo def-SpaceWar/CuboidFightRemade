@@ -4,7 +4,7 @@ export const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 export const ctx = canvas.getContext("2d");
 
 // each team has its own color
-export const teamColors = ["#990000", "#999900", "#009900", "#000099"];
+export const teamColors = ["#990000AA", "#999900AA", "#009900AA", "#000099AA"];
 
 // I'm too used to my variables being named like this.
 export const WIDTH = canvas.width;
@@ -17,7 +17,11 @@ export const camera = {
   h_scale: 1
 };
 
-export const globalFrameLength = (1000 / parseInt(localStorage.getItem("fpslimit"))) || 0; // VSync or choose
+export const globalFrameLength = (() => {
+  let fps = (1000 / parseInt(localStorage.getItem("fpslimit")))
+  if (fps == 0 || fps == Infinity) return 0;
+  return fps;
+})(); // VSync or choose
 export const globalPhysicsTick = 20; // Physics reloads every 20 milliseconds
 
 export function lerpCamera(objs: ScreenObject[]) {

@@ -30,7 +30,7 @@ export class PowerUpBox {
             bloodlust(30)
         ];
 
-        this.screenObject = new ScreenObject(x, y, 80, 80, "#742", true, true);
+        this.screenObject = new ScreenObject(x, y, 80, 80, "#742", true, true, [-5, 10]);
         this.screenObject.image = powerUpBoxTexture1;
         this.screenObject.tintPower = 0;
 

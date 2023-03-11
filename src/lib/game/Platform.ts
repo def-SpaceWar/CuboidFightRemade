@@ -57,7 +57,7 @@ export class Platform {
       this.extraObjects[0].shadow = true;
       this.extraObjects[0].shadowBlur = 5;
       this.extraObjects[0].shadowColor = "#00000055";
-      this.extraObjects[0].shadowOffset = [5, 5];
+      this.extraObjects[0].shadowOffset = [-8, 8];
     }
 
     switch (this.material) {
