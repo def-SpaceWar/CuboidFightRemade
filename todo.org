@@ -21,18 +21,33 @@ base stats are Berserk but worse
 + decent jump (2x)
 - low reload speed
 - low damage
++ comboing is same as berserk
 + after it dies it stays alive for 10 more seconds and has damageBoost(10, 10) and speedBoost(10, 4) which is very OP
 + while its a "zombie" give a accessory that goes on top that only shows when its hp is 0 that is just a moldy green with
   the players colored eye sockets.
 + killBuff is to buff its overall stats by 5% in EVERYTHING (including health).
-+ special is to kill anyone <=10 hp and make its HP 10 so another zombie could theoretically kill another zombie that just used its special.
-  - for every person the zombie kills (in special), it gets a LOT OF killingMachine and bloodLust.
++ special is to kill all others <=10 hp and make its HP 10 so another zombie could theoretically kill another zombie that just used its special.
+  + for every person the zombie kills (in special), it gets a LOT OF killingMachine and bloodLust.
 * TODO Description for every single class on ~~a new page~~ the main screen that you can scroll through!
 * TODO Juggernaut class will have meteor rain special.
 * TODO Each class should have it's own aesthetic change like the vampire having wings. [1/2]
 The vampire's wings will be of 2 different images and there will be a class for it that can draw. The player class will get an array called `cosmetics` and it will have the 2 vampire wings if it is a vampire and they're rotation will change based on the value of the jump force and their angles will be the inverse of eachother creating a flying effect when the vampire jumps. The wings will also be rendered under the player.
 + [X] Vampire Wings
 + [ ] Ninja Bandana that changes direction depending on movement
+* TODO Make new Speed Demon class!
+Ninja, but more speed, less damage.
+- HP is 65
++ faster than ninja
+- no ground pound
+- very low damage (~10 damage in a max hit)
++ medium 6x jump (like ninja but slightly less per jump)
++ first attack big cooldown, next attacks have exponentially lower cooldown
++ combo gives temporary boost in attack range, and temporary boost in speed. (new powerup for attack range)
++ killBuff is to heal to full health and figure out how to up the stats in a balanced manner.
++ special is to give abililitySpeed, BUT it'll only work on attacks, as the special cooldown multiplier will
+  + be upped significantly, and the abilitySpeed will only be given AFTER the specialcooldown is done, so
+  + they can attack right away. The attack speed will be useful.
+  - In the special the speed demon will also lose 50% of its health, so it better be worth it...
 
 * Dead...
 * KILL Using multiplayer firebase tutorial make single player button that plays ONLINE!

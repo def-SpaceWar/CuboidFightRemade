@@ -25,7 +25,7 @@ export type Class = "Default"
   | "Vampire"
   | "Support"
   | "Psycopath"
-  | "Angel"
+  | "Guardian"
   | "Zombie"
   | "Juggernaut";
 
@@ -38,7 +38,7 @@ export const numberToClass = (n: number): Class => {
             (n == 5) ? "Vampire" :
               (n == 6) ? "Support" :
                 (n == 7) ? "Psycopath" :
-                  (n == 8) ? "Angel" :
+                  (n == 8) ? "Guardian" :
                     (n == 9) ? "Zombie" :
                       (n == 10) ? "Juggernaut" :
                         "Default"
@@ -53,7 +53,7 @@ export const classColor = (playerClass: Class) => {
             (playerClass == "Vampire") ? "#246" :
               (playerClass == "Support") ? "#9FA" :
                 (playerClass == "Psycopath") ? "#201" :
-                  (playerClass == "Angel") ? "#2CD" :
+                  (playerClass == "Guardian") ? "#2CD" :
                     (playerClass == "Zombie") ? "#3A4" :
                       (playerClass == "Juggernaut") ? "#A5F" :
                         "#FFF"
@@ -67,7 +67,7 @@ export const classDescription = (playerClass: Class) => {
     ["3 HP.", "#FF9900"],
     [""],
     ["Kill Buff: On each kill, many positive effects are", "#99FF00"],
-    ["applied.", "#99FF00"],
+    ["applied, and permenant damage, speed, and kbDefence.", "#99FF00"],
     [""],
     ["**For every other class assume it has default level traits unless otherwise specified.", undefined, "13px sans"]
   ] :
@@ -440,7 +440,7 @@ export class Player {
         this.kbDefence *= 5;
         this.kbMult = 1.25;
         break;
-      case "Angel":
+      case "Guardian":
         break;
       case "Zombie":
       default:
@@ -548,7 +548,7 @@ export class Player {
                 power *= 1 + ((2 - this.health.health / this.health.maxHealth) * this.combo * ((this.killCount + 1) / 2));
                 this.effectors.push(killingMachine(this.combo * (this.killCount + 1), 4 * (this.killCount + 1)));
                 break;
-              case "Angel":
+              case "Guardian":
               case "Zombie":
               default:
                 power *= 1 + 0.5 * this.combo;
@@ -587,7 +587,7 @@ export class Player {
                 this.health.modHealth(this.health.maxHealth * 0.025);
               }
               break;
-            case "Angel":
+            case "Guardian":
             case "Zombie":
             default:
               break;
@@ -686,7 +686,7 @@ export class Player {
       case "Juggernaut":
         // Use the Gamemode.instance and make it METEOR RAIN!
         break; // for now...
-      case "Angel":
+      case "Guardian":
       case "Zombie":
       default:
         this.effectors.push(kbDefence(10, 1));
@@ -831,7 +831,7 @@ export class Player {
         this.effectors.push(damageDefence(8, 999999))
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00"); });
         break;
-      case "Angel":
+      case "Guardian":
       case "Zombie":
       default:
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00"); });
@@ -845,6 +845,9 @@ export class Player {
         this.effectors.push(damageDefence(3, 2));
         this.effectors.push(healBoost(3, 2));
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00"); });
+        this.damage *= 1.1;
+        this.speed *= 1.1;
+        this.kbDefence *= 1.1;
         break;
     }
   }
