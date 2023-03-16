@@ -360,7 +360,7 @@ export class Player {
       case "Ninja":
         this.speed *= 1.5;
         this.attackCooldown /= 1.5;
-        this.specialCooldownMult = 10;
+        this.specialCooldownMult = 7;
         this.damage /= 1.15;
         this.comboCooldownAmount = 300;
         this.jumpPower /= 1.4;
@@ -373,9 +373,9 @@ export class Player {
         break;
       case "Heavyweight":
         this.speed /= 1.3;
-        this.attackCooldown *= 1.2;
+        this.attackCooldown *= 2;
         this.specialCooldownMult = 4;
-        this.attackRange *= 1.1;
+        this.attackRange *= 1.2;
         this.damage *= 1.25;
         this.comboCooldownAmount = 100;
         this.jumpPower /= 3;
@@ -390,7 +390,7 @@ export class Player {
         this.speed *= 1.2;
         this.attackCooldown /= 1.15;
         this.specialCooldownMult = 4;
-        this.attackRange *= 1.2;
+        this.attackRange *= 1.35;
         this.damage /= 1.2;
         this.comboCooldownAmount = 150;
         this.jumpPower /= 4;
@@ -422,15 +422,15 @@ export class Player {
         this.health._health = 150;
         this.health.maxHealth = 150;
         this.damage /= 1.5;
-        this.attackCooldown *= 1.5;
-        this.specialCooldownMult = 2;
+        this.attackCooldown *= 2;
+        this.specialCooldownMult = 3;
         this.kbMult /= 1.5;
         this.kbDefence /= 1.5;
         this.comboCooldownAmount = 750;
         break;
       case "Juggernaut":
-        this.w *= 1.4;
-        this.h *= 1.4;
+        this.w *= 1.3;
+        this.h *= 1.3;
         this.speed /= 2;
         this.attackRange *= 1.25;
         this.attackCooldown *= 2;
@@ -441,6 +441,16 @@ export class Player {
         this.kbMult = 1.25;
         break;
       case "Guardian":
+        this.health.health = 125;
+        this.health._health = 125;
+        this.health.maxHealth = 125;
+        this.speed *= 1.1;
+        this.jumpPower *= 0.5;
+        this.attackCooldown *= 1.75;
+        this.comboCooldownAmount = 500;
+        this.specialCooldownMult = 2;
+        this.damage *= 0.9;
+        this.kbDefence *= 1.2;
         break;
       case "Zombie":
       default:
@@ -546,9 +556,11 @@ export class Player {
                 break;
               case "Psycopath":
                 power *= 1 + ((2 - this.health.health / this.health.maxHealth) * this.combo * ((this.killCount + 1) / 2));
-                this.effectors.push(killingMachine(this.combo * (this.killCount + 1), 4 * (this.killCount + 1)));
+                this.effectors.push(killingMachine(4 * (this.killCount + 1), this.combo * (this.killCount + 1)));
                 break;
               case "Guardian":
+                this.effectors.push(damageDefence(3 + this.combo * (this.killCount + 1), 2.5 * (this.killCount + 1)))
+                break;
               case "Zombie":
               default:
                 power *= 1 + 0.5 * this.combo;
@@ -588,7 +600,8 @@ export class Player {
               }
               break;
             case "Guardian":
-            case "Zombie":
+              otherplayer.effectors.push(damageDefence(1 + this.combo / 2, 1.5 + this.combo / 2));
+              break;
             default:
               break;
           }
@@ -622,14 +635,15 @@ export class Player {
         this.effectors.push(damageDefence(10, 2));
         break;
       case "Ninja":
-        this.effectors.push(regeneration(5, 8));
-        this.effectors.push(kbDefence(5, 8));
+        this.effectors.push(regeneration(7, 6));
+        this.effectors.push(damageDefence(7, 3));
+        this.effectors.push(kbDefence(7, 8));
         this.speed *= 0.01;
         this.jumpPower *= 0.01;
         setTimeout(() => {
           this.speed /= 0.01;
           this.jumpPower /= 0.01;
-        }, 12000);
+        }, 8000);
         break;
       case "Heavyweight":
         this.damage *= 1.5;
@@ -687,11 +701,26 @@ export class Player {
         // Use the Gamemode.instance and make it METEOR RAIN!
         break; // for now...
       case "Guardian":
+        this.effectors.push(damageBoost(20, 2));
+        this.health.modHealth(-30);
+
+        for (let i = 0; i < this.otherPlayers.length; i++) {
+          if (this.otherPlayers[i].team == this.team) {
+            this.otherPlayers[i].effectors.push(damageBoost(5, 3));
+            this.health.modHealth(-15);
+          }
+        }
+
+        this.effectors.push(damageDefence(10, 3));
+        this.effectors.push(kbDefence(10, 3));
+        break;
       case "Zombie":
       default:
-        this.effectors.push(kbDefence(10, 1));
-        this.effectors.push(damageDefence(10, 1));
-        this.effectors.push(regeneration(3, 1));
+        if (this.health.health < this.health.maxHealth) {
+          this.effectors.push(kbDefence(10, 1));
+          this.effectors.push(damageDefence(10, 1));
+          this.effectors.push(regeneration(3, 2));
+        }
         break;
     }
 
@@ -756,7 +785,7 @@ export class Player {
         this.health.maxHealth += 50;
         if (this.health.health < this.health.maxHealth) this.health.modHealth((this.health.maxHealth - this.health.health) / this.healMult);
         this.kbDefence *= 2;
-        this.speed /= 1.1;
+        this.damage *= 1.1;
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00"); });
         this.effectors.push(kbDefence(18, 2));
         this.effectors.push(kbBoost(18, 2));
@@ -824,7 +853,6 @@ export class Player {
         this.health.maxHealth += 20;
         this.health.modHealth(Math.max(0, this.health.maxHealth - this.health.health));
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00"); });
-
         break;
       case "Psycopath":
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00"); });
@@ -832,6 +860,13 @@ export class Player {
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00"); });
         break;
       case "Guardian":
+        this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00"); });
+        this.effectors.push(angelicAura(20));
+        this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00"); });
+        this.damage *= 1.15;
+        this.kbDefence *= 1.5;
+        this.health.maxHealth += 25;
+        break;
       case "Zombie":
       default:
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00"); });
@@ -1423,9 +1458,9 @@ export class PlayerHealth {
   }
 }
 
-function killingMachine(level: number, time: number) {
+function killingMachine(time: number, level: number) {
   return function(player: Player) {
-    GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect KillingMachine { time: ${time}, level: ${level} }`, "#7722aa");
+    GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect KillingMachine { time: ${time}, level: ${level} }`, "#7722FF");
 
     player.comboCooldownAmount *= 1 + 0.01 * level;
     player.speed *= 1 + 0.01 * level;
@@ -1444,5 +1479,17 @@ function killingMachine(level: number, time: number) {
       player.kbDefence /= 1 + 0.01 * level;
       player.kbMult /= 1 + 0.01 * level;
     }, time * 1000)
+  }
+}
+
+function angelicAura(time: number) {
+  return function(player: Player) {
+    GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect AngelicAura { time: ${time} }`, "#FFF");
+
+    let healLoop = setInterval(() => {
+      player.health.modHealth(Math.max(Math.min(player.health.maxHealth - player.health.health, 5), 0));
+    }, 1000)
+
+    setTimeout(() => clearInterval(healLoop), time * 1000)
   }
 }

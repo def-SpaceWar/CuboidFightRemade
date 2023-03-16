@@ -268,15 +268,15 @@ window.onload = () => {
 
       bg.image = data[1];
 
-      let done = false;
-      while (!done) {
-        done = true;
+      let running = true;
+      while (running) {
+        running = false;
         for (let i = 0; i < players.length; i++) {
           if (localStorage.getItem(`player${i + 1}enable`) == "false") {
             players[i].x = -1000;
             players[i].y = -1000;
             players.splice(i, 1);
-            done = false;
+            running = true;
           }
         }
       }
