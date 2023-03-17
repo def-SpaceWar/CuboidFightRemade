@@ -13,7 +13,7 @@ export class Gamemode {
 
   healthText(player: Player, lineNum: number) {
     if (lineNum == 1) {
-      return `Combo: ${player.combo}`;
+      return `Death Count: ${player.deaths}`;
     } else {
       return `Kill Count: ${player.killCount}`;
     }
@@ -24,6 +24,10 @@ export class Gamemode {
     // Not for every gamemode,
     // but Juggernaut will need this to set the juggernaut and all the players teams.
     // Juggernaut should also be its own class! (inaccessible by anyone except the gamemode)
+  }
+
+  action(_action: string) {
+    return;
   }
 
   isGameOver() {
@@ -89,8 +93,8 @@ export class Ffa extends Gamemode {
   }
 }
 
+/**First to 10 kills win and if its teams first team to 10 kills wins!*/
 export class Deathmatch extends Gamemode {
-  // First to 10 kills win and if its teams first team to 10 kills wins!
   players: Player[];
   teamsEnabled: boolean;
 
@@ -108,14 +112,6 @@ export class Deathmatch extends Gamemode {
     this.killsToWin = parseInt(localStorage.getItem("deathmatchkills")) || 5;
   }
 
-  healthText(player: Player, lineNum: number) {
-    if (lineNum == 1) {
-      return `Death Count: ${player.deaths}`;
-    } else {
-      return `Kill Count: ${player.killCount}`;
-    }
-  }
-
   isGameOver() {
     if (this.winner[1] != 0) return true;
 
@@ -127,7 +123,6 @@ export class Deathmatch extends Gamemode {
     }
 
     if (this.teamsEnabled) {
-      // get all the players on a team
       let teamXkillCount = [0, 0, 0, 0];
 
       for (let i = 0; i < this.players.length; i++) {
@@ -273,6 +268,13 @@ export class Juggernaut extends Gamemode {
 
         selected = true;
       }
+    }
+  }
+
+  action(action: string) {
+    switch (action) {
+      case "meteorRain":
+        break;
     }
   }
 
