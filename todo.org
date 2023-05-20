@@ -24,7 +24,7 @@ base stats are Berserk but worse
 - low reload speed
 - low damage
 + comboing is same as berserk
-+ after it dies it stays alive for 10 more seconds and has damageBoost(10, 10) and speedBoost(10, 4) which is very OP
++ after it dies it stays alive for 10 more seconds and has damageBoost(10, 4) and speedBoost(10, 4) which is very OP
 + while its a "zombie" give a accessory that goes on top that only shows when its hp is 0 that is just a moldy green with
   the players colored eye sockets.
 + killBuff is to buff its overall stats by 5% in EVERYTHING (including health).

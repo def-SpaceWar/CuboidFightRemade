@@ -453,6 +453,19 @@ export class Player {
         this.kbDefence *= 1.2;
         break;
       case "Zombie":
+        this.speed *= 1.2;
+        this.kbDefence *= 2.5;
+        this.health.health = 90;
+        this.health._health = 90;
+        this.health.maxHealth = 90;
+        this.jumpPower *= 1.4;
+        this.maxJumps = 2;
+        this.attackCooldown *= 1.25;
+        this.comboCooldownAmount = 1250;
+        this.damage *= 0.75;
+        this.specialCooldownMult = 4;
+        this.attackRange *= 0.75;
+        break;
       default:
         break;
     }
@@ -526,13 +539,13 @@ export class Player {
 
             switch (this.class) {
               case "Berserk":
-                power *= 1 + 0.25 * this.combo;
+                power *= 1 + 0.6 * this.combo;
                 break;
               case "Tank":
                 power *= 1 + 0 * this.combo;
                 break;
               case "Ninja":
-                power *= 1 + 0.15 * this.combo;
+                power *= 1 + 0.25 * this.combo;
                 break;
               case "Heavyweight":
                 power *= 1 + 0.4 * this.combo;
@@ -562,6 +575,8 @@ export class Player {
                 this.effectors.push(damageDefence(3 + this.combo * (this.killCount + 1), 2.5 * (this.killCount + 1)))
                 break;
               case "Zombie":
+                power *= 1 + 0.5 * this.combo + 0.1 * this.killCount + 0.05 * this.deaths;
+                break;
               default:
                 power *= 1 + 0.5 * this.combo;
                 break;
@@ -715,6 +730,19 @@ export class Player {
         this.effectors.push(kbDefence(10, 3));
         break;
       case "Zombie":
+        let peopleKilled = 0;
+        this.otherPlayers.map(p => {
+          if (p.health.health <= p.health.maxHealth * 0.1) {
+            p.lastPlayerHit = this;
+            p.health.modHealth(-p.health.maxHealth * 0.1, "infected");
+            peopleKilled++;
+          }
+        });
+        if (peopleKilled > 0) {
+            this.effectors.push(killingMachine(10 * peopleKilled, 5));
+            this.effectors.push(bloodlust(10 * peopleKilled));
+        }
+        break;
       default:
         if (this.health.health < this.health.maxHealth) {
           this.effectors.push(kbDefence(10, 1));
@@ -868,6 +896,21 @@ export class Player {
         this.health.maxHealth += 25;
         break;
       case "Zombie":
+        this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00"); });
+        this.health.modHealth(this.health.health * 0.05);
+        this.health.maxHealth *= 1.05;
+        this.damage *= 1.05;
+        this.kbDefence *= 1.05;
+        this.kbMult *= 1.05;
+        this.jumpPower *= 1.05;
+        this.speed *= 1.05;
+        this.attackCooldown /= 1.05;
+        this.comboCooldownAmount *= 1.05;
+        this.specialCooldownMult /= 1.05;
+        this.effectors.push(viral(15));
+        this.effectors.push(damageDefence(15, 2.5));
+        this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00"); });
+        break;
       default:
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff Begin [`, "#FFFF00"); });
         this.effectors.push(regeneration(3, 5));
@@ -906,7 +949,7 @@ export class Player {
     this.xVelocity = 0;
     this.yVelocity = 0;
 
-    if (this.health.health > 0) {
+    if (this.health.health > 0 || this.health.zombieDeath) {
       if (this.defenceDivisor > 0) {
         for (let i = 0; i < this.effectors.length; i++) {
           this.effectors.shift()(this);
@@ -922,7 +965,8 @@ export class Player {
       this.forces[0].x = this.speed * this.moveDir;
       if (this.class == "Psycopath") this.forces[0].x *= 3 - (this.health.health / this.health.maxHealth) * 2;
 
-      if (this.health.health <= 0) this.moving = false;
+      if (this.health.health <= 0 && this.class != "Zombie") this.moving = false;
+      if (this.class == "Zombie" && this.health.zombieDeathOver) this.moving = false;
     }
 
     if (this.grounded) {
@@ -1060,7 +1104,8 @@ export class Player {
   }
 
   listenKeyDown(event: KeyboardEvent) {
-    if (this.health.health <= 0) return;
+    if (this.health.health <= 0 && this.class != "Zombie") return;
+    if (this.class == "Zombie" && this.health.zombieDeathOver) return;
 
     switch (event.key) {
       case this.controls.left:
@@ -1096,7 +1141,8 @@ export class Player {
   }
 
   listenKeyUp(event: KeyboardEvent) {
-    if (this.health.health <= 0) return;
+    if (this.health.health <= 0 && this.class != "Zombie") return;
+    if (this.class == "Zombie" && this.health.zombieDeathOver) return;
 
     switch (event.key) {
       case this.controls.left:
@@ -1136,6 +1182,10 @@ export class PlayerHealth {
   constX: number;
   constW: number;
 
+  zombieDeath: boolean;
+  zombieDeathOver: boolean;
+  reason: string;
+
   screenObject: ScreenObject;
   backObject: ScreenObject;
   borderObject: ScreenObject;
@@ -1160,6 +1210,8 @@ export class PlayerHealth {
     this.w = 200;
     this.constW = 200;
     this.h = 50;
+    this.zombieDeath = false;
+    this.zombieDeathOver = false;
 
     if (this.parentNum == 1 || this.parentNum == 3) this.x = 50;
     if (this.parentNum == 1 || this.parentNum == 2) this.y = 50;
@@ -1245,7 +1297,20 @@ export class PlayerHealth {
   }
 
   update() {
-    if (this.health <= 0) {
+    if (this.health <= 0 && !this.zombieDeath) {
+      if (this.parent.class == "Zombie" && !this.zombieDeathOver) {
+        this.zombieDeath = true;
+        this.health = 0;
+        this.parent.effectors.push(damageBoost(10, 4));
+        this.parent.effectors.push(speedBoost(10, 3));
+        this.parent.effectors.push(jumpBoost(10, 2));
+        setTimeout(() => {
+          this.zombieDeath = false;
+          this.zombieDeathOver = true;
+          this.afterDeath(this.reason);
+        }, 10_000);
+        return;
+      }
       this.health = 0;
       this.parent.screenObject.color = this.parent.inactiveColor;
       // we --die-- are dead :P
@@ -1344,6 +1409,8 @@ export class PlayerHealth {
             GameConsole.log(`<span style="color: ${this.color};">[Player ${this.parent.playerNum}]</span> spontaneously combusted because of <span style="color: ${this.parent.lastPlayerHit.color};">[Player ${this.parent.lastPlayerHit.playerNum}]</span>!`, "#A0A0A0");
             break;
         }
+      } else if (reason == "infected") {
+        GameConsole.log(`<span style="color: ${this.color};">[Player ${this.parent.playerNum}]</span> died to the global infection by <span style="color: ${this.parent.lastPlayerHit.color};">[Player ${this.parent.lastPlayerHit.playerNum}]</span>!`, "#A0A0A0");
       } else {
         GameConsole.log(`<span style="color: ${this.color};">[Player ${this.parent.playerNum}]</span> was killed by <span style="color: ${this.parent.lastPlayerHit.color};">[Player ${this.parent.lastPlayerHit.playerNum}]</span>!`, "#A0A0A0");
       }
@@ -1353,15 +1420,13 @@ export class PlayerHealth {
       this.parent.lastPlayerHit.killBuff();
     }
 
+    this.respawn();
+  }
+
+  respawn() {
     if (Gamemode.instance.lives) this.parent.lives -= 1;
     this.parent.deaths++;
 
-    if (this.parent.class == "Zombie") {
-      // STAY ALIVE FOR 10 MORE SECONDS WITH DAMAGE BOOST 10
-      // this will be very tricky hardcoding so many things
-      // but this is the final class being added to the game!
-      // so it doesnt matter
-    }
     // if the gamemode has respawning respawn
     if (Gamemode.instance.respawn) {
       if (this.parent.lives <= 0) return;
@@ -1369,6 +1434,7 @@ export class PlayerHealth {
       setTimeout(() => {
         // in this function the player will get
         // invincibility and respawn at their spawn point
+        if (this.zombieDeathOver) this.zombieDeathOver = false;
         this.parent.respawn();
       }, 2500);
     }
@@ -1376,6 +1442,7 @@ export class PlayerHealth {
 
   modHealth(amount: number, reason?: string) {
     if (this.health <= 0) return;
+    this.reason = reason;
 
     if (amount < 0) amount *= this.parent.defenceDivisor;
     if (amount > 0) amount *= this.parent.healMult;
@@ -1434,7 +1501,7 @@ export class PlayerHealth {
       this.damageHealIndicators.shift();
     }, 1500);
 
-    if (this.health <= 0) {
+    if (this.health <= 0 && this.parent.class != "Zombie") {
       this.afterDeath(reason);
     }
 
@@ -1491,5 +1558,26 @@ function angelicAura(time: number) {
     }, 1000)
 
     setTimeout(() => clearInterval(healLoop), time * 1000)
+  }
+}
+
+function viral(time: number) {
+  return function(player: Player) {
+    GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect Viral { time: ${time} }`, "#392");
+
+    player.attackRange *= 2;
+    player.kbDefence *= 2;
+    player.kbMult *= 2;
+
+    let healLoop = setInterval(() => {
+      player.health.modHealth(Math.max(Math.min(player.health.maxHealth - player.health.health, 0.5), 0));
+    }, 250)
+
+    setTimeout(() => {
+      player.attackRange /= 2;
+      player.kbDefence *= 2;
+      player.kbMult /= 2;
+      clearInterval(healLoop);
+    }, time * 1000)
   }
 }

@@ -341,7 +341,10 @@ window.onload = () => {
       const playerScreenObjs: ScreenObject[] = [];
 
       for (let i = 0; i < players.length; i++) {
-        if (players[i].health.health > 0) {
+        if (players[i].health.health > 0 && players[i].class != "Zombie") {
+          playerScreenObjs.push(players[i].screenObject);
+        }
+        if (players[i].class == "Zombie" && !players[i].health.zombieDeathOver) {
           playerScreenObjs.push(players[i].screenObject);
         }
       }
@@ -443,124 +446,124 @@ window.onload = () => {
     }
 
     function showClasses() {
-      const border = new ScreenObject(50, 50, WIDTH - 100, HEIGHT - 100, "#333", false);
-      const displayBox = new ScreenObject(100, 100, 400, HEIGHT - 200, classColors[classIdx], false);
+      //const border = new ScreenObject(50, 50, WIDTH - 100, HEIGHT - 100, "#333", false);
+      //const displayBox = new ScreenObject(100, 100, 400, HEIGHT - 200, classColors[classIdx], false);
 
-      const platformThingy = new ScreenObject(150, 400, 300, 80, "#345", false);
-      const playerShowcase = new ScreenObject(250, 340, 100, 100, "#f43", false);
+      //const platformThingy = new ScreenObject(150, 400, 300, 80, "#345", false);
+      //const playerShowcase = new ScreenObject(250, 340, 100, 100, "#f43", false);
 
-      const nextButton = new Button(
-        WIDTH - 75, HEIGHT - 75, 55, 55,
-        { inactive: "#999", active: "#CCC", pressed: "#FFF" },
-        10,
-        "#555",
-        ">",
-        [-25, 25],
-        "#333",
-        () => { classIdx++; },
-        "100px monospace"
-      );
+      //const nextButton = new Button(
+      //  WIDTH - 75, HEIGHT - 75, 55, 55,
+      //  { inactive: "#999", active: "#CCC", pressed: "#FFF" },
+      //  10,
+      //  "#555",
+      //  ">",
+      //  [-25, 25],
+      //  "#333",
+      //  () => { classIdx++; },
+      //  "100px monospace"
+      //);
 
-      const prevButton = new Button(
-        20, HEIGHT - 75, 55, 55,
-        { inactive: "#999", active: "#CCC", pressed: "#FFF" },
-        10,
-        "#555",
-        "<",
-        [-30, 25],
-        "#333",
-        () => { classIdx--; },
-        "100px monospace"
-      );
+      //const prevButton = new Button(
+      //  20, HEIGHT - 75, 55, 55,
+      //  { inactive: "#999", active: "#CCC", pressed: "#FFF" },
+      //  10,
+      //  "#555",
+      //  "<",
+      //  [-30, 25],
+      //  "#333",
+      //  () => { classIdx--; },
+      //  "100px monospace"
+      //);
 
-      let done = false;
-      const exitButton = new Button(
-        WIDTH - 75, 20, 55, 55,
-        { inactive: "#F00", active: "#F55", pressed: "#F99" },
-        10,
-        "#555",
-        "x",
-        [-28, 20],
-        "#333",
-        () => { done = true; },
-        "100px monospace"
-      );
+      //let done = false;
+      //const exitButton = new Button(
+      //  WIDTH - 75, 20, 55, 55,
+      //  { inactive: "#F00", active: "#F55", pressed: "#F99" },
+      //  10,
+      //  "#555",
+      //  "x",
+      //  [-28, 20],
+      //  "#333",
+      //  () => { done = true; },
+      //  "100px monospace"
+      //);
 
-      document.addEventListener("mousemove", (e: MouseEvent) => {
-        nextButton.listenMouseMove(e);
-        prevButton.listenMouseMove(e);
-        exitButton.listenMouseMove(e);
-      });
+      //document.addEventListener("mousemove", (e: MouseEvent) => {
+      //  nextButton.listenMouseMove(e);
+      //  prevButton.listenMouseMove(e);
+      //  exitButton.listenMouseMove(e);
+      //});
 
-      document.addEventListener("mousedown", (e: MouseEvent) => {
-        nextButton.listenMouseDown(e);
-        prevButton.listenMouseDown(e);
-        exitButton.listenMouseDown(e);
-      });
+      //document.addEventListener("mousedown", (e: MouseEvent) => {
+      //  nextButton.listenMouseDown(e);
+      //  prevButton.listenMouseDown(e);
+      //  exitButton.listenMouseDown(e);
+      //});
 
-      document.addEventListener("mouseup", (e: MouseEvent) => {
-        nextButton.listenMouseUp(e);
-        prevButton.listenMouseUp(e);
-        exitButton.listenMouseUp(e);
-      });
+      //document.addEventListener("mouseup", (e: MouseEvent) => {
+      //  nextButton.listenMouseUp(e);
+      //  prevButton.listenMouseUp(e);
+      //  exitButton.listenMouseUp(e);
+      //});
 
-      const textBorder = new ScreenObject(550, 100, 550, HEIGHT - 200, "#444", false);
+      //const textBorder = new ScreenObject(550, 100, 550, HEIGHT - 200, "#444", false);
 
-      process = setCustomInterval(runClasses);
+      //process = setCustomInterval(runClasses);
 
-      function runClasses() {
-        if (done) {
-          clearCustomInterval(process);
-          process = setCustomInterval(mainMenu)
-        }
+      //function runClasses() {
+      //  if (done) {
+      //    clearCustomInterval(process);
+      //    process = setCustomInterval(mainMenu)
+      //  }
 
-        ctx.fillStyle = "#0DF";
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
-        ctx.drawImage(bgOrig, 0, 0, WIDTH, HEIGHT);
+      //  ctx.fillStyle = "#0DF";
+      //  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+      //  ctx.drawImage(bgOrig, 0, 0, WIDTH, HEIGHT);
 
-        if (classIdx < 0) classIdx += classNames.length;
-        classIdx = classIdx % classNames.length;
+      //  if (classIdx < 0) classIdx += classNames.length;
+      //  classIdx = classIdx % classNames.length;
 
-        // Run info drawing code here!
-        border.draw();
-        displayBox.color = classColors[classIdx] || "#000";
-        displayBox.draw();
+      //  // Run info drawing code here!
+      //  border.draw();
+      //  displayBox.color = classColors[classIdx] || "#000";
+      //  displayBox.draw();
 
-        platformThingy.draw();
-        if (classIdx == PlayerClass.Vampire) {
-          ctx.drawImage(vampireLeftWingTexture, playerShowcase.x - 100, playerShowcase.y, 100, 100);
-          ctx.drawImage(vampireRightWingTexture, playerShowcase.x + 100, playerShowcase.y, 100, 100);
-        }
-        if (classIdx == PlayerClass.Juggernaut) {
-          ctx.fillStyle = playerShowcase.color;
-          ctx.fillRect(
-            playerShowcase.x - (playerShowcase.w * 0.2),
-            playerShowcase.y - (playerShowcase.h * 0.4),
-            playerShowcase.w * 1.4,
-            playerShowcase.h * 1.4
-          );
-        } else {
-          playerShowcase.draw();
-        }
+      //  platformThingy.draw();
+      //  if (classIdx == PlayerClass.Vampire) {
+      //    ctx.drawImage(vampireLeftWingTexture, playerShowcase.x - 100, playerShowcase.y, 100, 100);
+      //    ctx.drawImage(vampireRightWingTexture, playerShowcase.x + 100, playerShowcase.y, 100, 100);
+      //  }
+      //  if (classIdx == PlayerClass.Juggernaut) {
+      //    ctx.fillStyle = playerShowcase.color;
+      //    ctx.fillRect(
+      //      playerShowcase.x - (playerShowcase.w * 0.2),
+      //      playerShowcase.y - (playerShowcase.h * 0.4),
+      //      playerShowcase.w * 1.4,
+      //      playerShowcase.h * 1.4
+      //    );
+      //  } else {
+      //    playerShowcase.draw();
+      //  }
 
-        nextButton.draw();
-        prevButton.draw();
-        exitButton.draw();
+      //  nextButton.draw();
+      //  prevButton.draw();
+      //  exitButton.draw();
 
-        textBorder.draw();
+      //  textBorder.draw();
 
-        ctx.fillStyle = "#efefef";
-        ctx.font = "60px sans";
-        ctx.fillText(classNames[classIdx], 600, 200, 450);
+      //  ctx.fillStyle = "#efefef";
+      //  ctx.font = "60px sans";
+      //  ctx.fillText(classNames[classIdx], 600, 200, 450);
 
-        for (let i = 0; i < classDescs[classIdx].length; i++) {
-          ctx.fillStyle = classDescs[classIdx][i][1] || "#cfdfef";
-          ctx.font = classDescs[classIdx][i][2] || "20px sans";
-          ctx.fillText(classDescs[classIdx][i][0], 600, 250 + 20 * i, 450);
-        }
+      //  for (let i = 0; i < classDescs[classIdx].length; i++) {
+      //    ctx.fillStyle = classDescs[classIdx][i][1] || "#cfdfef";
+      //    ctx.font = classDescs[classIdx][i][2] || "20px sans";
+      //    ctx.fillText(classDescs[classIdx][i][0], 600, 250 + 20 * i, 450);
+      //  }
 
-        frames++;
-      }
+      //  frames++;
+      //}
     }
   }
 };
