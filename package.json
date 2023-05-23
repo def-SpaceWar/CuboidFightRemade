@@ -6,7 +6,7 @@
   "directories": {},
   "scripts": {
     "start": "snowpack dev",
-    "build": "snowpack build && rm -rf ./build/.*"
+    "build": "snowpack build && rm -rf ./build/.git"
   },
   "repository": {
     "type": "git",
