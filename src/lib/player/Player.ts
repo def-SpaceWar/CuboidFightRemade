@@ -459,7 +459,7 @@ export class Player {
         this.health._health = 90;
         this.health.maxHealth = 90;
         this.jumpPower *= 1.4;
-        this.maxJumps = 2;
+        this.maxJumps = 1;
         this.attackCooldown *= 1.25;
         this.comboCooldownAmount = 1250;
         this.damage *= 0.75;
@@ -678,7 +678,7 @@ export class Player {
         }, 8000);
         break;
       case "Support":
-        this.health.modHealth(10);
+        this.health.modHealth(40);
 
         for (let i = 0; i < this.otherPlayers.length; i++) {
           if (this.otherPlayers[i].team == this.team) {
@@ -695,7 +695,7 @@ export class Player {
             otherplayer.health.modHealth(healAmount);
 
             if (healAmount > 0) {
-              this.health.modHealth(25);
+              this.health.modHealth(15);
             }
           }
         }
@@ -732,7 +732,7 @@ export class Player {
       case "Zombie":
         let peopleKilled = 0;
         this.otherPlayers.map(p => {
-          if (p.health.health <= p.health.maxHealth * 0.1) {
+          if (p.health.health <= p.health.maxHealth * 0.1 && p.health.health > 0) {
             p.lastPlayerHit = this;
             p.health.modHealth(-p.health.maxHealth * 0.1, "infected");
             peopleKilled++;
