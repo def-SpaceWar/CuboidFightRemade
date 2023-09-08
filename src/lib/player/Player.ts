@@ -346,16 +346,16 @@ export class Player {
         break;
       case "Tank":
         this.speed /= 1.5;
-        this.attackCooldown *= 1.6;
+        this.attackCooldown *= 1.3;
         this.specialCooldownMult = 3;
-        this.damage *= 1.1;
-        this.comboCooldownAmount = 200;
+        this.damage *= 1.2;
+        this.comboCooldownAmount = 150;
         this.jumpPower /= 1.5;
-        this.health.health = 200;
-        this.health._health = 200;
-        this.health.maxHealth = 200;
-        this.kbMult = 0.2;
-        this.kbDefence = 2;
+        this.health.health = 300;
+        this.health._health = 300;
+        this.health.maxHealth = 300;
+        this.kbMult = 1.4;
+        this.kbDefence = 8;
         break;
       case "Ninja":
         this.speed *= 1.5;
@@ -372,19 +372,19 @@ export class Player {
         this.kbDefence = 0.9;
         break;
       case "Heavyweight":
-        this.speed /= 1.3;
+        this.speed /= 1.2;
         this.attackCooldown *= 2;
-        this.specialCooldownMult = 4;
+        this.specialCooldownMult = 6;
         this.attackRange *= 1.2;
-        this.damage *= 1.25;
+        this.damage *= 1.85;
         this.comboCooldownAmount = 100;
         this.jumpPower /= 3;
         this.maxJumps = 3;
-        this.health.health = 115;
-        this.health._health = 115;
-        this.health.maxHealth = 115;
-        this.kbMult = 1.2;
-        this.kbDefence = 1.5;
+        this.health.health = 150;
+        this.health._health = 150;
+        this.health.maxHealth = 150;
+        this.kbMult = 3.5;
+        this.kbDefence = 3.5;
         break;
       case "Vampire":
         this.speed *= 1.2;
@@ -399,7 +399,7 @@ export class Player {
         this.health._health = 40;
         this.health.maxHealth = 40;
         this.kbMult = 0;
-        this.kbDefence = 0.9;
+        this.kbDefence *= 0.9;
 
         this.accessoriesUnder.push(new VampireWing(this, true));    // left
         this.accessoriesUnder.push(new VampireWing(this, false));   // right
@@ -415,35 +415,35 @@ export class Player {
         this.kbDefence = 1.5;
         break;
       case "Psycopath":
-        this.speed /= 1.5;
-        this.jumpPower /= 1.5;
+        this.speed /= 1.1;
+        this.jumpPower /= 1.2;
         this.maxJumps = 1;
-        this.health.health = 150;
-        this.health._health = 150;
-        this.health.maxHealth = 150;
-        this.damage /= 1.5;
-        this.attackCooldown *= 2;
+        this.health.health = 200;
+        this.health._health = 200;
+        this.health.maxHealth = 200;
+        this.damage /= 1.4;
+        this.attackCooldown *= 1.85;
         this.specialCooldownMult = 3;
-        this.kbMult /= 1.5;
-        this.kbDefence /= 1.5;
-        this.comboCooldownAmount = 750;
+        this.kbMult /= 1.25;
+        this.kbDefence *= 1.5;
+        this.comboCooldownAmount = 650;
         break;
       case "Juggernaut":
         this.w *= 1.3;
         this.h *= 1.3;
-        this.speed /= 2;
+        this.speed /= 1.8;
         this.attackRange *= 1.25;
         this.attackCooldown *= 2;
-        this.health.health = 300;
-        this.health._health = 300;
-        this.health.maxHealth = 300;
+        this.health.health = 1000;
+        this.health._health = 1000;
+        this.health.maxHealth = 1000;
         this.kbDefence *= 5;
-        this.kbMult = 1.25;
+        this.kbMult = 10;
         break;
       case "Guardian":
-        this.health.health = 125;
-        this.health._health = 125;
-        this.health.maxHealth = 125;
+        this.health.health = 115;
+        this.health._health = 115;
+        this.health.maxHealth = 115;
         this.speed *= 1.1;
         this.jumpPower *= 0.5;
         this.attackCooldown *= 1.75;
@@ -569,7 +569,7 @@ export class Player {
                 break;
               case "Psycopath":
                 power *= 1 + ((2 - this.health.health / this.health.maxHealth) * this.combo * ((this.killCount + 1) / 2));
-                this.effectors.push(killingMachine(4 * (this.killCount + 1), this.combo * (this.killCount + 1)));
+                this.effectors.push(killingMachine(5 * (this.killCount + 1), 3 * this.combo * (this.killCount + 1)));
                 break;
               case "Guardian":
                 this.effectors.push(damageDefence(3 + this.combo * (this.killCount + 1), 2.5 * (this.killCount + 1)))
@@ -752,7 +752,7 @@ export class Player {
         break;
     }
 
-    this.coolAttack(true);
+    this.coolAttack3 * (true);
   }
 
   coolAttack(special = false) {
@@ -963,7 +963,7 @@ export class Player {
 
     if (this.moving) {
       this.forces[0].x = this.speed * this.moveDir;
-      if (this.class == "Psycopath") this.forces[0].x *= 3 - (this.health.health / this.health.maxHealth) * 2;
+      if (this.class == "Psycopath") this.forces[0].x *= 4 - (this.health.health / this.health.maxHealth) * 2;
 
       if (this.health.health <= 0 && this.class != "Zombie") this.moving = false;
       if (this.class == "Zombie" && this.health.zombieDeathOver) this.moving = false;
