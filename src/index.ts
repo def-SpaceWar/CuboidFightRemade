@@ -332,7 +332,7 @@ window.onload = () => {
         powerUps[i].updatePhysics();
       }
 
-      if (Math.random() * 1500 < 1) {
+      if (Math.random() * 1000 < 1) {
         powerUps.push(new PowerUpBox(Math.random() * WIDTH * 2 + WIDTH / 2, Math.random() * HEIGHT * 2 + HEIGHT / 2));
         GameConsole.log("A Power Up has spawned!");
       }

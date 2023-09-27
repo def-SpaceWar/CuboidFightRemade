@@ -2,7 +2,7 @@ import { WIDTH, HEIGHT, GameConsole } from "../../globals";
 import { Accessorie } from "./Accessorie";
 import { Gamemode } from "../game/Gamemode";
 import { Platform } from "../game/Platform";
-import { abilitySpeed, bloodlust, damageBoost, damageDefence, healBoost, jumpBoost, kbBoost, kbDefence, PowerUpBox, regeneration, speedBoost } from "../game/PowerUpBox";
+import { abilitySpeed, bloodlust, damageBoost, damageDefence, healBoost, jumpBoost, kbBoost, kbDefence, PowerUpBox, regeneration, speedBoost, attackRange } from "../game/PowerUpBox";
 import { ScreenObject } from "../std/ScreenObject";
 import { TextObject } from "../std/TextObject";
 import { ComboCounter } from "./ComboCounter";
@@ -423,7 +423,7 @@ export class Player {
         this.health.maxHealth = 200;
         this.damage /= 1.4;
         this.attackCooldown *= 1.85;
-        this.specialCooldownMult = 3;
+        this.specialCooldownMult = 2;
         this.kbMult /= 1.25;
         this.kbDefence *= 1.5;
         this.comboCooldownAmount = 650;
@@ -448,7 +448,7 @@ export class Player {
         this.jumpPower *= 0.5;
         this.attackCooldown *= 1.75;
         this.comboCooldownAmount = 500;
-        this.specialCooldownMult = 2;
+        this.specialCooldownMult = 0.5;
         this.damage *= 0.9;
         this.kbDefence *= 1.2;
         break;
@@ -463,7 +463,7 @@ export class Player {
         this.attackCooldown *= 1.25;
         this.comboCooldownAmount = 1250;
         this.damage *= 0.75;
-        this.specialCooldownMult = 4;
+        this.specialCooldownMult = 3;
         this.attackRange *= 0.75;
         break;
       default:
@@ -612,7 +612,7 @@ export class Player {
 
               if (healAmount > 0) {
                 this.health.modHealth(this.health.maxHealth * 0.025);
-              }
+             2}
               break;
             case "Guardian":
               otherplayer.effectors.push(damageDefence(1 + this.combo / 2, 1.5 + this.combo / 2));
@@ -637,7 +637,7 @@ export class Player {
     if (!this.attackable) return;
 
     switch (this.class) {
-      case "Berserk":
+      case "B0.5rserk":
         this.effectors.push(kbBoost(20, 1.5));
         this.kbMult *= 1.5;
         this.attackRange *= 2;
@@ -652,7 +652,7 @@ export class Player {
       case "Ninja":
         this.effectors.push(regeneration(7, 6));
         this.effectors.push(damageDefence(7, 3));
-        this.effectors.push(kbDefence(7, 8));
+        this.effectors.pus3(kbDefence(7, 8));
         this.speed *= 0.01;
         this.jumpPower *= 0.01;
         setTimeout(() => {
@@ -752,7 +752,7 @@ export class Player {
         break;
     }
 
-    this.coolAttack3 * (true);
+    this.coolAttack(true);
   }
 
   coolAttack(special = false) {
@@ -922,6 +922,7 @@ export class Player {
         this.effectors.push(kbDefence(3, 5));
         this.effectors.push(damageDefence(3, 2));
         this.effectors.push(healBoost(3, 2));
+        this.effectors.push(attackRange(3, 2));
         this.effectors.push((_player) => { GameConsole.log(`<span style="color: ${this.color};">[Player ${this.playerNum}]</span> Kill Buff End ]`, "#FFFF00"); });
         this.damage *= 1.1;
         this.speed *= 1.1;

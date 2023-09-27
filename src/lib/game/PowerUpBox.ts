@@ -17,17 +17,17 @@ export class PowerUpBox {
 
     constructor(x: number, y: number) {
         this.powerUps = [
-            regeneration(10, 5),
-            regeneration(4, 10),
+            regeneration(10, 4),
             abilitySpeed(18, 3),
             damageBoost(8, 3),
             jumpBoost(15, 1.5),
-            speedBoost(12, 2),
-            kbBoost(8, 3),
+            speedBoost(12, 2.5),
+            kbBoost(20, 3),
             kbDefence(20, 5),
-            damageDefence(10, 1.5),
-            healBoost(20, 2),
-            bloodlust(30)
+            damageDefence(50, 1.5),
+            healBoost(20, 4),
+            bloodlust(45),
+            attackRange(10, 2.5),
         ];
 
         this.screenObject = new ScreenObject(x, y, 80, 80, "#742", true, true, [-5, 10]);
@@ -193,6 +193,18 @@ export function bloodlust(time: number) {
             player.jumpPower /= 1.5;
             player.kbDefence /= 1.5;
             player.damage /= 1.25;
+        }, time * 1000);
+    }
+}
+
+export function attackRange(time: number, level: number) {
+    return function(player: Player) {
+        GameConsole.log(`<span style="color: ${player.color};">[Player ${player.playerNum}]</span> Effect Attack Range { time: ${time} }`, "#335599");
+
+        player.attackRange *= level;
+
+        setTimeout(() => {
+            player.attackRange /= level;
         }, time * 1000);
     }
 }
