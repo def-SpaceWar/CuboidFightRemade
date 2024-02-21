@@ -41,7 +41,7 @@ export const numberToClass = (n: number): Class => {
                   (n == 8) ? "Guardian" :
                     (n == 9) ? "Zombie" :
                       (n == 10) ? "Juggernaut" :
-                        "Default"
+                      "Default"
 }
 
 export const classColor = (playerClass: Class) => {
@@ -324,7 +324,12 @@ export class Player {
     this.lives = parseInt(localStorage.getItem("stocklives")) || this.lives;
 
     // classes
-    this.class = (localStorage.getItem(`player${this.playerNum}class`) as Class) || "Default";
+    const c: Class | "Random" = (localStorage.getItem(`player${this.playerNum}class`) as Class | "Random") || "Default";
+    if (c === "Random") {
+        this.class = numberToClass(Math.floor(Math.random() * 11));
+    } else {
+        this.class = c;
+    }
     this.loadClass();
   }
 
@@ -652,7 +657,7 @@ export class Player {
       case "Ninja":
         this.effectors.push(regeneration(7, 6));
         this.effectors.push(damageDefence(7, 3));
-        this.effectors.pus3(kbDefence(7, 8));
+        this.effectors.push(kbDefence(7, 8));
         this.speed *= 0.01;
         this.jumpPower *= 0.01;
         setTimeout(() => {
